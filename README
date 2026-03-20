@@ -1,0 +1,194 @@
+# 🛒 קניות ביחד — רשימת קניות משפחתית
+
+אפליקציית רשימת קניות משותפת לכל המשפחה.  
+כולם מוסיפים פריטים, אחד הולך לסופר ומסמן מה קנה.
+
+---
+
+## ✨ מה האפליקציה יודעת לעשות
+
+- **הוספת פריטים** — כל בן משפחה מהטלפון שלו
+- **סנכרון אמיתי (Real-time)** — שינוי מופיע מיד אצל כולם
+- **מצב קניות** — סמן פריטים שקנית בסופר עם פס התקדמות
+- **מחיקת מסומנים** — ניקוי הרשימה אחרי הקנייה
+- **כמה משפחות** — כל משפחה עם קוד משלה, נפרד לחלוטין
+- **ללא הרשמה** — כניסה עם קוד בן 6 ספרות בלבד
+
+---
+
+## 🛠️ הגדרה (פעם אחת!)
+
+### שלב 1 — צור פרויקט Firebase חינמי
+
+1. כנס ל [console.firebase.google.com](https://console.firebase.google.com)
+2. לחץ **"הוסף פרויקט"** ← תן שם (למשל `family-shopping`)
+3. **כבה Google Analytics** (לא צריך) ← לחץ "צור פרויקט"
+
+---
+
+### שלב 2 — הפעל Realtime Database
+
+1. בתפריט הצד ← **Build → Realtime Database**
+2. לחץ **"צור מסד נתונים"**
+3. בחר שרת: **europe-west1** (אירופה — הכי קרוב לישראל)
+4. בחר **"התחל במצב בדיקה"** ← לחץ **"אפשר"**
+
+> ⚠️ אחרי 30 יום מצב הבדיקה פג — ראה שלב 2ב' להמשך
+
+**שלב 2ב' — כללי אבטחה (אחרי שהאפליקציה עובדת)**
+
+בלשונית **"כללים"** של Realtime Database, החלף ב:
+```json
+{
+  "rules": {
+    "fam": {
+      "$code": {
+        ".read": true,
+        ".write": true
+      }
+    }
+  }
+}
+```
+לחץ **"פרסם"**.
+
+---
+
+### שלב 3 — קבל את פרטי ה-Config
+
+1. בתפריט ← **Project Overview** ← לחץ על סמל **`</>`** (Web)
+2. תן שם לאפליקציה (למשל `shopping-web`) ← **"הרשם"**
+3. תראה קוד שנראה כך — **שמור אותו!**
+
+```javascript
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "family-shopping-xxxxx.firebaseapp.com",
+  databaseURL: "https://family-shopping-xxxxx-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "family-shopping-xxxxx",
+  storageBucket: "family-shopping-xxxxx.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+};
+```
+
+---
+
+### שלב 4 — עדכן את הקוד
+
+פתח את `index.html` וחפש את הקטע הזה:
+
+```javascript
+const FIREBASE_CONFIG = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT.firebaseapp.com",
+  ...
+};
+```
+
+**החלף** את כל הערכים עם הערכים שהעתקת בשלב 3.
+
+---
+
+### שלב 5 — העלה ל-GitHub Pages
+
+```bash
+# אם עדיין אין לך GitHub repo:
+git init
+git add .
+git commit -m "🛒 Family Shopping App"
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main
+```
+
+**הפעל GitHub Pages:**
+1. כנס ל-repo ב-GitHub
+2. Settings → Pages
+3. Source: **Deploy from a branch**
+4. Branch: **main** / root
+5. לחץ **Save**
+
+בעוד כמה דקות האפליקציה תהיה זמינה בכתובת:  
+`https://YOUR_USERNAME.github.io/YOUR_REPO/`
+
+---
+
+## 👨‍👩‍👧‍👦 איך משתמשים
+
+### יצירת משפחה (פעם אחת)
+1. לחץ **"צור משפחה חדשה"**
+2. הזן שם משפחה ושם שלך
+3. קבל **קוד בן 6 ספרות**
+4. שתף את הקוד עם בני המשפחה
+
+### הצטרפות למשפחה
+1. לחץ **"הצטרף למשפחה קיימת"**
+2. הזן את הקוד שקיבלת + שמך
+3. נכנסים לאותה רשימה!
+
+### הוספת פריטים
+- לחץ **"+ הוסף פריט"**
+- כתוב בחופשי או בחר מהצעות מהירות
+
+### בסופר
+1. עבור ללשונית **"קניות"**
+2. סמן כל פריט שקנית ✓
+3. בסוף לחץ **"נקה מסומנים"**
+
+---
+
+## 🏗️ מבנה טכני
+
+```
+index.html           ← האפליקציה כולה (קובץ יחיד!)
+README.md            ← הוראות אלו
+```
+
+**Firebase Realtime Database מבנה הנתונים:**
+```
+fam/
+  {code}/
+    meta/
+      name: "משפחת כהן"
+      created: 1234567890
+    items/
+      {itemId}/
+        text: "חלב"
+        addedBy: "אמא"
+        addedAt: 1234567890
+        checked: false
+        checkedBy: null
+        checkedAt: null
+```
+
+**טכנולוגיות:**
+- HTML/CSS/JS טהור — ללא framework
+- Firebase Realtime Database (חינמי)
+- Google Fonts — Heebo (עברית)
+- GitHub Pages — hosting (חינמי)
+
+---
+
+## 💰 עלות
+
+**חינם לחלוטין!**
+
+Firebase Spark Plan (חינמי) כולל:
+- 1GB אחסון
+- 10GB העברת נתונים לחודש
+- Real-time connections ללא הגבלה
+
+עבור משפחה אחת או אפילו כמה משפחות — **לעולם לא תגיע למגבלה**.
+
+---
+
+## ❓ שאלות נפוצות
+
+**Q: האם הנתונים בטוחים?**  
+A: הנתונים מאוחסנים ב-Firebase של Google עם הצפנה בהעברה (HTTPS). מי שיש לו את הקוד בן 6 הספרות יכול לראות ולערוך את הרשימה — זה מתאים למשפחה.
+
+**Q: מה קורה אם שני אנשים מוסיפים בו-זמנית?**  
+A: Firebase מטפל בזה — שני הפריטים יתווספו ללא התנגשות.
+
+**Q: האם עובד בלי אינטרנט?**  
+A: לא — נדרש חיבור לאינטרנט לסנכרון. בלי חיבור הרשימה לא תתעדכן.
