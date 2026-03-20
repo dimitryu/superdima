@@ -576,6 +576,9 @@ body {
 </head>
 <body>
 <div id="app">
+</head>
+<body>
+<div id="app">
 
 <!-- ═══════════ WELCOME ═══════════ -->
 <div class="screen active" id="s-welcome">
@@ -594,7 +597,7 @@ body {
       🔗 הצטרף למשפחה קיימת
     </button>
   </div>
-  <div class="welcome-footer">גרסה 1.0 · Family Shopping App</div>
+  <div class="welcome-footer">גרסה 1.1 · Family Shopping App</div>
 </div>
 
 <!-- ═══════════ CREATE FAMILY ═══════════ -->
@@ -784,17 +787,17 @@ body {
 
 </div><!-- #app -->
 
-<!-- ═══════════ FIREBASE ═══════════ -->
-<script type="module">
-import { initializeApp }                     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue,
-         push, update, remove }              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+<!-- Firebase Compat SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+/* =====================================================
+   SuperDima v1.1
+   Plain <script> — no ES modules, no scoping issues
+   ===================================================== */
 
-/* ─────────────────────────────────────────────
-   🔧 הגדרת Firebase — החלף בערכים שלך!
-   ראה הוראות ב- README.md
-   ───────────────────────────────────────────── */
-const firebaseConfig = {
+/* 🔧 הגדר Firebase שלך כאן */
+var FIREBASE_CONFIG = {
   apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
   authDomain: "superdima-ef60f.firebaseapp.com",
   databaseURL: "https://superdima-ef60f-default-rtdb.europe-west1.firebasedatabase.app",
@@ -804,298 +807,335 @@ const firebaseConfig = {
   appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
   measurementId: "G-JNF66CHKYX"
 };
-/* ───────────────────────────────────────────── */
 
-const IS_CONFIGURED = !FIREBASE_CONFIG.apiKey.includes("YOUR");
+/* ── Init ── */
+var IS_CONFIGURED = FIREBASE_CONFIG.apiKey.indexOf("YOUR") === -1;
+var db = null;
+var itemsRef = null;
+var itemsListener = null;
 
-let db, unsub;
 if (IS_CONFIGURED) {
-  const fireApp = initializeApp(FIREBASE_CONFIG);
-  db = getDatabase(fireApp);
+  firebase.initializeApp(FIREBASE_CONFIG);
+  db = firebase.database();
 }
 
-// ── STATE ──
-let S = { code: null, family: null, user: null, items: {} };
+/* ── State ── */
+var S = { code: null, family: null, user: null, items: {} };
 
-// ── INIT ──
-// <script type="module"> is deferred by default — DOM is ready here
-if (!IS_CONFIGURED) {
-  document.getElementById('cfg-warn-area').innerHTML = `
-    <div class="cfg-warn">
-      ⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.<br>
-      📖 ראה הוראות מפורטות ב- <strong>README.md</strong>
-    </div>`;
-} else {
-  // Auto-login from localStorage
+/* ══════════════════════════════════════
+   UI HELPERS
+   ══════════════════════════════════════ */
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(function(s) {
+    s.classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+
+function toast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2500);
+}
+
+function openSheet(id)  { document.getElementById(id).classList.add('open'); }
+function closeSheet(id) { document.getElementById(id).classList.remove('open'); }
+
+function overlayClick(e, id) {
+  if (e.target.classList.contains('overlay')) closeSheet(id);
+}
+
+function setSyncing() {
+  document.getElementById('sync-dot').className = 'sync-dot syncing';
+  document.getElementById('sync-txt').textContent = 'מסנכרן...';
+}
+function setSynced() {
+  document.getElementById('sync-dot').className = 'sync-dot';
+  document.getElementById('sync-txt').textContent = 'מסונכרן';
+}
+function setSyncErr() {
+  document.getElementById('sync-dot').className = 'sync-dot error';
+  document.getElementById('sync-txt').textContent = 'שגיאת חיבור';
+}
+
+function esc(s) {
+  s = s || '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function ago(ts) {
+  if (!ts) return '';
+  var d = Date.now() - ts;
+  if (d < 60000) return 'לפני רגע';
+  if (d < 3600000) return 'לפני ' + Math.floor(d/60000) + " דק'";
+  if (d < 86400000) return 'לפני ' + Math.floor(d/3600000) + " שע'";
+  return 'לפני ' + Math.floor(d/86400000) + ' ימים';
+}
+
+function save() {
+  localStorage.setItem('kniYot_v1', JSON.stringify({
+    code: S.code, family: S.family, user: S.user
+  }));
+}
+
+/* ══════════════════════════════════════
+   NAVIGATION
+   ══════════════════════════════════════ */
+
+function goApp() {
+  document.getElementById('h-family').textContent  = S.family;
+  document.getElementById('h-user').textContent    = S.user;
+  document.getElementById('ss-family').textContent = S.family;
+  document.getElementById('ss-user').textContent   = S.user;
+  document.getElementById('ss-code').textContent   = S.code;
+  show('s-app');
+  subscribeItems();
+}
+
+function subscribeItems() {
+  if (!IS_CONFIGURED || !S.code) return;
+  // Detach previous listener
+  if (itemsRef && itemsListener) {
+    itemsRef.off('value', itemsListener);
+  }
+  itemsRef = db.ref('fam/' + S.code + '/items');
+  setSyncing();
+  itemsListener = itemsRef.on('value',
+    function(snap) { S.items = snap.val() || {}; render(); setSynced(); },
+    function(err)  { console.error(err); setSyncErr(); }
+  );
+}
+
+/* ══════════════════════════════════════
+   RENDERING
+   ══════════════════════════════════════ */
+
+function render() {
+  var entries = Object.keys(S.items).map(function(id) {
+    return Object.assign({ id: id }, S.items[id]);
+  });
+  var unc = entries.filter(function(i) { return !i.checked; });
+  var chk = entries.filter(function(i) { return  i.checked; });
+
+  // List tab
+  var lb = document.getElementById('list-body');
+  if (!entries.length) {
+    lb.innerHTML = emptyHTML('📋', 'הרשימה ריקה', 'הוסף את הפריטים שצריך לקנות');
+  } else {
+    var html = '<div class="items-list">';
+    unc.forEach(function(i) { html += itemCard(i, 'list'); });
+    if (chk.length) {
+      html += '<div class="section-label">✓ כבר קנינו</div>';
+      chk.forEach(function(i) { html += itemCard(i, 'list'); });
+    }
+    html += '</div>';
+    lb.innerHTML = html;
+  }
+
+  // Shopping tab progress
+  var total = entries.length, done = chk.length;
+  document.getElementById('prog-label').textContent = done + '/' + total;
+  document.getElementById('prog-fill').style.width  = total ? ((done/total)*100) + '%' : '0%';
+
+  var sb = document.getElementById('shop-body');
+  if (!entries.length) {
+    sb.innerHTML = emptyHTML('🎉', 'הרשימה ריקה', 'אין מה לקנות כרגע!');
+  } else {
+    var shtml = '<div class="items-list" style="padding-bottom:80px;">';
+    unc.forEach(function(i) { shtml += itemCard(i, 'shop'); });
+    if (chk.length) {
+      shtml += '<div class="section-label">✅ נקנה</div>';
+      chk.forEach(function(i) { shtml += itemCard(i, 'shop'); });
+    }
+    shtml += '</div>';
+    sb.innerHTML = shtml;
+  }
+}
+
+function emptyHTML(icon, title, sub) {
+  return '<div class="empty"><div class="e-icon">' + icon + '</div><h3>' + title + '</h3><p>' + sub + '</p></div>';
+}
+
+function itemCard(item, mode) {
+  var ch = item.checked;
+  var meta = ch
+    ? '✓ נקנה על ידי ' + esc(item.checkedBy || '')
+    : 'הוסיף ' + esc(item.addedBy) + ' · ' + ago(item.addedAt);
+  var shopCls = mode === 'shop' ? ' shopping-mode' : '';
+  var checkedCls = ch ? ' checked' : '';
+  var delBtn = mode === 'list'
+    ? '<button class="del-btn" onclick="appDel(\'' + item.id + '\')">✕</button>'
+    : '';
+  return '<div class="item-card' + checkedCls + '">'
+    + '<div class="check-btn' + checkedCls + shopCls + '" onclick="appToggle(\'' + item.id + '\')">'
+    + (ch ? '✓' : '')
+    + '</div>'
+    + '<div class="item-body">'
+    + '<div class="item-name">' + esc(item.text) + '</div>'
+    + '<div class="item-meta">' + meta + '</div>'
+    + '</div>'
+    + delBtn
+    + '</div>';
+}
+
+/* ══════════════════════════════════════
+   ACTIONS — called from HTML onclick
+   ══════════════════════════════════════ */
+
+function createFamily() {
+  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
+  var fam  = document.getElementById('f-family-name').value.trim();
+  var user = document.getElementById('f-creator-name').value.trim();
+  if (!fam || !user) return toast('מלא את כל השדות');
+  var code = String(Math.floor(100000 + Math.random() * 900000));
+  db.ref('fam/' + code + '/meta').set({ name: fam, created: Date.now() })
+    .then(function() {
+      S = { code: code, family: fam, user: user, items: {} };
+      save();
+      document.getElementById('d-code').textContent = code;
+      show('s-code');
+    })
+    .catch(function(e) { toast('שגיאה — בדוק חיבור'); console.error(e); });
+}
+
+function joinFamily() {
+  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
+  var code = document.getElementById('f-join-code').value.trim();
+  var user = document.getElementById('f-joiner-name').value.trim();
+  if (!code || !user) return toast('מלא את כל השדות');
+  db.ref('fam/' + code + '/meta').get()
+    .then(function(snap) {
+      if (!snap.exists()) return toast('קוד לא נמצא — בדוק שוב');
+      S = { code: code, family: snap.val().name, user: user, items: {} };
+      save();
+      goApp();
+    })
+    .catch(function(e) { toast('שגיאה — בדוק חיבור'); console.error(e); });
+}
+
+function copyCode() {
+  var code = S.code || document.getElementById('d-code').textContent;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(code).then(function() { toast('הקוד הועתק ✓'); });
+  }
+}
+
+function enterApp() { goApp(); }
+
+function syncNow() { setSyncing(); subscribeItems(); }
+
+function addItem() {
+  var el = document.getElementById('item-input');
+  var text = el.value.trim();
+  if (!text) return;
+  db.ref('fam/' + S.code + '/items').push({
+    text: text, addedBy: S.user, addedAt: Date.now(), checked: false
+  }).then(function() {
+    el.value = '';
+    closeSheet('add-sheet');
+    toast('"' + text + '" נוסף ✓');
+  }).catch(function() { toast('שגיאה בהוספה'); });
+}
+
+function quickAdd(btn) {
+  var text = btn.textContent.replace(/[\u{1F000}-\u{1FFFF}]/gu, '').trim();
+  // fallback: strip leading emoji-like chars
+  text = text.replace(/^[^\u0590-\u05FF\w]+/, '').trim();
+  document.getElementById('item-input').value = text;
+  document.getElementById('item-input').focus();
+}
+
+function appToggle(id) {
+  var it = S.items[id];
+  if (!it) return;
+  db.ref('fam/' + S.code + '/items/' + id).update({
+    checked:   !it.checked,
+    checkedBy: !it.checked ? S.user : null,
+    checkedAt: !it.checked ? Date.now() : null
+  }).catch(function() { toast('שגיאה'); });
+}
+
+function appDel(id) {
+  db.ref('fam/' + S.code + '/items/' + id).remove()
+    .then(function() { toast('הוסר'); })
+    .catch(function() { toast('שגיאה'); });
+}
+
+function clearChecked() {
+  var u = {};
+  var count = 0;
+  Object.keys(S.items).forEach(function(id) {
+    if (S.items[id].checked) { u['fam/' + S.code + '/items/' + id] = null; count++; }
+  });
+  if (!count) return toast('אין פריטים מסומנים');
+  db.ref().update(u)
+    .then(function() { toast(count + ' פריטים הוסרו'); })
+    .catch(function() { toast('שגיאה'); });
+}
+
+function uncheckAll() {
+  var u = {};
+  var count = 0;
+  Object.keys(S.items).forEach(function(id) {
+    if (S.items[id].checked) {
+      u['fam/' + S.code + '/items/' + id + '/checked']   = false;
+      u['fam/' + S.code + '/items/' + id + '/checkedBy'] = null;
+      count++;
+    }
+  });
+  if (!count) return toast('אין כלום לאפס');
+  db.ref().update(u)
+    .then(function() { toast('כל הסימונים אופסו'); })
+    .catch(function() { toast('שגיאה'); });
+}
+
+function switchTab(tab) {
+  ['list', 'shop'].forEach(function(t) {
+    document.getElementById('t-' + t).classList.toggle('active', t === tab);
+    document.getElementById('c-' + t).classList.toggle('active', t === tab);
+  });
+  document.getElementById('fab').style.display = tab === 'list' ? 'flex' : 'none';
+}
+
+function logout() {
+  if (itemsRef && itemsListener) {
+    itemsRef.off('value', itemsListener);
+    itemsRef = null;
+    itemsListener = null;
+  }
+  localStorage.removeItem('kniYot_v1');
+  S = { code: null, family: null, user: null, items: {} };
+  closeSheet('settings-sheet');
+  show('s-welcome');
+}
+
+/* ══════════════════════════════════════
+   STARTUP — runs after all functions defined
+   ══════════════════════════════════════ */
+(function init() {
+  if (!IS_CONFIGURED) {
+    var el = document.getElementById('cfg-warn-area');
+    if (el) el.innerHTML = '<div class="cfg-warn">⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.</div>';
+    return;
+  }
   try {
-    const saved = localStorage.getItem('kniYot_v1');
+    var saved = localStorage.getItem('kniYot_v1');
     if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.code && parsed.family && parsed.user) {
-        Object.assign(S, parsed);
+      var p = JSON.parse(saved);
+      if (p && p.code && p.family && p.user) {
+        S = { code: p.code, family: p.family, user: p.user, items: {} };
         goApp();
+        return;
       }
     }
   } catch(e) {
     localStorage.removeItem('kniYot_v1');
   }
-}
-
-// ── SCREEN ──
-window.show = id => {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-};
-
-// ── CREATE ──
-window.createFamily = async () => {
-  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
-  const fam  = document.getElementById('f-family-name').value.trim();
-  const user = document.getElementById('f-creator-name').value.trim();
-  if (!fam || !user) return toast('מלא את כל השדות');
-
-  const code = String(Math.floor(100000 + Math.random() * 900000));
-  try {
-    await set(ref(db, `fam/${code}/meta`), { name: fam, created: Date.now() });
-    S = { code, family: fam, user, items: {} };
-    save();
-    document.getElementById('d-code').textContent = code;
-    show('s-code');
-  } catch(e) { toast('שגיאה — בדוק חיבור'); console.error(e); }
-};
-
-window.copyCode = () => {
-  navigator.clipboard?.writeText(S.code ?? document.getElementById('d-code').textContent)
-    .then(() => toast('הקוד הועתק ✓'));
-};
-
-window.enterApp = goApp;
-
-// ── JOIN ──
-window.joinFamily = async () => {
-  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
-  const code = document.getElementById('f-join-code').value.trim();
-  const user = document.getElementById('f-joiner-name').value.trim();
-  if (!code || !user) return toast('מלא את כל השדות');
-
-  try {
-    const snap = await get(ref(db, `fam/${code}/meta`));
-    if (!snap.exists()) return toast('קוד לא נמצא — בדוק שוב');
-    S = { code, family: snap.val().name, user, items: {} };
-    save();
-    goApp();
-  } catch(e) { toast('שגיאה — בדוק חיבור'); console.error(e); }
-};
-
-// ── ENTER APP ──
-function goApp() {
-  document.getElementById('h-family').textContent = S.family;
-  document.getElementById('h-user').textContent   = S.user;
-  document.getElementById('ss-family').textContent = S.family;
-  document.getElementById('ss-user').textContent   = S.user;
-  document.getElementById('ss-code').textContent   = S.code;
-  show('s-app');
-  subscribe();
-}
-
-// ── REALTIME ──
-function subscribe() {
-  if (!IS_CONFIGURED || !S.code) return;
-  if (unsub) unsub();
-  setSyncing();
-  unsub = onValue(
-    ref(db, `fam/${S.code}/items`),
-    snap => { S.items = snap.val() ?? {}; render(); setSynced(); },
-    ()   => setSyncErr()
-  );
-}
-
-window.syncNow = () => { setSyncing(); subscribe(); };
-
-// ── RENDER ──
-function render() {
-  const all = Object.entries(S.items).map(([id,d]) => ({ id, ...d }));
-  const unc = all.filter(i => !i.checked);
-  const chk = all.filter(i => i.checked);
-
-  // LIST TAB
-  const lb = document.getElementById('list-body');
-  if (!all.length) {
-    lb.innerHTML = html_empty('📋','הרשימה ריקה','הוסף את הפריטים שצריך לקנות');
-  } else {
-    lb.innerHTML = `<div class="items-list">
-      ${unc.length ? unc.map(i => card(i,'list')).join('') : ''}
-      ${chk.length ? `<div class="section-label">✓ כבר ברשימה / נקנה</div>${chk.map(i => card(i,'list')).join('')}` : ''}
-    </div>`;
-  }
-
-  // SHOPPING TAB
-  const sb = document.getElementById('shop-body');
-  const total = all.length, done = chk.length;
-  document.getElementById('prog-label').textContent = `${done}/${total}`;
-  document.getElementById('prog-fill').style.width  = total ? `${(done/total)*100}%` : '0%';
-
-  if (!all.length) {
-    sb.innerHTML = html_empty('🎉','הרשימה ריקה','אין מה לקנות כרגע!');
-  } else {
-    sb.innerHTML = `<div class="items-list" style="padding-bottom:80px;">
-      ${unc.map(i => card(i,'shop')).join('')}
-      ${chk.length ? `<div class="section-label">✅ נקנה</div>${chk.map(i => card(i,'shop')).join('')}` : ''}
-    </div>`;
-  }
-}
-
-function html_empty(icon, title, sub) {
-  return `<div class="empty"><div class="e-icon">${icon}</div><h3>${title}</h3><p>${sub}</p></div>`;
-}
-
-function card(item, mode) {
-  const ch = item.checked;
-  const meta = ch
-    ? `✓ נקנה על ידי ${esc(item.checkedBy || '')}`
-    : `הוסיף ${esc(item.addedBy)} · ${ago(item.addedAt)}`;
-  const shopClass = mode==='shop' ? 'shopping-mode' : '';
-  return `
-  <div class="item-card ${ch?'checked':''}">
-    <div class="check-btn ${ch?'checked':''} ${shopClass}" onclick="toggle('${item.id}')">
-      ${ch?'✓':''}
-    </div>
-    <div class="item-body">
-      <div class="item-name">${esc(item.text)}</div>
-      <div class="item-meta">${meta}</div>
-    </div>
-    ${mode==='list' ? `<button class="del-btn" onclick="del('${item.id}')">✕</button>` : ''}
-  </div>`;
-}
-
-// ── ADD ITEM ──
-window.addItem = async () => {
-  const el = document.getElementById('item-input');
-  const text = el.value.trim();
-  if (!text) return;
-  try {
-    setSyncing();
-    await push(ref(db, `fam/${S.code}/items`), {
-      text, addedBy: S.user, addedAt: Date.now(), checked: false
-    });
-    el.value = '';
-    closeSheet('add-sheet');
-    toast(`"${text}" נוסף ✓`);
-  } catch(e) { toast('שגיאה בהוספה'); }
-};
-
-window.quickAdd = btn => {
-  const text = btn.textContent.replace(/\p{Emoji}/gu,'').trim();
-  document.getElementById('item-input').value = text;
-  document.getElementById('item-input').focus();
-};
-
-// ── TOGGLE ──
-window.toggle = async id => {
-  const it = S.items[id]; if (!it) return;
-  try {
-    await update(ref(db, `fam/${S.code}/items/${id}`), {
-      checked: !it.checked,
-      checkedBy: !it.checked ? S.user : null,
-      checkedAt: !it.checked ? Date.now() : null
-    });
-  } catch(e) { toast('שגיאה'); }
-};
-
-// ── DELETE ──
-window.del = async id => {
-  try { await remove(ref(db, `fam/${S.code}/items/${id}`)); toast('הוסר'); }
-  catch(e) { toast('שגיאה'); }
-};
-
-// ── CLEAR CHECKED ──
-window.clearChecked = async () => {
-  const list = Object.entries(S.items).filter(([,v]) => v.checked);
-  if (!list.length) return toast('אין פריטים מסומנים');
-  try {
-    const u = {};
-    list.forEach(([id]) => { u[`fam/${S.code}/items/${id}`] = null; });
-    await update(ref(db), u);
-    toast(`${list.length} פריטים הוסרו`);
-  } catch(e) { toast('שגיאה'); }
-};
-
-window.uncheckAll = async () => {
-  const list = Object.entries(S.items).filter(([,v]) => v.checked);
-  if (!list.length) return toast('אין כלום לאפס');
-  try {
-    const u = {};
-    list.forEach(([id]) => {
-      u[`fam/${S.code}/items/${id}/checked`]   = false;
-      u[`fam/${S.code}/items/${id}/checkedBy`] = null;
-    });
-    await update(ref(db), u);
-    toast('כל הסימונים אופסו');
-  } catch(e) { toast('שגיאה'); }
-};
-
-// ── TABS ──
-window.switchTab = tab => {
-  ['list','shop'].forEach(t => {
-    document.getElementById(`t-${t}`).classList.toggle('active', t===tab);
-    document.getElementById(`c-${t}`).classList.toggle('active', t===tab);
-  });
-  document.getElementById('fab').style.display = tab==='list' ? 'flex' : 'none';
-};
-
-// ── SHEETS ──
-window.openSheet  = id => document.getElementById(id).classList.add('open');
-window.closeSheet = id => document.getElementById(id).classList.remove('open');
-window.overlayClick = (e,id) => { if(e.target.classList.contains('overlay')) closeSheet(id); };
-
-// ── SETTINGS ──
-window.logout = () => {
-  if (unsub) unsub();
-  localStorage.removeItem('kniYot_v1');
-  S = { code:null, family:null, user:null, items:{} };
-  closeSheet('settings-sheet');
   show('s-welcome');
-};
+})();
 
-// ── SYNC UI ──
-function setSyncing() {
-  const d = document.getElementById('sync-dot');
-  d.className = 'sync-dot syncing';
-  document.getElementById('sync-txt').textContent = 'מסנכרן...';
-}
-function setSynced() {
-  const d = document.getElementById('sync-dot');
-  d.className = 'sync-dot';
-  document.getElementById('sync-txt').textContent = 'מסונכרן';
-}
-function setSyncErr() {
-  const d = document.getElementById('sync-dot');
-  d.className = 'sync-dot error';
-  document.getElementById('sync-txt').textContent = 'שגיאת חיבור';
-}
-
-// ── TOAST ──
-window.toast = msg => {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
-};
-
-// ── HELPERS ──
-function save() {
-  localStorage.setItem('kniYot_v1', JSON.stringify({ code:S.code, family:S.family, user:S.user }));
-}
-function esc(s='') {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function ago(ts) {
-  if (!ts) return '';
-  const d = Date.now()-ts;
-  if (d<60000) return 'לפני רגע';
-  if (d<3600000) return `לפני ${Math.floor(d/60000)} דק'`;
-  if (d<86400000) return `לפני ${Math.floor(d/3600000)} שע'`;
-  return `לפני ${Math.floor(d/86400000)} ימים`;
-}
 </script>
 </body>
 </html>
