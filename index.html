@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1B4332">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>🛒 קניות ביחד</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-900: #1B4332;
+  --green-700: #2D6A4F;
+  --green-500: #40916C;
+  --green-300: #74C69D;
+  --green-100: #D8F3DC;
+  --green-50:  #F0FAF3;
+  --amber:     #F4A261;
+  --amber-dark:#E76F51;
+  --red:       #E63946;
+  --bg:        #F7F5F0;
+  --card:      #FFFFFF;
+  --text:      #1A2E1C;
+  --text-2:    #4A6352;
+  --text-3:    #8FAD99;
+  --border:    #E2EDE6;
+  --shadow-sm: 0 1px 3px rgba(27,67,50,0.08);
+  --shadow:    0 4px 12px rgba(27,67,50,0.12);
+  --shadow-lg: 0 12px 32px rgba(27,67,50,0.18);
+  --r:         14px;
+  --r-sm:      10px;
+  --r-full:    100px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Heebo', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  overscroll-behavior: none;
+}
+
+#app {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100dvh;
+  background: var(--bg);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; flex-direction: column; min-height: 100dvh; }
+.screen.active { display: flex; }
+
+/* ── WELCOME ── */
+.welcome-bg {
+  background: linear-gradient(160deg, var(--green-900) 0%, var(--green-700) 55%, var(--green-500) 100%);
+  padding: 64px 28px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.welcome-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.welcome-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.9);
+  border-radius: var(--r-full);
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  position: relative;
+}
+.welcome-icon {
+  font-size: 72px;
+  display: block;
+  margin-bottom: 20px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+  position: relative;
+}
+.welcome-bg h1 {
+  font-size: 36px;
+  font-weight: 900;
+  color: white;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  position: relative;
+}
+.welcome-bg p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.75);
+  font-weight: 400;
+  position: relative;
+}
+.welcome-actions {
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.welcome-footer {
+  text-align: center;
+  padding: 0 24px 24px;
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 15px 24px;
+  border-radius: var(--r);
+  border: none;
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  position: relative;
+  overflow: hidden;
+}
+.btn:active { transform: scale(0.97); }
+.btn-primary {
+  background: var(--green-700);
+  color: white;
+  box-shadow: 0 4px 14px rgba(45,106,79,0.35);
+}
+.btn-primary:hover { background: var(--green-900); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(45,106,79,0.4); }
+.btn-ghost {
+  background: white;
+  color: var(--green-700);
+  border: 2px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.btn-ghost:hover { border-color: var(--green-300); background: var(--green-50); }
+.btn-amber { background: var(--amber); color: white; box-shadow: 0 4px 14px rgba(244,162,97,0.35); }
+.btn-danger { background: white; color: var(--red); border: 1.5px solid var(--border); }
+.btn-sm { padding: 8px 16px; font-size: 14px; border-radius: var(--r-sm); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* ── FORM SCREENS ── */
+.form-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0 24px 32px;
+}
+.form-top {
+  background: var(--green-900);
+  padding: 52px 28px 36px;
+  color: white;
+}
+.form-top .back-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.65);
+  font-size: 14px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  width: fit-content;
+  border: none;
+  background: none;
+  font-family: 'Heebo', sans-serif;
+}
+.form-top .back-row:hover { color: white; }
+.form-top .form-icon { font-size: 44px; margin-bottom: 12px; display: block; }
+.form-top h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+.form-top p { font-size: 14px; opacity: 0.7; }
+
+.field-group { margin-top: 24px; }
+.field-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-2);
+  margin-bottom: 8px;
+}
+.field-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--r);
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  color: var(--text);
+  background: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  direction: rtl;
+  text-align: right;
+}
+.field-group input:focus {
+  border-color: var(--green-500);
+  box-shadow: 0 0 0 3px rgba(64,145,108,0.15);
+}
+.field-group input.code-input {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 6px;
+}
+
+.form-spacer { flex: 1; }
+.form-submit { margin-top: 24px; }
+
+/* ── JOIN CODE BOX ── */
+.code-reveal {
+  background: linear-gradient(135deg, var(--green-900), var(--green-700));
+  border-radius: var(--r);
+  padding: 28px;
+  text-align: center;
+  margin: 28px 0 16px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.code-reveal::after {
+  content: '✦';
+  position: absolute;
+  font-size: 120px;
+  right: -20px;
+  top: -30px;
+  opacity: 0.06;
+}
+.code-reveal .code-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.65; margin-bottom: 10px; }
+.code-reveal .code-val {
+  font-size: 46px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.code-reveal .code-hint { font-size: 13px; opacity: 0.6; margin-top: 10px; }
+
+/* ── APP HEADER ── */
+.app-header {
+  background: var(--green-900);
+  padding: 48px 20px 16px;
+  color: white;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.app-header-text h2 {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.app-header-text .sub {
+  font-size: 13px;
+  opacity: 0.6;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.sync-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green-300);
+  display: inline-block;
+}
+.sync-dot.syncing { background: var(--amber); animation: blink 0.8s infinite; }
+.sync-dot.error { background: var(--red); }
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+.header-actions { display: flex; gap: 2px; }
+.icon-btn {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: white;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 17px;
+  transition: background 0.15s;
+}
+.icon-btn:hover { background: rgba(255,255,255,0.2); }
+
+/* ── TABS ── */
+.tab-bar {
+  display: flex;
+  background: var(--green-900);
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.tab {
+  flex: 1; padding: 10px 0 12px;
+  border: none; background: none;
+  font-family: 'Heebo', sans-serif;
+  font-size: 14px; font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  border-bottom: 2.5px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.tab.active { color: white; border-bottom-color: var(--green-300); font-weight: 700; }
+
+/* ── TAB CONTENT ── */
+.tab-content { display: none; flex: 1; flex-direction: column; overflow-y: auto; padding-bottom: 100px; }
+.tab-content.active { display: flex; }
+
+/* ── EMPTY STATE ── */
+.empty {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; padding: 48px 32px;
+  gap: 12px;
+}
+.empty .e-icon { font-size: 52px; }
+.empty h3 { font-size: 18px; font-weight: 700; color: var(--text); }
+.empty p { font-size: 14px; color: var(--text-3); line-height: 1.6; }
+
+/* ── ITEM CARDS ── */
+.items-list { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+
+.section-label {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--text-3);
+  padding: 8px 4px 4px;
+}
+
+.item-card {
+  background: white;
+  border-radius: var(--r);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  border: 1.5px solid var(--border);
+  transition: all 0.2s;
+  animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95) translateY(6px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.item-card.checked {
+  opacity: 0.55;
+  background: var(--bg);
+  border-color: transparent;
+  box-shadow: none;
+}
+.item-card.checked .item-name { text-decoration: line-through; color: var(--text-3); }
+
+.check-btn {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 2.5px solid var(--border);
+  background: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+  font-size: 13px;
+  color: transparent;
+}
+.check-btn:hover { border-color: var(--green-500); transform: scale(1.1); }
+.check-btn.checked {
+  background: var(--green-500);
+  border-color: var(--green-500);
+  color: white;
+}
+.check-btn.shopping-mode:not(.checked) {
+  border-color: var(--amber);
+}
+.check-btn.shopping-mode:not(.checked):hover {
+  background: var(--amber);
+  color: white;
+  border-color: var(--amber);
+}
+
+.item-body { flex: 1; min-width: 0; }
+.item-name { font-size: 15px; font-weight: 600; }
+.item-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+
+.del-btn {
+  background: none; border: none;
+  color: var(--text-3); cursor: pointer;
+  padding: 4px; font-size: 14px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+.item-card:hover .del-btn { opacity: 1; }
+.del-btn:hover { color: var(--red); }
+
+/* ── FAB ── */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(430px - 48px);
+  width: calc(100% - 48px);
+  background: var(--green-700);
+  color: white;
+  border: none;
+  border-radius: var(--r-full);
+  padding: 16px 28px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(27,67,50,0.4);
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+  z-index: 50;
+}
+.fab:hover { background: var(--green-900); transform: translateX(-50%) translateY(-2px); }
+.fab:active { transform: translateX(-50%) scale(0.97); }
+
+/* ── SHOPPING PANEL ── */
+.shopping-banner {
+  background: linear-gradient(135deg, var(--amber-dark), var(--amber));
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.shopping-banner .banner-text h3 { font-size: 15px; font-weight: 700; }
+.shopping-banner .banner-text p { font-size: 13px; opacity: 0.85; }
+.progress-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.progress-track {
+  flex: 1;
+  background: rgba(255,255,255,0.3);
+  border-radius: 4px;
+  height: 6px;
+  overflow: hidden;
+}
+.progress-fill {
+  background: white;
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.progress-label { font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+.shopping-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 12px 20px 28px;
+  display: flex;
+  gap: 10px;
+  z-index: 50;
+}
+
+/* ── MODAL ── */
+.overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(27,67,50,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  align-items: flex-end;
+  justify-content: center;
+}
+.overlay.open { display: flex; }
+
+.sheet {
+  background: white;
+  border-radius: 24px 24px 0 0;
+  padding: 8px 24px 40px;
+  width: 100%; max-width: 430px;
+  animation: sheetUp 0.32s cubic-bezier(0.34,1.2,0.64,1);
+}
+@keyframes sheetUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.sheet-handle {
+  width: 40px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 12px auto 20px;
+}
+.sheet h3 { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+
+.add-row { display: flex; gap: 10px; }
+.add-row input {
+  flex: 1; padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--r);
+  font-family: 'Heebo', sans-serif;
+  font-size: 16px; outline: none;
+  direction: rtl; text-align: right;
+  transition: border-color 0.2s;
+}
+.add-row input:focus { border-color: var(--green-500); }
+
+.chips-label { font-size: 12px; color: var(--text-3); margin: 16px 0 10px; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  background: var(--green-50);
+  color: var(--green-700);
+  border: 1.5px solid var(--green-100);
+  border-radius: var(--r-full);
+  padding: 7px 14px;
+  font-family: 'Heebo', sans-serif;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.chip:hover { background: var(--green-700); color: white; border-color: var(--green-700); }
+
+/* ── SETTINGS ── */
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.settings-row:last-of-type { border: none; }
+.settings-row .s-label { font-size: 14px; color: var(--text-2); }
+.settings-row .s-val { font-size: 14px; font-weight: 700; color: var(--text); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 90px; left: 50%; transform: translateX(-50%) translateY(8px);
+  background: var(--green-900);
+  color: white;
+  padding: 11px 20px;
+  border-radius: var(--r-full);
+  font-size: 14px; font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 999; pointer-events: none;
+  box-shadow: var(--shadow);
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── CONFIG WARNING ── */
+.cfg-warn {
+  background: #FFF3CD; border: 1px solid #FFC107;
+  border-radius: var(--r-sm); padding: 14px 16px;
+  font-size: 13px; line-height: 1.6; color: #856404;
+  margin: 16px 24px 0;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ═══════════ WELCOME ═══════════ -->
+<div class="screen active" id="s-welcome">
+  <div class="welcome-bg">
+    <div class="welcome-badge">🌿 רשימת קניות משפחתית</div>
+    <span class="welcome-icon">🛒</span>
+    <h1>קניות<br>ביחד</h1>
+    <p>כולם מוסיפים, אחד קונה</p>
+  </div>
+  <div id="cfg-warn-area"></div>
+  <div class="welcome-actions">
+    <button class="btn btn-primary" onclick="show('s-create')">
+      ✦ צור משפחה חדשה
+    </button>
+    <button class="btn btn-ghost" onclick="show('s-join')">
+      🔗 הצטרף למשפחה קיימת
+    </button>
+  </div>
+  <div class="welcome-footer">גרסה 1.0 · Family Shopping App</div>
+</div>
+
+<!-- ═══════════ CREATE FAMILY ═══════════ -->
+<div class="screen" id="s-create">
+  <div class="form-top">
+    <button class="back-row" onclick="show('s-welcome')">← חזרה</button>
+    <span class="form-icon">🏠</span>
+    <h2>צור משפחה חדשה</h2>
+    <p>תיצור רשימה שכולם יוכלו להוסיף אליה</p>
+  </div>
+  <div class="form-wrap">
+    <div class="field-group">
+      <label>שם המשפחה</label>
+      <input type="text" id="f-family-name" placeholder='משפחת כהן...' autocomplete="off" />
+    </div>
+    <div class="field-group">
+      <label>השם שלך</label>
+      <input type="text" id="f-creator-name" placeholder='אמא, אבא, יוסי...' autocomplete="off" />
+    </div>
+    <div class="form-spacer"></div>
+    <div class="form-submit">
+      <button class="btn btn-primary" style="width:100%;" onclick="createFamily()">
+        צור משפחה ✨
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ JOIN FAMILY ═══════════ -->
+<div class="screen" id="s-join">
+  <div class="form-top">
+    <button class="back-row" onclick="show('s-welcome')">← חזרה</button>
+    <span class="form-icon">🔗</span>
+    <h2>הצטרף למשפחה</h2>
+    <p>הזן את קוד ההצטרפות שקיבלת</p>
+  </div>
+  <div class="form-wrap">
+    <div class="field-group">
+      <label>קוד הצטרפות</label>
+      <input type="text" class="code-input" id="f-join-code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="off" />
+    </div>
+    <div class="field-group">
+      <label>השם שלך</label>
+      <input type="text" id="f-joiner-name" placeholder='אמא, אבא, יוסי...' autocomplete="off" />
+    </div>
+    <div class="form-spacer"></div>
+    <div class="form-submit">
+      <button class="btn btn-amber" style="width:100%;" onclick="joinFamily()">
+        הצטרף 🚀
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CODE REVEALED ═══════════ -->
+<div class="screen" id="s-code">
+  <div class="form-top">
+    <span class="form-icon">🎉</span>
+    <h2>המשפחה נוצרה!</h2>
+    <p>שתף את הקוד הזה עם כל בני המשפחה</p>
+  </div>
+  <div class="form-wrap">
+    <div class="code-reveal">
+      <div class="code-label">קוד הצטרפות</div>
+      <div class="code-val" id="d-code">------</div>
+      <div class="code-hint">שתף את הקוד כדי שהמשפחה תצטרף</div>
+    </div>
+    <button class="btn btn-ghost" style="width:100%;" onclick="copyCode()">📋 העתק קוד</button>
+    <div class="form-spacer"></div>
+    <div class="form-submit">
+      <button class="btn btn-primary" style="width:100%;" onclick="enterApp()">כנס לרשימה →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN APP ═══════════ -->
+<div class="screen" id="s-app">
+  <div class="app-header">
+    <div class="app-header-text">
+      <h2 id="h-family">משפחה</h2>
+      <div class="sub">
+        <span class="sync-dot" id="sync-dot"></span>
+        <span id="sync-txt">מסונכרן</span>
+        <span>·</span>
+        <span id="h-user">אתה</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="syncNow()" title="רענן">⟳</button>
+      <button class="icon-btn" onclick="openSheet('settings-sheet')" title="הגדרות">⚙</button>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab active" id="t-list" onclick="switchTab('list')">📝 רשימה</button>
+    <button class="tab" id="t-shop" onclick="switchTab('shop')">🛒 קניות</button>
+  </div>
+
+  <!-- LIST TAB -->
+  <div class="tab-content active" id="c-list">
+    <div id="list-body"></div>
+  </div>
+
+  <!-- SHOPPING TAB -->
+  <div class="tab-content" id="c-shop">
+    <div class="shopping-banner">
+      <div class="banner-text">
+        <h3>מצב קניות 🛒</h3>
+        <p>סמן מה קנית</p>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="progress-label" id="prog-label">0/0</div>
+      </div>
+    </div>
+    <div id="shop-body"></div>
+    <div class="shopping-bottom">
+      <button class="btn btn-danger" style="flex:1; font-size:14px;" onclick="clearChecked()">🗑 נקה מסומנים</button>
+      <button class="btn btn-ghost" style="flex:1; font-size:14px;" onclick="uncheckAll()">↺ אפס הכל</button>
+    </div>
+  </div>
+
+  <button class="fab" id="fab" onclick="openSheet('add-sheet')">
+    + הוסף פריט
+  </button>
+</div>
+
+<!-- ═══════════ ADD SHEET ═══════════ -->
+<div class="overlay" id="add-sheet" onclick="overlayClick(event,'add-sheet')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3>➕ הוסף לרשימה</h3>
+    <div class="add-row">
+      <button class="btn btn-primary btn-sm" onclick="addItem()">הוסף</button>
+      <input type="text" id="item-input" placeholder="מה לקנות?" onkeydown="if(event.key==='Enter') addItem()" />
+    </div>
+    <div class="chips-label">הצעות מהירות</div>
+    <div class="chips">
+      <button class="chip" onclick="quickAdd(this)">🥛 חלב</button>
+      <button class="chip" onclick="quickAdd(this)">🍞 לחם</button>
+      <button class="chip" onclick="quickAdd(this)">🧀 גבינה</button>
+      <button class="chip" onclick="quickAdd(this)">🥚 ביצים</button>
+      <button class="chip" onclick="quickAdd(this)">🍅 עגבניות</button>
+      <button class="chip" onclick="quickAdd(this)">🥒 מלפפון</button>
+      <button class="chip" onclick="quickAdd(this)">🍌 בננות</button>
+      <button class="chip" onclick="quickAdd(this)">🍎 תפוחים</button>
+      <button class="chip" onclick="quickAdd(this)">🍗 עוף</button>
+      <button class="chip" onclick="quickAdd(this)">🥩 בשר</button>
+      <button class="chip" onclick="quickAdd(this)">🧴 שמפו</button>
+      <button class="chip" onclick="quickAdd(this)">🧻 נייר טואלט</button>
+      <button class="chip" onclick="quickAdd(this)">🧼 סבון</button>
+      <button class="chip" onclick="quickAdd(this)">🫙 שמן זית</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SETTINGS SHEET ═══════════ -->
+<div class="overlay" id="settings-sheet" onclick="overlayClick(event,'settings-sheet')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <h3>⚙️ הגדרות</h3>
+    <div class="settings-row">
+      <span class="s-label">🏠 שם המשפחה</span>
+      <span class="s-val" id="ss-family">—</span>
+    </div>
+    <div class="settings-row">
+      <span class="s-label">👤 השם שלי</span>
+      <span class="s-val" id="ss-user">—</span>
+    </div>
+    <div class="settings-row">
+      <span class="s-label">🔑 קוד הצטרפות</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span class="s-val" id="ss-code">—</span>
+        <button class="btn btn-ghost btn-sm" onclick="copyCode()">העתק</button>
+      </div>
+    </div>
+    <div style="margin-top:20px;">
+      <button class="btn btn-danger" style="width:100%;" onclick="logout()">
+        🚪 יציאה מהרשימה
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+</div><!-- #app -->
+
+<!-- ═══════════ FIREBASE ═══════════ -->
+<script type="module">
+import { initializeApp }                     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue,
+         push, update, remove }              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+/* ─────────────────────────────────────────────
+   🔧 הגדרת Firebase — החלף בערכים שלך!
+   ראה הוראות ב- README.md
+   ───────────────────────────────────────────── */
+const FIREBASE_CONFIG = {
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT.firebaseapp.com",
+  databaseURL:       "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
+};
+/* ───────────────────────────────────────────── */
+
+const IS_CONFIGURED = !FIREBASE_CONFIG.apiKey.includes("YOUR");
+
+let db, unsub;
+if (IS_CONFIGURED) {
+  const fireApp = initializeApp(FIREBASE_CONFIG);
+  db = getDatabase(fireApp);
+}
+
+// ── STATE ──
+let S = { code: null, family: null, user: null, items: {} };
+
+// ── INIT ──
+if (!IS_CONFIGURED) {
+  document.getElementById('cfg-warn-area').innerHTML = `
+    <div class="cfg-warn">
+      ⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.<br>
+      📖 ראה הוראות מפורטות ב- <strong>README.md</strong>
+    </div>`;
+}
+
+const saved = localStorage.getItem('kniYot_v1');
+if (saved && IS_CONFIGURED) {
+  try {
+    Object.assign(S, JSON.parse(saved));
+    goApp();
+  } catch(e) { localStorage.removeItem('kniYot_v1'); }
+}
+
+// ── SCREEN ──
+window.show = id => {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+};
+
+// ── CREATE ──
+window.createFamily = async () => {
+  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
+  const fam  = document.getElementById('f-family-name').value.trim();
+  const user = document.getElementById('f-creator-name').value.trim();
+  if (!fam || !user) return toast('מלא את כל השדות');
+
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  try {
+    await set(ref(db, `fam/${code}/meta`), { name: fam, created: Date.now() });
+    S = { code, family: fam, user, items: {} };
+    save();
+    document.getElementById('d-code').textContent = code;
+    show('s-code');
+  } catch(e) { toast('שגיאה — בדוק חיבור'); console.error(e); }
+};
+
+window.copyCode = () => {
+  navigator.clipboard?.writeText(S.code ?? document.getElementById('d-code').textContent)
+    .then(() => toast('הקוד הועתק ✓'));
+};
+
+window.enterApp = goApp;
+
+// ── JOIN ──
+window.joinFamily = async () => {
+  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
+  const code = document.getElementById('f-join-code').value.trim();
+  const user = document.getElementById('f-joiner-name').value.trim();
+  if (!code || !user) return toast('מלא את כל השדות');
+
+  try {
+    const snap = await get(ref(db, `fam/${code}/meta`));
+    if (!snap.exists()) return toast('קוד לא נמצא — בדוק שוב');
+    S = { code, family: snap.val().name, user, items: {} };
+    save();
+    goApp();
+  } catch(e) { toast('שגיאה — בדוק חיבור'); console.error(e); }
+};
+
+// ── ENTER APP ──
+function goApp() {
+  document.getElementById('h-family').textContent = S.family;
+  document.getElementById('h-user').textContent   = S.user;
+  document.getElementById('ss-family').textContent = S.family;
+  document.getElementById('ss-user').textContent   = S.user;
+  document.getElementById('ss-code').textContent   = S.code;
+  show('s-app');
+  subscribe();
+}
+
+// ── REALTIME ──
+function subscribe() {
+  if (!IS_CONFIGURED || !S.code) return;
+  if (unsub) unsub();
+  setSyncing();
+  unsub = onValue(
+    ref(db, `fam/${S.code}/items`),
+    snap => { S.items = snap.val() ?? {}; render(); setSynced(); },
+    ()   => setSyncErr()
+  );
+}
+
+window.syncNow = () => { setSyncing(); subscribe(); };
+
+// ── RENDER ──
+function render() {
+  const all = Object.entries(S.items).map(([id,d]) => ({ id, ...d }));
+  const unc = all.filter(i => !i.checked);
+  const chk = all.filter(i => i.checked);
+
+  // LIST TAB
+  const lb = document.getElementById('list-body');
+  if (!all.length) {
+    lb.innerHTML = html_empty('📋','הרשימה ריקה','הוסף את הפריטים שצריך לקנות');
+  } else {
+    lb.innerHTML = `<div class="items-list">
+      ${unc.length ? unc.map(i => card(i,'list')).join('') : ''}
+      ${chk.length ? `<div class="section-label">✓ כבר ברשימה / נקנה</div>${chk.map(i => card(i,'list')).join('')}` : ''}
+    </div>`;
+  }
+
+  // SHOPPING TAB
+  const sb = document.getElementById('shop-body');
+  const total = all.length, done = chk.length;
+  document.getElementById('prog-label').textContent = `${done}/${total}`;
+  document.getElementById('prog-fill').style.width  = total ? `${(done/total)*100}%` : '0%';
+
+  if (!all.length) {
+    sb.innerHTML = html_empty('🎉','הרשימה ריקה','אין מה לקנות כרגע!');
+  } else {
+    sb.innerHTML = `<div class="items-list" style="padding-bottom:80px;">
+      ${unc.map(i => card(i,'shop')).join('')}
+      ${chk.length ? `<div class="section-label">✅ נקנה</div>${chk.map(i => card(i,'shop')).join('')}` : ''}
+    </div>`;
+  }
+}
+
+function html_empty(icon, title, sub) {
+  return `<div class="empty"><div class="e-icon">${icon}</div><h3>${title}</h3><p>${sub}</p></div>`;
+}
+
+function card(item, mode) {
+  const ch = item.checked;
+  const meta = ch
+    ? `✓ נקנה על ידי ${esc(item.checkedBy || '')}`
+    : `הוסיף ${esc(item.addedBy)} · ${ago(item.addedAt)}`;
+  const shopClass = mode==='shop' ? 'shopping-mode' : '';
+  return `
+  <div class="item-card ${ch?'checked':''}">
+    <div class="check-btn ${ch?'checked':''} ${shopClass}" onclick="toggle('${item.id}')">
+      ${ch?'✓':''}
+    </div>
+    <div class="item-body">
+      <div class="item-name">${esc(item.text)}</div>
+      <div class="item-meta">${meta}</div>
+    </div>
+    ${mode==='list' ? `<button class="del-btn" onclick="del('${item.id}')">✕</button>` : ''}
+  </div>`;
+}
+
+// ── ADD ITEM ──
+window.addItem = async () => {
+  const el = document.getElementById('item-input');
+  const text = el.value.trim();
+  if (!text) return;
+  try {
+    setSyncing();
+    await push(ref(db, `fam/${S.code}/items`), {
+      text, addedBy: S.user, addedAt: Date.now(), checked: false
+    });
+    el.value = '';
+    closeSheet('add-sheet');
+    toast(`"${text}" נוסף ✓`);
+  } catch(e) { toast('שגיאה בהוספה'); }
+};
+
+window.quickAdd = btn => {
+  const text = btn.textContent.replace(/\p{Emoji}/gu,'').trim();
+  document.getElementById('item-input').value = text;
+  document.getElementById('item-input').focus();
+};
+
+// ── TOGGLE ──
+window.toggle = async id => {
+  const it = S.items[id]; if (!it) return;
+  try {
+    await update(ref(db, `fam/${S.code}/items/${id}`), {
+      checked: !it.checked,
+      checkedBy: !it.checked ? S.user : null,
+      checkedAt: !it.checked ? Date.now() : null
+    });
+  } catch(e) { toast('שגיאה'); }
+};
+
+// ── DELETE ──
+window.del = async id => {
+  try { await remove(ref(db, `fam/${S.code}/items/${id}`)); toast('הוסר'); }
+  catch(e) { toast('שגיאה'); }
+};
+
+// ── CLEAR CHECKED ──
+window.clearChecked = async () => {
+  const list = Object.entries(S.items).filter(([,v]) => v.checked);
+  if (!list.length) return toast('אין פריטים מסומנים');
+  try {
+    const u = {};
+    list.forEach(([id]) => { u[`fam/${S.code}/items/${id}`] = null; });
+    await update(ref(db), u);
+    toast(`${list.length} פריטים הוסרו`);
+  } catch(e) { toast('שגיאה'); }
+};
+
+window.uncheckAll = async () => {
+  const list = Object.entries(S.items).filter(([,v]) => v.checked);
+  if (!list.length) return toast('אין כלום לאפס');
+  try {
+    const u = {};
+    list.forEach(([id]) => {
+      u[`fam/${S.code}/items/${id}/checked`]   = false;
+      u[`fam/${S.code}/items/${id}/checkedBy`] = null;
+    });
+    await update(ref(db), u);
+    toast('כל הסימונים אופסו');
+  } catch(e) { toast('שגיאה'); }
+};
+
+// ── TABS ──
+window.switchTab = tab => {
+  ['list','shop'].forEach(t => {
+    document.getElementById(`t-${t}`).classList.toggle('active', t===tab);
+    document.getElementById(`c-${t}`).classList.toggle('active', t===tab);
+  });
+  document.getElementById('fab').style.display = tab==='list' ? 'flex' : 'none';
+};
+
+// ── SHEETS ──
+window.openSheet  = id => document.getElementById(id).classList.add('open');
+window.closeSheet = id => document.getElementById(id).classList.remove('open');
+window.overlayClick = (e,id) => { if(e.target.classList.contains('overlay')) closeSheet(id); };
+
+// ── SETTINGS ──
+window.logout = () => {
+  if (unsub) unsub();
+  localStorage.removeItem('kniYot_v1');
+  S = { code:null, family:null, user:null, items:{} };
+  closeSheet('settings-sheet');
+  show('s-welcome');
+};
+
+// ── SYNC UI ──
+function setSyncing() {
+  const d = document.getElementById('sync-dot');
+  d.className = 'sync-dot syncing';
+  document.getElementById('sync-txt').textContent = 'מסנכרן...';
+}
+function setSynced() {
+  const d = document.getElementById('sync-dot');
+  d.className = 'sync-dot';
+  document.getElementById('sync-txt').textContent = 'מסונכרן';
+}
+function setSyncErr() {
+  const d = document.getElementById('sync-dot');
+  d.className = 'sync-dot error';
+  document.getElementById('sync-txt').textContent = 'שגיאת חיבור';
+}
+
+// ── TOAST ──
+window.toast = msg => {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+};
+
+// ── HELPERS ──
+function save() {
+  localStorage.setItem('kniYot_v1', JSON.stringify({ code:S.code, family:S.family, user:S.user }));
+}
+function esc(s='') {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function ago(ts) {
+  if (!ts) return '';
+  const d = Date.now()-ts;
+  if (d<60000) return 'לפני רגע';
+  if (d<3600000) return `לפני ${Math.floor(d/60000)} דק'`;
+  if (d<86400000) return `לפני ${Math.floor(d/3600000)} שע'`;
+  return `לפני ${Math.floor(d/86400000)} ימים`;
+}
+</script>
+</body>
+</html>
