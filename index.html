@@ -5,798 +5,390 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#1B4332">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>🛒 SuperDima</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --green-900: #1B4332;
-  --green-700: #2D6A4F;
-  --green-500: #40916C;
-  --green-300: #74C69D;
-  --green-100: #D8F3DC;
-  --green-50:  #F0FAF3;
-  --amber:     #F4A261;
-  --amber-dark:#E76F51;
-  --red:       #E63946;
-  --bg:        #F7F5F0;
-  --card:      #FFFFFF;
-  --text:      #1A2E1C;
-  --text-2:    #4A6352;
-  --text-3:    #8FAD99;
-  --border:    #E2EDE6;
-  --shadow-sm: 0 1px 3px rgba(27,67,50,0.08);
-  --shadow:    0 4px 12px rgba(27,67,50,0.12);
-  --shadow-lg: 0 12px 32px rgba(27,67,50,0.18);
-  --r:         14px;
-  --r-sm:      10px;
-  --r-full:    100px;
+  --g900:#1B4332;--g700:#2D6A4F;--g500:#40916C;--g300:#74C69D;--g100:#D8F3DC;--g50:#F0FAF3;
+  --amber:#F4A261;--amber-d:#E76F51;--red:#E63946;
+  --bg:#F7F5F0;--text:#1A2E1C;--t2:#4A6352;--t3:#8FAD99;--border:#E2EDE6;
+  --sh:0 1px 4px rgba(27,67,50,.09);--sh2:0 4px 14px rgba(27,67,50,.14);
+  --r:14px;--rs:10px;--rf:100px;
 }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;display:flex;justify-content:center;overscroll-behavior:none}
+#app{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);display:flex;flex-direction:column;overflow:hidden}
+.screen{display:none;flex-direction:column;min-height:100dvh}
+.screen.active{display:flex}
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* WELCOME */
+.wbg{background:linear-gradient(160deg,var(--g900) 0%,var(--g700) 55%,var(--g500) 100%);padding:64px 28px 48px;position:relative;overflow:hidden}
+.wbg::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/svg%3E")}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.9);border-radius:var(--rf);padding:5px 14px;font-size:12px;font-weight:500;margin-bottom:20px;position:relative}
+.wicon{font-size:72px;display:block;margin-bottom:20px;filter:drop-shadow(0 4px 12px rgba(0,0,0,.2));position:relative}
+.wbg h1{font-size:36px;font-weight:900;color:#fff;line-height:1.1;margin-bottom:10px;position:relative}
+.wbg p{font-size:16px;color:rgba(255,255,255,.75);position:relative}
+.wactions{padding:32px 24px;display:flex;flex-direction:column;gap:12px;flex:1}
+.wfooter{text-align:center;padding:0 24px 24px;color:var(--t3);font-size:12px}
 
-body {
-  font-family: 'Heebo', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100dvh;
-  display: flex;
-  justify-content: center;
-  overscroll-behavior: none;
-}
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--r);border:none;font-family:'Heebo',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1)}
+.btn:active{transform:scale(.97)}
+.btn-p{background:var(--g700);color:#fff;box-shadow:0 4px 14px rgba(45,106,79,.35)}
+.btn-p:hover{background:var(--g900)}
+.btn-g{background:#fff;color:var(--g700);border:2px solid var(--border)}
+.btn-g:hover{border-color:var(--g300);background:var(--g50)}
+.btn-a{background:var(--amber);color:#fff;box-shadow:0 4px 14px rgba(244,162,97,.35)}
+.btn-d{background:#fff;color:var(--red);border:1.5px solid var(--border)}
+.btn-sm{padding:8px 16px;font-size:14px;border-radius:var(--rs)}
 
-#app {
-  width: 100%;
-  max-width: 430px;
-  min-height: 100dvh;
-  background: var(--bg);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
+/* FORMS */
+.ftop{background:var(--g900);padding:52px 28px 36px;color:#fff}
+.ftop .back{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.65);font-size:14px;margin-bottom:24px;cursor:pointer;width:fit-content;border:none;background:none;font-family:'Heebo',sans-serif}
+.ftop .ficon{font-size:44px;margin-bottom:12px;display:block}
+.ftop h2{font-size:26px;font-weight:800;margin-bottom:6px}
+.ftop p{font-size:14px;opacity:.7}
+.fwrap{display:flex;flex-direction:column;flex:1;padding:0 24px 32px}
+.fg{margin-top:20px}
+.fg label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:7px}
+.fg input,.fg select{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:var(--r);font-family:'Heebo',sans-serif;font-size:15px;color:var(--text);background:#fff;outline:none;transition:border-color .2s;direction:rtl;text-align:right}
+.fg input:focus,.fg select:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(64,145,108,.15)}
+.code-inp{text-align:center!important;font-size:28px!important;font-weight:700!important;letter-spacing:6px!important}
+.fspacer{flex:1}
+.fsub{margin-top:20px}
 
-/* ── SCREENS ── */
-.screen { display: none; flex-direction: column; min-height: 100dvh; }
-.screen.active { display: flex; }
+/* CODE BOX */
+.codebox{background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r);padding:28px;text-align:center;margin:28px 0 16px;color:#fff}
+.codel{font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.65;margin-bottom:10px}
+.codev{font-size:46px;font-weight:900;letter-spacing:8px}
+.codeh{font-size:13px;opacity:.6;margin-top:10px}
 
-/* ── WELCOME ── */
-.welcome-bg {
-  background: linear-gradient(160deg, var(--green-900) 0%, var(--green-700) 55%, var(--green-500) 100%);
-  padding: 64px 28px 48px;
-  position: relative;
-  overflow: hidden;
-}
-.welcome-bg::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-}
-.welcome-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,0.12);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: rgba(255,255,255,0.9);
-  border-radius: var(--r-full);
-  padding: 5px 14px;
-  font-size: 12px;
-  font-weight: 500;
-  margin-bottom: 20px;
-  position: relative;
-}
-.welcome-icon {
-  font-size: 72px;
-  display: block;
-  margin-bottom: 20px;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
-  position: relative;
-}
-.welcome-bg h1 {
-  font-size: 36px;
-  font-weight: 900;
-  color: white;
-  line-height: 1.1;
-  margin-bottom: 10px;
-  position: relative;
-}
-.welcome-bg p {
-  font-size: 16px;
-  color: rgba(255,255,255,0.75);
-  font-weight: 400;
-  position: relative;
-}
-.welcome-actions {
-  padding: 32px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-}
-.welcome-footer {
-  text-align: center;
-  padding: 0 24px 24px;
-  color: var(--text-3);
-  font-size: 12px;
-}
+/* APP HEADER */
+.aheader{background:var(--g900);padding:48px 20px 0;color:#fff;display:flex;align-items:flex-end;justify-content:space-between}
+.aheader-txt h2{font-size:18px;font-weight:800;line-height:1.2}
+.aheader-txt .sub{font-size:12px;opacity:.6;margin-top:2px;display:flex;align-items:center;gap:5px}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--g300);display:inline-block}
+.sdot.syncing{background:var(--amber);animation:blink .8s infinite}
+.sdot.error{background:var(--red)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.hbtns{display:flex;gap:2px}
+.ibtn{background:rgba(255,255,255,.1);border:none;color:#fff;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;transition:background .15s}
+.ibtn:hover{background:rgba(255,255,255,.2)}
 
-/* ── BUTTONS ── */
-.btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 15px 24px;
-  border-radius: var(--r);
-  border: none;
-  font-family: 'Heebo', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s cubic-bezier(0.34,1.56,0.64,1);
-  position: relative;
-  overflow: hidden;
-}
-.btn:active { transform: scale(0.97); }
-.btn-primary {
-  background: var(--green-700);
-  color: white;
-  box-shadow: 0 4px 14px rgba(45,106,79,0.35);
-}
-.btn-primary:hover { background: var(--green-900); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(45,106,79,0.4); }
-.btn-ghost {
-  background: white;
-  color: var(--green-700);
-  border: 2px solid var(--border);
-  box-shadow: var(--shadow-sm);
-}
-.btn-ghost:hover { border-color: var(--green-300); background: var(--green-50); }
-.btn-amber { background: var(--amber); color: white; box-shadow: 0 4px 14px rgba(244,162,97,0.35); }
-.btn-danger { background: white; color: var(--red); border: 1.5px solid var(--border); }
-.btn-sm { padding: 8px 16px; font-size: 14px; border-radius: var(--r-sm); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+/* TABS - bigger with distinct backgrounds */
+.tabs{display:flex;background:var(--g900);padding:12px 16px 0;gap:8px}
+.tab{flex:1;padding:13px 0 15px;border:none;font-family:'Heebo',sans-serif;font-size:16px;font-weight:700;border-radius:12px 12px 0 0;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab .tab-icon{font-size:22px;line-height:1}
+.tab-list{background:rgba(116,198,157,.15);color:rgba(255,255,255,.6)}
+.tab-list.active{background:#fff;color:var(--g900)}
+.tab-shop{background:rgba(244,162,97,.15);color:rgba(255,255,255,.6)}
+.tab-shop.active{background:#FFF8F0;color:var(--amber-d)}
 
-/* ── FORM SCREENS ── */
-.form-wrap {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  padding: 0 24px 32px;
-}
-.form-top {
-  background: var(--green-900);
-  padding: 52px 28px 36px;
-  color: white;
-}
-.form-top .back-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: rgba(255,255,255,0.65);
-  font-size: 14px;
-  margin-bottom: 24px;
-  cursor: pointer;
-  width: fit-content;
-  border: none;
-  background: none;
-  font-family: 'Heebo', sans-serif;
-}
-.form-top .back-row:hover { color: white; }
-.form-top .form-icon { font-size: 44px; margin-bottom: 12px; display: block; }
-.form-top h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
-.form-top p { font-size: 14px; opacity: 0.7; }
+/* TAB CONTENT */
+.tcont{display:none;flex:1;flex-direction:column;overflow-y:auto;padding-bottom:110px}
+.tcont.active{display:flex}
 
-.field-group { margin-top: 24px; }
-.field-group label {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--text-2);
-  margin-bottom: 8px;
-}
-.field-group input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 2px solid var(--border);
-  border-radius: var(--r);
-  font-family: 'Heebo', sans-serif;
-  font-size: 16px;
-  color: var(--text);
-  background: white;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  direction: rtl;
-  text-align: right;
-}
-.field-group input:focus {
-  border-color: var(--green-500);
-  box-shadow: 0 0 0 3px rgba(64,145,108,0.15);
-}
-.field-group input.code-input {
-  text-align: center;
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: 6px;
-}
+/* EMPTY */
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:48px 32px;gap:12px}
+.empty .ei{font-size:52px}
+.empty h3{font-size:18px;font-weight:700}
+.empty p{font-size:14px;color:var(--t3);line-height:1.6}
 
-.form-spacer { flex: 1; }
-.form-submit { margin-top: 24px; }
+/* CATEGORY HEADER */
+.cat-hdr{display:flex;align-items:center;gap:8px;padding:12px 16px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);background:var(--bg);position:sticky;top:0;z-index:2;border-bottom:1px solid var(--border)}
+.cat-hdr .ci{font-size:16px}
 
-/* ── JOIN CODE BOX ── */
-.code-reveal {
-  background: linear-gradient(135deg, var(--green-900), var(--green-700));
-  border-radius: var(--r);
-  padding: 28px;
-  text-align: center;
-  margin: 28px 0 16px;
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-.code-reveal::after {
-  content: '✦';
-  position: absolute;
-  font-size: 120px;
-  right: -20px;
-  top: -30px;
-  opacity: 0.06;
-}
-.code-reveal .code-label { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.65; margin-bottom: 10px; }
-.code-reveal .code-val {
-  font-size: 46px;
-  font-weight: 900;
-  letter-spacing: 8px;
-  font-variant-numeric: tabular-nums;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-.code-reveal .code-hint { font-size: 13px; opacity: 0.6; margin-top: 10px; }
+/* ITEM LIST */
+.ilist{padding:6px 12px 4px;display:flex;flex-direction:column;gap:7px}
 
-/* ── APP HEADER ── */
-.app-header {
-  background: var(--green-900);
-  padding: 48px 20px 16px;
-  color: white;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-.app-header-text h2 {
-  font-size: 22px;
-  font-weight: 800;
-  line-height: 1.2;
-}
-.app-header-text .sub {
-  font-size: 13px;
-  opacity: 0.6;
-  margin-top: 2px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.sync-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--green-300);
-  display: inline-block;
-}
-.sync-dot.syncing { background: var(--amber); animation: blink 0.8s infinite; }
-.sync-dot.error { background: var(--red); }
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
+/* ITEM CARD */
+.icard{background:#fff;border-radius:var(--r);padding:11px 13px;display:flex;align-items:center;gap:9px;box-shadow:var(--sh);border:1.5px solid var(--border);transition:all .25s;animation:popIn .22s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{opacity:0;transform:scale(.95) translateY(5px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.icard.done{opacity:.45;background:var(--bg);border-color:transparent;box-shadow:none}
+.icard.done .iname{text-decoration:line-through;color:var(--t3)}
+.icard.shop-hi{border-color:var(--g300);background:var(--g50);box-shadow:0 2px 8px rgba(64,145,108,.12)}
 
-.header-actions { display: flex; gap: 2px; }
-.icon-btn {
-  background: rgba(255,255,255,0.1);
-  border: none;
-  color: white;
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  font-size: 17px;
-  transition: background 0.15s;
-}
-.icon-btn:hover { background: rgba(255,255,255,0.2); }
+/* CHECKBOX */
+.ckbtn{width:26px;height:26px;border-radius:50%;border:2.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s cubic-bezier(.34,1.56,.64,1);font-size:12px;color:transparent}
+.ckbtn:hover{border-color:var(--g500);transform:scale(1.1)}
+.ckbtn.checked{background:var(--g500);border-color:var(--g500);color:#fff}
+.ckbtn.shop-ck:not(.checked){border-color:var(--amber)}
+.ckbtn.shop-ck:not(.checked):hover{background:var(--amber);color:#fff;border-color:var(--amber)}
 
-/* ── TABS ── */
-.tab-bar {
-  display: flex;
-  background: var(--green-900);
-  padding: 0 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-.tab {
-  flex: 1; padding: 10px 0 12px;
-  border: none; background: none;
-  font-family: 'Heebo', sans-serif;
-  font-size: 14px; font-weight: 500;
-  color: rgba(255,255,255,0.5);
-  border-bottom: 2.5px solid transparent;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.tab.active { color: white; border-bottom-color: var(--green-300); font-weight: 700; }
+/* ITEM IMAGE */
+.iimg{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)}
 
-/* ── TAB CONTENT ── */
-.tab-content { display: none; flex: 1; flex-direction: column; overflow-y: auto; padding-bottom: 100px; }
-.tab-content.active { display: flex; }
+/* ITEM BODY */
+.ibody{flex:1;min-width:0}
+.iname{font-size:15px;font-weight:600;line-height:1.3}
+.imeta{font-size:11px;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.cat-tag{background:var(--g50);color:var(--g700);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;white-space:nowrap}
+.added-by{color:var(--t2);font-weight:500}
 
-/* ── EMPTY STATE ── */
-.empty {
-  flex: 1; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; padding: 48px 32px;
-  gap: 12px;
-}
-.empty .e-icon { font-size: 52px; }
-.empty h3 { font-size: 18px; font-weight: 700; color: var(--text); }
-.empty p { font-size: 14px; color: var(--text-3); line-height: 1.6; }
+/* QUANTITY */
+.qty-wrap{display:flex;align-items:center;background:var(--g50);border-radius:8px;border:1.5px solid var(--g100);overflow:hidden;flex-shrink:0}
+.qty-wrap input{width:52px;border:none;background:transparent;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;text-align:center;color:var(--text);outline:none;padding:5px 4px;direction:ltr}
 
-/* ── ITEM CARDS ── */
-.items-list { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+/* DELETE */
+.dbtn{background:none;border:none;color:var(--t3);cursor:pointer;padding:5px;font-size:13px;border-radius:6px;opacity:0;transition:opacity .15s,color .15s;flex-shrink:0}
+.icard:hover .dbtn{opacity:1}
+.dbtn:hover{color:var(--red)}
 
-.section-label {
-  font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1px;
-  color: var(--text-3);
-  padding: 8px 4px 4px;
-}
+/* SHOP SECTIONS */
+.shop-hdr{padding:12px 16px 6px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:7px}
+.shop-hdr.active{color:var(--g700);border-bottom:2.5px solid var(--g300)}
+.shop-hdr.done-hdr{color:var(--t3)}
 
-.item-card {
-  background: white;
-  border-radius: var(--r);
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: var(--shadow-sm);
-  border: 1.5px solid var(--border);
-  transition: all 0.2s;
-  animation: popIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.95) translateY(6px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
-}
-.item-card.checked {
-  opacity: 0.55;
-  background: var(--bg);
-  border-color: transparent;
-  box-shadow: none;
-}
-.item-card.checked .item-name { text-decoration: line-through; color: var(--text-3); }
+/* PROGRESS */
+.prog-bar{background:var(--g900);padding:10px 20px 14px}
+.prog-inner{display:flex;align-items:center;gap:10px}
+.prog-track{flex:1;background:rgba(255,255,255,.2);border-radius:4px;height:7px;overflow:hidden}
+.prog-fill{background:var(--g300);height:100%;border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+.prog-lbl{font-size:13px;font-weight:700;color:#fff;min-width:40px}
+.prog-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px}
 
-.check-btn {
-  width: 28px; height: 28px; border-radius: 50%;
-  border: 2.5px solid var(--border);
-  background: white;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
-  font-size: 13px;
-  color: transparent;
-}
-.check-btn:hover { border-color: var(--green-500); transform: scale(1.1); }
-.check-btn.checked {
-  background: var(--green-500);
-  border-color: var(--green-500);
-  color: white;
-}
-.check-btn.shopping-mode:not(.checked) {
-  border-color: var(--amber);
-}
-.check-btn.shopping-mode:not(.checked):hover {
-  background: var(--amber);
-  color: white;
-  border-color: var(--amber);
-}
+/* FAB */
+.fab{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);max-width:calc(430px - 48px);width:calc(100% - 48px);background:var(--g700);color:#fff;border:none;border-radius:var(--rf);padding:16px 28px;font-family:'Heebo',sans-serif;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 24px rgba(27,67,50,.4);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;z-index:50}
+.fab:hover{background:var(--g900);transform:translateX(-50%) translateY(-2px)}
+.fab:active{transform:translateX(-50%) scale(.97)}
 
-.item-body { flex: 1; min-width: 0; }
-.item-name { font-size: 15px; font-weight: 600; }
-.item-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+/* SHOP BOTTOM */
+.shop-bot{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid var(--border);padding:12px 20px 28px;display:flex;gap:10px;z-index:50}
 
-.del-btn {
-  background: none; border: none;
-  color: var(--text-3); cursor: pointer;
-  padding: 4px; font-size: 14px;
-  border-radius: 6px;
-  opacity: 0;
-  transition: opacity 0.15s, color 0.15s;
-}
-.item-card:hover .del-btn { opacity: 1; }
-.del-btn:hover { color: var(--red); }
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(27,67,50,.5);backdrop-filter:blur(4px);z-index:100;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.sheet{background:#fff;border-radius:24px 24px 0 0;padding:8px 20px 40px;width:100%;max-width:430px;animation:sheetUp .3s cubic-bezier(.34,1.2,.64,1);max-height:90dvh;overflow-y:auto}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 18px}
+.sheet h3{font-size:18px;font-weight:800;margin-bottom:16px}
 
-/* ── FAB ── */
-.fab {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  max-width: calc(430px - 48px);
-  width: calc(100% - 48px);
-  background: var(--green-700);
-  color: white;
-  border: none;
-  border-radius: var(--r-full);
-  padding: 16px 28px;
-  font-family: 'Heebo', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 24px rgba(27,67,50,0.4);
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: all 0.2s;
-  z-index: 50;
-}
-.fab:hover { background: var(--green-900); transform: translateX(-50%) translateY(-2px); }
-.fab:active { transform: translateX(-50%) scale(0.97); }
+/* ADD SHEET */
+.cat-select{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;color:var(--text);background:#fff;outline:none;direction:rtl}
+.cat-select:focus{border-color:var(--g500)}
+.img-preview{width:100%;height:110px;object-fit:cover;border-radius:var(--rs);margin-top:8px;border:1px solid var(--border);display:none}
 
-/* ── SHOPPING PANEL ── */
-.shopping-banner {
-  background: linear-gradient(135deg, var(--amber-dark), var(--amber));
-  color: white;
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.shopping-banner .banner-text h3 { font-size: 15px; font-weight: 700; }
-.shopping-banner .banner-text p { font-size: 13px; opacity: 0.85; }
-.progress-wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.progress-track {
-  flex: 1;
-  background: rgba(255,255,255,0.3);
-  border-radius: 4px;
-  height: 6px;
-  overflow: hidden;
-}
-.progress-fill {
-  background: white;
-  height: 100%;
-  border-radius: 4px;
-  transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1);
-}
-.progress-label { font-size: 12px; font-weight: 700; white-space: nowrap; }
+/* CHIPS */
+.chips-sec{margin-top:14px}
+.chips-cat-lbl{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;margin:12px 0 6px;display:flex;align-items:center;gap:5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--g50);color:var(--g700);border:1.5px solid var(--g100);border-radius:var(--rf);padding:6px 12px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.chip:hover{background:var(--g700);color:#fff;border-color:var(--g700)}
 
-.shopping-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 430px;
-  background: white;
-  border-top: 1px solid var(--border);
-  padding: 12px 20px 28px;
-  display: flex;
-  gap: 10px;
-  z-index: 50;
-}
+/* FAVS */
+.fav-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
+.fav-row:last-child{border:none}
+.fav-icon{font-size:18px;flex-shrink:0}
+.fav-name{flex:1;font-size:14px;font-weight:500}
+.fav-cat{font-size:11px;color:var(--t3)}
+.fav-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;border-radius:6px}
+.fav-del:hover{color:var(--red)}
+.fav-add-row{display:flex;gap:8px;margin-bottom:14px;align-items:center}
+.fav-add-row input{flex:1;padding:10px 14px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;direction:rtl;outline:none;background:#fff}
+.fav-add-row input:focus{border-color:var(--g500)}
 
-/* ── MODAL ── */
-.overlay {
-  display: none;
-  position: fixed; inset: 0;
-  background: rgba(27,67,50,0.5);
-  backdrop-filter: blur(4px);
-  z-index: 100;
-  align-items: flex-end;
-  justify-content: center;
-}
-.overlay.open { display: flex; }
+/* SETTINGS */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.srow:last-of-type{border:none}
+.srow .sl{font-size:14px;color:var(--t2)}
+.srow .sv{font-size:14px;font-weight:700}
 
-.sheet {
-  background: white;
-  border-radius: 24px 24px 0 0;
-  padding: 8px 24px 40px;
-  width: 100%; max-width: 430px;
-  animation: sheetUp 0.32s cubic-bezier(0.34,1.2,0.64,1);
-}
-@keyframes sheetUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
-}
-.sheet-handle {
-  width: 40px; height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  margin: 12px auto 20px;
-}
-.sheet h3 { font-size: 18px; font-weight: 800; margin-bottom: 20px; }
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--g900);color:#fff;padding:11px 20px;border-radius:var(--rf);font-size:14px;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .25s,transform .25s;z-index:999;pointer-events:none;box-shadow:var(--sh2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-.add-row { display: flex; gap: 10px; }
-.add-row input {
-  flex: 1; padding: 14px 16px;
-  border: 2px solid var(--border);
-  border-radius: var(--r);
-  font-family: 'Heebo', sans-serif;
-  font-size: 16px; outline: none;
-  direction: rtl; text-align: right;
-  transition: border-color 0.2s;
-}
-.add-row input:focus { border-color: var(--green-500); }
-
-.chips-label { font-size: 12px; color: var(--text-3); margin: 16px 0 10px; font-weight: 600; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-  background: var(--green-50);
-  color: var(--green-700);
-  border: 1.5px solid var(--green-100);
-  border-radius: var(--r-full);
-  padding: 7px 14px;
-  font-family: 'Heebo', sans-serif;
-  font-size: 13px; font-weight: 600;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.chip:hover { background: var(--green-700); color: white; border-color: var(--green-700); }
-
-/* ── SETTINGS ── */
-.settings-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-.settings-row:last-of-type { border: none; }
-.settings-row .s-label { font-size: 14px; color: var(--text-2); }
-.settings-row .s-val { font-size: 14px; font-weight: 700; color: var(--text); }
-
-/* ── TOAST ── */
-.toast {
-  position: fixed;
-  bottom: 90px; left: 50%; transform: translateX(-50%) translateY(8px);
-  background: var(--green-900);
-  color: white;
-  padding: 11px 20px;
-  border-radius: var(--r-full);
-  font-size: 14px; font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.25s, transform 0.25s;
-  z-index: 999; pointer-events: none;
-  box-shadow: var(--shadow);
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ── CONFIG WARNING ── */
-.cfg-warn {
-  background: #FFF3CD; border: 1px solid #FFC107;
-  border-radius: var(--r-sm); padding: 14px 16px;
-  font-size: 13px; line-height: 1.6; color: #856404;
-  margin: 16px 24px 0;
-}
+/* CONFIG WARN */
+.cfgwarn{background:#FFF3CD;border:1px solid #FFC107;border-radius:var(--rs);padding:14px 16px;font-size:13px;line-height:1.6;color:#856404;margin:16px 24px 0}
 </style>
 </head>
 <body>
 <div id="app">
-</head>
-<body>
-<div id="app">
 
-<!-- ═══════════ WELCOME ═══════════ -->
+<!-- WELCOME -->
 <div class="screen active" id="s-welcome">
-  <div class="welcome-bg">
-    <div class="welcome-badge">🌿 רשימת קניות משפחתית</div>
-    <span class="welcome-icon">🛒</span>
+  <div class="wbg">
+    <div class="badge">🌿 רשימת קניות משפחתית</div>
+    <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
   </div>
   <div id="cfg-warn-area"></div>
-  <div class="welcome-actions">
-    <button class="btn btn-primary" onclick="show('s-create')">
-      ✦ צור משפחה חדשה
-    </button>
-    <button class="btn btn-ghost" onclick="show('s-join')">
-      🔗 הצטרף למשפחה קיימת
-    </button>
+  <div class="wactions">
+    <button class="btn btn-p" onclick="createFamilyScreen()">✦ צור משפחה חדשה</button>
+    <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="welcome-footer">גרסה 1.1 · Family Shopping App</div>
+  <div class="wfooter">גרסה 1.2 · Family Shopping App</div>
 </div>
 
-<!-- ═══════════ CREATE FAMILY ═══════════ -->
+<!-- CREATE -->
 <div class="screen" id="s-create">
-  <div class="form-top">
-    <button class="back-row" onclick="show('s-welcome')">← חזרה</button>
-    <span class="form-icon">🏠</span>
+  <div class="ftop">
+    <button class="back" onclick="show('s-welcome')">← חזרה</button>
+    <span class="ficon">🏠</span>
     <h2>צור משפחה חדשה</h2>
     <p>תיצור רשימה שכולם יוכלו להוסיף אליה</p>
   </div>
-  <div class="form-wrap">
-    <div class="field-group">
-      <label>שם המשפחה</label>
-      <input type="text" id="f-family-name" placeholder='משפחת כהן...' autocomplete="off" />
-    </div>
-    <div class="field-group">
-      <label>השם שלך</label>
-      <input type="text" id="f-creator-name" placeholder='אמא, אבא, יוסי...' autocomplete="off" />
-    </div>
-    <div class="form-spacer"></div>
-    <div class="form-submit">
-      <button class="btn btn-primary" style="width:100%;" onclick="createFamily()">
-        צור משפחה ✨
-      </button>
-    </div>
+  <div class="fwrap">
+    <div class="fg"><label>שם המשפחה</label><input type="text" id="f-family-name" placeholder="כהן, לוי..." autocomplete="off"/></div>
+    <div class="fg"><label>השם שלך</label><input type="text" id="f-creator-name" placeholder="אמא, אבא, יוסי..." autocomplete="off"/></div>
+    <div class="fspacer"></div>
+    <div class="fsub"><button class="btn btn-p" style="width:100%" onclick="createFamily()">צור משפחה ✨</button></div>
   </div>
 </div>
 
-<!-- ═══════════ JOIN FAMILY ═══════════ -->
+<!-- JOIN -->
 <div class="screen" id="s-join">
-  <div class="form-top">
-    <button class="back-row" onclick="show('s-welcome')">← חזרה</button>
-    <span class="form-icon">🔗</span>
+  <div class="ftop">
+    <button class="back" onclick="show('s-welcome')">← חזרה</button>
+    <span class="ficon">🔗</span>
     <h2>הצטרף למשפחה</h2>
     <p>הזן את קוד ההצטרפות שקיבלת</p>
   </div>
-  <div class="form-wrap">
-    <div class="field-group">
-      <label>קוד הצטרפות</label>
-      <input type="text" class="code-input" id="f-join-code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="off" />
-    </div>
-    <div class="field-group">
-      <label>השם שלך</label>
-      <input type="text" id="f-joiner-name" placeholder='אמא, אבא, יוסי...' autocomplete="off" />
-    </div>
-    <div class="form-spacer"></div>
-    <div class="form-submit">
-      <button class="btn btn-amber" style="width:100%;" onclick="joinFamily()">
-        הצטרף 🚀
-      </button>
-    </div>
+  <div class="fwrap">
+    <div class="fg"><label>קוד הצטרפות</label><input type="text" class="code-inp" id="f-join-code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="off"/></div>
+    <div class="fg"><label>השם שלך</label><input type="text" id="f-joiner-name" placeholder="אמא, אבא, יוסי..." autocomplete="off"/></div>
+    <div class="fspacer"></div>
+    <div class="fsub"><button class="btn btn-a" style="width:100%" onclick="joinFamily()">הצטרף 🚀</button></div>
   </div>
 </div>
 
-<!-- ═══════════ CODE REVEALED ═══════════ -->
+<!-- CODE REVEAL -->
 <div class="screen" id="s-code">
-  <div class="form-top">
-    <span class="form-icon">🎉</span>
+  <div class="ftop">
+    <span class="ficon">🎉</span>
     <h2>המשפחה נוצרה!</h2>
-    <p>שתף את הקוד הזה עם כל בני המשפחה</p>
+    <p>שתף את הקוד עם כל בני המשפחה</p>
   </div>
-  <div class="form-wrap">
-    <div class="code-reveal">
-      <div class="code-label">קוד הצטרפות</div>
-      <div class="code-val" id="d-code">------</div>
-      <div class="code-hint">שתף את הקוד כדי שהמשפחה תצטרף</div>
+  <div class="fwrap">
+    <div class="codebox">
+      <div class="codel">קוד הצטרפות</div>
+      <div class="codev" id="d-code">------</div>
+      <div class="codeh">שתף כדי שהמשפחה תצטרף</div>
     </div>
-    <button class="btn btn-ghost" style="width:100%;" onclick="copyCode()">📋 העתק קוד</button>
-    <div class="form-spacer"></div>
-    <div class="form-submit">
-      <button class="btn btn-primary" style="width:100%;" onclick="enterApp()">כנס לרשימה →</button>
-    </div>
+    <button class="btn btn-g" style="width:100%" onclick="copyCode()">📋 העתק קוד</button>
+    <div class="fspacer"></div>
+    <div class="fsub"><button class="btn btn-p" style="width:100%" onclick="goApp()">כנס לרשימה →</button></div>
   </div>
 </div>
 
-<!-- ═══════════ MAIN APP ═══════════ -->
+<!-- MAIN APP -->
 <div class="screen" id="s-app">
-  <div class="app-header">
-    <div class="app-header-text">
-      <h2 id="h-family">משפחה</h2>
+  <div class="aheader">
+    <div class="aheader-txt">
+      <h2 id="h-family">רשימה של משפחת</h2>
       <div class="sub">
-        <span class="sync-dot" id="sync-dot"></span>
-        <span id="sync-txt">מסונכרן</span>
-        <span>·</span>
+        <span class="sdot" id="sync-dot"></span>
+        <span id="sync-txt">מסונכרן</span> ·
         <span id="h-user">אתה</span>
       </div>
     </div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="syncNow()" title="רענן">⟳</button>
-      <button class="icon-btn" onclick="openSheet('settings-sheet')" title="הגדרות">⚙</button>
+    <div class="hbtns">
+      <button class="ibtn" onclick="syncNow()" title="רענן">⟳</button>
+      <button class="ibtn" onclick="openSheet('sh-favs')" title="מועדפים">⭐</button>
+      <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
     </div>
   </div>
 
-  <div class="tab-bar">
-    <button class="tab active" id="t-list" onclick="switchTab('list')">📝 רשימה</button>
-    <button class="tab" id="t-shop" onclick="switchTab('shop')">🛒 קניות</button>
+  <div class="tabs">
+    <button class="tab tab-list active" id="t-list" onclick="switchTab('list')">
+      <span class="tab-icon">📝</span>רשימה
+    </button>
+    <button class="tab tab-shop" id="t-shop" onclick="switchTab('shop')">
+      <span class="tab-icon">🛒</span>קניות
+    </button>
   </div>
 
-  <!-- LIST TAB -->
-  <div class="tab-content active" id="c-list">
-    <div id="list-body"></div>
-  </div>
+  <div class="tcont active" id="c-list"><div id="list-body"></div></div>
 
-  <!-- SHOPPING TAB -->
-  <div class="tab-content" id="c-shop">
-    <div class="shopping-banner">
-      <div class="banner-text">
-        <h3>מצב קניות 🛒</h3>
-        <p>סמן מה קנית</p>
+  <div class="tcont" id="c-shop">
+    <div class="prog-bar">
+      <div class="prog-inner">
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="prog-lbl" id="prog-label">0/0</div>
       </div>
-      <div class="progress-wrap">
-        <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-        <div class="progress-label" id="prog-label">0/0</div>
-      </div>
+      <div class="prog-sub">סמן פריטים שקנית</div>
     </div>
     <div id="shop-body"></div>
-    <div class="shopping-bottom">
-      <button class="btn btn-danger" style="flex:1; font-size:14px;" onclick="clearChecked()">🗑 נקה מסומנים</button>
-      <button class="btn btn-ghost" style="flex:1; font-size:14px;" onclick="uncheckAll()">↺ אפס הכל</button>
+    <div class="shop-bot">
+      <button class="btn btn-d btn-sm" style="flex:1" onclick="clearChecked()">🗑 נקה נקנה</button>
+      <button class="btn btn-g btn-sm" style="flex:1" onclick="uncheckAll()">↺ אפס הכל</button>
     </div>
   </div>
 
-  <button class="fab" id="fab" onclick="openSheet('add-sheet')">
-    + הוסף פריט
-  </button>
+  <button class="fab" id="fab" onclick="openSheet('sh-add')">+ הוסף פריט</button>
 </div>
 
-<!-- ═══════════ ADD SHEET ═══════════ -->
-<div class="overlay" id="add-sheet" onclick="overlayClick(event,'add-sheet')">
+<!-- ADD SHEET -->
+<div class="overlay" id="sh-add" onclick="overlayClick(event,'sh-add')">
   <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h3>➕ הוסף לרשימה</h3>
-    <div class="add-row">
-      <button class="btn btn-primary btn-sm" onclick="addItem()">הוסף</button>
-      <input type="text" id="item-input" placeholder="מה לקנות?" onkeydown="if(event.key==='Enter') addItem()" />
+    <div class="handle"></div>
+    <h3>➕ הוסף פריט</h3>
+    <div class="fg" style="margin-top:0">
+      <label>שם המוצר</label>
+      <input type="text" id="item-input" placeholder="מה לקנות?" onkeydown="if(event.key==='Enter')addItem()"/>
     </div>
-    <div class="chips-label">הצעות מהירות</div>
-    <div class="chips">
-      <button class="chip" onclick="quickAdd(this)">🥛 חלב</button>
-      <button class="chip" onclick="quickAdd(this)">🍞 לחם</button>
-      <button class="chip" onclick="quickAdd(this)">🧀 גבינה</button>
-      <button class="chip" onclick="quickAdd(this)">🥚 ביצים</button>
-      <button class="chip" onclick="quickAdd(this)">🍅 עגבניות</button>
-      <button class="chip" onclick="quickAdd(this)">🥒 מלפפון</button>
-      <button class="chip" onclick="quickAdd(this)">🍌 בננות</button>
-      <button class="chip" onclick="quickAdd(this)">🍎 תפוחים</button>
-      <button class="chip" onclick="quickAdd(this)">🍗 עוף</button>
-      <button class="chip" onclick="quickAdd(this)">🥩 בשר</button>
-      <button class="chip" onclick="quickAdd(this)">🧴 שמפו</button>
-      <button class="chip" onclick="quickAdd(this)">🧻 נייר טואלט</button>
-      <button class="chip" onclick="quickAdd(this)">🧼 סבון</button>
-      <button class="chip" onclick="quickAdd(this)">🫙 שמן זית</button>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════ SETTINGS SHEET ═══════════ -->
-<div class="overlay" id="settings-sheet" onclick="overlayClick(event,'settings-sheet')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <h3>⚙️ הגדרות</h3>
-    <div class="settings-row">
-      <span class="s-label">🏠 שם המשפחה</span>
-      <span class="s-val" id="ss-family">—</span>
-    </div>
-    <div class="settings-row">
-      <span class="s-label">👤 השם שלי</span>
-      <span class="s-val" id="ss-user">—</span>
-    </div>
-    <div class="settings-row">
-      <span class="s-label">🔑 קוד הצטרפות</span>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span class="s-val" id="ss-code">—</span>
-        <button class="btn btn-ghost btn-sm" onclick="copyCode()">העתק</button>
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <div style="flex:1">
+        <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:7px">קטגוריה</label>
+        <select id="item-cat" class="cat-select"></select>
+      </div>
+      <div style="width:95px">
+        <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:7px">כמות</label>
+        <input type="text" id="item-qty" placeholder="1 יח׳" style="width:100%;padding:11px 12px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;text-align:center;outline:none;direction:ltr"/>
       </div>
     </div>
-    <div style="margin-top:20px;">
-      <button class="btn btn-danger" style="width:100%;" onclick="logout()">
-        🚪 יציאה מהרשימה
-      </button>
+    <div style="margin-top:12px">
+      <label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:7px">תמונה (URL) — אופציונלי</label>
+      <input type="url" id="item-img" placeholder="https://..." style="width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;outline:none;direction:ltr;text-align:left" oninput="previewImg(this.value)"/>
+      <img id="img-preview" class="img-preview" alt=""/>
     </div>
+    <div style="margin-top:16px">
+      <button class="btn btn-p" style="width:100%" onclick="addItem()">הוסף לרשימה ✓</button>
+    </div>
+    <div class="chips-sec" id="quick-chips"></div>
   </div>
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<!-- FAVORITES SHEET -->
+<div class="overlay" id="sh-favs" onclick="overlayClick(event,'sh-favs')">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>⭐ ניהול מועדפים</h3>
+    <div class="fav-add-row">
+      <input type="text" id="fav-new-name" placeholder="שם מוצר חדש..."/>
+      <select id="fav-new-cat" class="cat-select" style="width:130px;padding:10px 10px;border-radius:var(--rs)"></select>
+      <button class="btn btn-p btn-sm" onclick="addFavorite()">+ הוסף</button>
+    </div>
+    <div id="favs-list"></div>
+  </div>
+</div>
 
+<!-- SETTINGS SHEET -->
+<div class="overlay" id="sh-settings" onclick="overlayClick(event,'sh-settings')">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>⚙️ הגדרות</h3>
+    <div class="srow"><span class="sl">🏠 שם המשפחה</span><span class="sv" id="ss-family">—</span></div>
+    <div class="srow"><span class="sl">👤 השם שלי</span><span class="sv" id="ss-user">—</span></div>
+    <div class="srow">
+      <span class="sl">🔑 קוד הצטרפות</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="sv" id="ss-code">—</span>
+        <button class="btn btn-g btn-sm" onclick="copyCode()">העתק</button>
+      </div>
+    </div>
+    <div style="margin-top:20px"><button class="btn btn-d" style="width:100%" onclick="logout()">🚪 יציאה מהרשימה</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 </div><!-- #app -->
 
-<!-- Firebase Compat SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-/* =====================================================
-   SuperDima v1.1
-   Plain <script> — no ES modules, no scoping issues
-   ===================================================== */
+/* SuperDima v1.2 */
 
-/* 🔧 הגדר Firebase שלך כאן */
 var FIREBASE_CONFIG = {
   apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
   authDomain: "superdima-ef60f.firebaseapp.com",
@@ -808,334 +400,400 @@ var FIREBASE_CONFIG = {
   measurementId: "G-JNF66CHKYX"
 };
 
-/* ── Init ── */
+var CATS = [
+  {id:'general', label:'כללי',           icon:'🛍️'},
+  {id:'veggies', label:'ירקות ופירות',    icon:'🍅'},
+  {id:'dairy',   label:'חלב וביצים',      icon:'🧀'},
+  {id:'bread',   label:'לחם ומאפים',      icon:'🍞'},
+  {id:'meat',    label:'בשר ודגים',       icon:'🥩'},
+  {id:'pantry',  label:'מזווה ובישול',    icon:'🍝'},
+  {id:'cans',    label:'שימורים',         icon:'🥫'},
+  {id:'snacks',  label:'חטיפים וממתקים',  icon:'🍫'},
+  {id:'drinks',  label:'משקאות קלים',     icon:'🥤'},
+  {id:'alcohol', label:'אלכוהול',         icon:'🍷'},
+  {id:'cleaning',label:'ניקיון ובית',     icon:'🧹'}
+];
+
+var DEFAULT_FAVS = [
+  {t:'בטטה',c:'veggies'},{t:'בננה',c:'veggies'},{t:'בצל',c:'veggies'},{t:'בצל ירוק',c:'veggies'},
+  {t:'ברוקולי',c:'veggies'},{t:'גזר',c:'veggies'},{t:'גמבה',c:'veggies'},{t:'דלעת',c:'veggies'},
+  {t:'חסה',c:'veggies'},{t:'חצילים',c:'veggies'},{t:'כרוב לבן',c:'veggies'},{t:'כרובית',c:'veggies'},
+  {t:'לימון',c:'veggies'},{t:'מלפפון',c:'veggies'},{t:'סלק',c:'veggies'},{t:'סלרי',c:'veggies'},
+  {t:'עגבניות',c:'veggies'},{t:'עגבניות שרי מארז',c:'veggies'},{t:'ענבים',c:'veggies'},
+  {t:'פטרוזיליה',c:'veggies'},{t:'פילפל חריף 1יח',c:'veggies'},{t:'קולורבי',c:'veggies'},
+  {t:'קוסברה',c:'veggies'},{t:'קיווי',c:'veggies'},{t:'קישוים',c:'veggies'},
+  {t:'שום',c:'veggies'},{t:'שמיר',c:'veggies'},{t:'תפוח אדמה',c:'veggies'},{t:'תפוחים',c:'veggies'},
+  {t:'אקטימל',c:'dairy'},{t:'אשל',c:'dairy'},{t:'ביצים 30 יחידות',c:'dairy'},
+  {t:'גבינה טעם טוב טרה',c:'dairy'},{t:'גבינה מגורדת',c:'dairy'},
+  {t:'גבינה צהובה 15%',c:'dairy'},{t:'גבינה צהובה עמק',c:'dairy'},
+  {t:"גבינת שמנת ניו יורק 30%",c:'dairy'},{t:'חלב',c:'dairy'},
+  {t:'יוגורט פרו',c:'dairy'},{t:'יוגורט שתייה',c:'dairy'},{t:'מוצרלה ביבי',c:'dairy'},
+  {t:'יוגורט מילקי',c:'dairy'},{t:'פיטוט רגילות',c:'dairy'},
+  {t:"קוטג' שטראוס",c:'dairy'},{t:"קוטג' תנובה",c:'dairy'},
+  {t:'שמנת חמוצה',c:'dairy'},{t:'שמנת לבישול',c:'dairy'},{t:'שמנת מתוקה',c:'dairy'},
+  {t:'לחם שיפון מלא',c:'bread'},{t:'לחמניות כוסמין',c:'bread'},{t:'פיתה',c:'bread'},{t:'פיתות כוסמין',c:'bread'},
+  {t:'חזה עוף',c:'meat'},{t:'כנפיים',c:'meat'},{t:'פרגית',c:'meat'},
+  {t:'אורז',c:'pantry'},{t:'אצות נוערי',c:'pantry'},{t:'חומץ 5%',c:'pantry'},
+  {t:'חמאת בוטנים טיבועת',c:'pantry'},{t:'כוסמת',c:'pantry'},{t:'מיקס פירות יער',c:'pantry'},
+  {t:'נס קפה',c:'pantry'},{t:'סודה לשתיה',c:'pantry'},{t:'סויה',c:'pantry'},
+  {t:'סוכר',c:'pantry'},{t:'סילאן',c:'pantry'},{t:'פלפל שחור גרוס גס',c:'pantry'},
+  {t:'פסטה',c:'pantry'},{t:'פסטרמה',c:'pantry'},{t:'פפריקה מתוקה',c:'pantry'},
+  {t:'פריכיות',c:'pantry'},{t:'קוסקוס',c:'pantry'},{t:'קטשופ',c:'pantry'},
+  {t:'קליליות',c:'pantry'},{t:'קמח',c:'pantry'},{t:'רוטב בזיליקום ללינה',c:'pantry'},
+  {t:'רסק עגבניות בשפורפרת',c:'pantry'},{t:'שמן חמניות',c:'pantry'},
+  {t:'שניצל תירס קפוא',c:'pantry'},{t:'תבלין לפיצה',c:'pantry'},
+  {t:'אפונה רוסית',c:'cans'},{t:'טונה בשמן StarKist',c:'cans'},{t:'כרוב כבוש',c:'cans'},{t:'מיונז תלמה',c:'cans'},
+  {t:'דופשניות',c:'snacks'},{t:'חלבה',c:'snacks'},{t:'לוטוס עוגיות',c:'snacks'},
+  {t:'מרשמלו',c:'snacks'},{t:'נוטלה',c:'snacks'},{t:'פופקורן',c:'snacks'},
+  {t:'פטיבר',c:'snacks'},{t:'פרינגלס פיצה',c:'snacks'},{t:'שוקולד מריר 5יח',c:'snacks'},
+  {t:'קולה זירו',c:'drinks'},{t:'קולה רגילה',c:'drinks'},
+  {t:"שוופס ג'ינג'ר",c:'drinks'},{t:"שישית מים מי עדן 1.5 ל'",c:'drinks'},
+  {t:'בירה',c:'alcohol'},{t:'וויסקי בלנטיינס',c:'alcohol'},
+  {t:'מגבות נייר',c:'cleaning'},{t:'מגני תחתון אולוויז 3',c:'cleaning'},
+  {t:'מטליות בגליל',c:'cleaning'},{t:'מרכך כביסה',c:'cleaning'},
+  {t:'משחת שיניים פרדונטקס',c:'cleaning'},{t:'משחת שיניים קולגייט',c:'cleaning'},
+  {t:'נייר טואלת',c:'cleaning'},{t:'סבון אסלה כדוריות',c:'cleaning'},
+  {t:'פדים ימיות כארפריי',c:'cleaning'},{t:'פיניש קפסולות למדיח',c:'cleaning'},
+  {t:'חרדל רוסי',c:'general'},{t:"צ'ילי מתוק",c:'general'},{t:'שום קטוש',c:'general'}
+];
+
+/* ── INIT ── */
 var IS_CONFIGURED = FIREBASE_CONFIG.apiKey.indexOf("YOUR") === -1;
-var db = null;
-var itemsRef = null;
-var itemsListener = null;
+var db = null, itemsRef = null, itemsListener = null, favsRef = null, favsListener = null;
+if (IS_CONFIGURED) { firebase.initializeApp(FIREBASE_CONFIG); db = firebase.database(); }
+var S = {code:null,family:null,user:null,items:{},favs:[]};
 
-if (IS_CONFIGURED) {
-  firebase.initializeApp(FIREBASE_CONFIG);
-  db = firebase.database();
+/* ── HELPERS ── */
+function show(id){ document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')}); document.getElementById(id).classList.add('active'); }
+function toast(msg){ var el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(function(){el.classList.remove('show')},2500); }
+function openSheet(id){ document.getElementById(id).classList.add('open'); }
+function closeSheet(id){ document.getElementById(id).classList.remove('open'); }
+function overlayClick(e,id){ if(e.target.classList.contains('overlay'))closeSheet(id); }
+function setSyncing(){ document.getElementById('sync-dot').className='sdot syncing'; document.getElementById('sync-txt').textContent='מסנכרן...'; }
+function setSynced(){ document.getElementById('sync-dot').className='sdot'; document.getElementById('sync-txt').textContent='מסונכרן'; }
+function setSyncErr(){ document.getElementById('sync-dot').className='sdot error'; document.getElementById('sync-txt').textContent='שגיאת חיבור'; }
+function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function ago(ts){ if(!ts)return ''; var d=Date.now()-ts; if(d<60000)return 'עכשיו'; if(d<3600000)return Math.floor(d/60000)+" דק'"; if(d<86400000)return Math.floor(d/3600000)+" שע'"; return Math.floor(d/86400000)+' ימים'; }
+function catById(id){ for(var i=0;i<CATS.length;i++)if(CATS[i].id===id)return CATS[i]; return CATS[0]; }
+function save(){ localStorage.setItem('kniYot_v1',JSON.stringify({code:S.code,family:S.family,user:S.user})); }
+
+function buildSelects(){
+  var opts=CATS.map(function(c){return '<option value="'+c.id+'">'+c.icon+' '+c.label+'</option>';}).join('');
+  document.getElementById('item-cat').innerHTML=opts;
+  document.getElementById('fav-new-cat').innerHTML=opts;
 }
 
-/* ── State ── */
-var S = { code: null, family: null, user: null, items: {} };
+/* ── NAV ── */
+function createFamilyScreen(){ show('s-create'); }
 
-/* ══════════════════════════════════════
-   UI HELPERS
-   ══════════════════════════════════════ */
-
-function show(id) {
-  document.querySelectorAll('.screen').forEach(function(s) {
-    s.classList.remove('active');
-  });
-  document.getElementById(id).classList.add('active');
-}
-
-function toast(msg) {
-  var el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(function() { el.classList.remove('show'); }, 2500);
-}
-
-function openSheet(id)  { document.getElementById(id).classList.add('open'); }
-function closeSheet(id) { document.getElementById(id).classList.remove('open'); }
-
-function overlayClick(e, id) {
-  if (e.target.classList.contains('overlay')) closeSheet(id);
-}
-
-function setSyncing() {
-  document.getElementById('sync-dot').className = 'sync-dot syncing';
-  document.getElementById('sync-txt').textContent = 'מסנכרן...';
-}
-function setSynced() {
-  document.getElementById('sync-dot').className = 'sync-dot';
-  document.getElementById('sync-txt').textContent = 'מסונכרן';
-}
-function setSyncErr() {
-  document.getElementById('sync-dot').className = 'sync-dot error';
-  document.getElementById('sync-txt').textContent = 'שגיאת חיבור';
-}
-
-function esc(s) {
-  s = s || '';
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function ago(ts) {
-  if (!ts) return '';
-  var d = Date.now() - ts;
-  if (d < 60000) return 'לפני רגע';
-  if (d < 3600000) return 'לפני ' + Math.floor(d/60000) + " דק'";
-  if (d < 86400000) return 'לפני ' + Math.floor(d/3600000) + " שע'";
-  return 'לפני ' + Math.floor(d/86400000) + ' ימים';
-}
-
-function save() {
-  localStorage.setItem('kniYot_v1', JSON.stringify({
-    code: S.code, family: S.family, user: S.user
-  }));
-}
-
-/* ══════════════════════════════════════
-   NAVIGATION
-   ══════════════════════════════════════ */
-
-function goApp() {
-  document.getElementById('h-family').textContent  = S.family;
-  document.getElementById('h-user').textContent    = S.user;
-  document.getElementById('ss-family').textContent = S.family;
-  document.getElementById('ss-user').textContent   = S.user;
-  document.getElementById('ss-code').textContent   = S.code;
+function goApp(){
+  document.getElementById('h-family').textContent = 'רשימה של משפחת ' + S.family;
+  document.getElementById('h-user').textContent   = S.user;
+  document.getElementById('ss-family').textContent= S.family;
+  document.getElementById('ss-user').textContent  = S.user;
+  document.getElementById('ss-code').textContent  = S.code;
   show('s-app');
+  buildSelects();
   subscribeItems();
+  subscribeFavs();
 }
 
-function subscribeItems() {
-  if (!IS_CONFIGURED || !S.code) return;
-  // Detach previous listener
-  if (itemsRef && itemsListener) {
-    itemsRef.off('value', itemsListener);
-  }
-  itemsRef = db.ref('fam/' + S.code + '/items');
+/* ── SUBSCRIPTIONS ── */
+function subscribeItems(){
+  if(!IS_CONFIGURED||!S.code)return;
+  if(itemsRef&&itemsListener)itemsRef.off('value',itemsListener);
+  itemsRef=db.ref('fam/'+S.code+'/items');
   setSyncing();
-  itemsListener = itemsRef.on('value',
-    function(snap) { S.items = snap.val() || {}; render(); setSynced(); },
-    function(err)  { console.error(err); setSyncErr(); }
+  itemsListener=itemsRef.on('value',
+    function(snap){S.items=snap.val()||{};render();setSynced();},
+    function(e){console.error(e);setSyncErr();}
   );
 }
 
-/* ══════════════════════════════════════
-   RENDERING
-   ══════════════════════════════════════ */
-
-function render() {
-  var entries = Object.keys(S.items).map(function(id) {
-    return Object.assign({ id: id }, S.items[id]);
+function subscribeFavs(){
+  if(!IS_CONFIGURED||!S.code)return;
+  if(favsRef&&favsListener)favsRef.off('value',favsListener);
+  favsRef=db.ref('fam/'+S.code+'/favs');
+  favsRef.once('value',function(snap){
+    if(!snap.exists()||Object.keys(snap.val()||{}).length===0){
+      var seed={};
+      DEFAULT_FAVS.forEach(function(f,i){seed['f'+i]={text:f.t,category:f.c};});
+      favsRef.set(seed);
+    }
   });
-  var unc = entries.filter(function(i) { return !i.checked; });
-  var chk = entries.filter(function(i) { return  i.checked; });
+  favsListener=favsRef.on('value',function(snap){
+    var v=snap.val()||{};
+    S.favs=Object.keys(v).map(function(k){return {id:k,text:v[k].text,category:v[k].category};});
+    S.favs.sort(function(a,b){return (a.text||'').localeCompare(b.text||'','he');});
+    renderChips();
+    renderFavsList();
+  });
+}
 
-  // List tab
-  var lb = document.getElementById('list-body');
-  if (!entries.length) {
-    lb.innerHTML = emptyHTML('📋', 'הרשימה ריקה', 'הוסף את הפריטים שצריך לקנות');
-  } else {
-    var html = '<div class="items-list">';
-    unc.forEach(function(i) { html += itemCard(i, 'list'); });
-    if (chk.length) {
-      html += '<div class="section-label">✓ כבר קנינו</div>';
-      chk.forEach(function(i) { html += itemCard(i, 'list'); });
-    }
-    html += '</div>';
-    lb.innerHTML = html;
+function syncNow(){ setSyncing(); subscribeItems(); }
+
+/* ── RENDER ── */
+function render(){
+  var entries=Object.keys(S.items).map(function(id){return Object.assign({id:id},S.items[id]);});
+  var unc=entries.filter(function(i){return !i.checked;});
+  var chk=entries.filter(function(i){return  i.checked;});
+  unc.sort(function(a,b){
+    var ia=CATS.findIndex(function(c){return c.id===(a.category||'general')});
+    var ib=CATS.findIndex(function(c){return c.id===(b.category||'general')});
+    if(ia!==ib)return ia-ib;
+    return (a.text||'').localeCompare(b.text||'','he');
+  });
+  renderList(unc,chk);
+  renderShop(unc,chk);
+}
+
+function renderList(unc,chk){
+  var lb=document.getElementById('list-body');
+  if(!unc.length&&!chk.length){lb.innerHTML=emptyH('📋','הרשימה ריקה','הוסף את הפריטים שצריך לקנות');return;}
+  var groups={};
+  unc.forEach(function(item){var cid=item.category||'general';if(!groups[cid])groups[cid]=[];groups[cid].push(item);});
+  var html='';
+  CATS.forEach(function(cat){
+    if(!groups[cat.id]||!groups[cat.id].length)return;
+    html+='<div class="cat-hdr"><span class="ci">'+cat.icon+'</span>'+cat.label+'</div><div class="ilist">';
+    groups[cat.id].forEach(function(i){html+=card(i,'list');});
+    html+='</div>';
+  });
+  if(chk.length){
+    html+='<div class="cat-hdr" style="color:var(--t3)">✓ כבר קנינו</div><div class="ilist">';
+    chk.forEach(function(i){html+=card(i,'list');});
+    html+='</div>';
   }
+  lb.innerHTML=html;
+}
 
-  // Shopping tab progress
-  var total = entries.length, done = chk.length;
-  document.getElementById('prog-label').textContent = done + '/' + total;
-  document.getElementById('prog-fill').style.width  = total ? ((done/total)*100) + '%' : '0%';
-
-  var sb = document.getElementById('shop-body');
-  if (!entries.length) {
-    sb.innerHTML = emptyHTML('🎉', 'הרשימה ריקה', 'אין מה לקנות כרגע!');
-  } else {
-    var shtml = '<div class="items-list" style="padding-bottom:80px;">';
-    unc.forEach(function(i) { shtml += itemCard(i, 'shop'); });
-    if (chk.length) {
-      shtml += '<div class="section-label">✅ נקנה</div>';
-      chk.forEach(function(i) { shtml += itemCard(i, 'shop'); });
-    }
-    shtml += '</div>';
-    sb.innerHTML = shtml;
+function renderShop(unc,chk){
+  var total=unc.length+chk.length,done=chk.length;
+  document.getElementById('prog-label').textContent=done+'/'+total;
+  document.getElementById('prog-fill').style.width=total?((done/total)*100)+'%':'0%';
+  var sb=document.getElementById('shop-body');
+  if(!total){sb.innerHTML=emptyH('🎉','הרשימה ריקה','אין מה לקנות כרגע!');return;}
+  var html='';
+  if(unc.length){
+    html+='<div class="shop-hdr active">🛒 עוד לקנות — '+unc.length+' פריטים</div><div class="ilist">';
+    unc.forEach(function(i){html+=card(i,'shop');});
+    html+='</div>';
   }
+  if(chk.length){
+    html+='<div class="shop-hdr done-hdr">✅ כבר בעגלה — '+chk.length+'</div><div class="ilist">';
+    chk.forEach(function(i){html+=card(i,'shop');});
+    html+='</div>';
+  }
+  sb.innerHTML=html;
 }
 
-function emptyHTML(icon, title, sub) {
-  return '<div class="empty"><div class="e-icon">' + icon + '</div><h3>' + title + '</h3><p>' + sub + '</p></div>';
+function card(item,mode){
+  var ch=item.checked;
+  var cat=catById(item.category||'general');
+  var doneCls=ch?' done':'';
+  var shopHiCls=(mode==='shop'&&!ch)?' shop-hi':'';
+  var ckCls=ch?' checked':'';
+  var shopCk=mode==='shop'?' shop-ck':'';
+
+  var imgH=item.imageUrl
+    ?'<img class="iimg" src="'+esc(item.imageUrl)+'" onerror="this.style.display=\'none\'" alt=""/>'
+    :'';
+
+  var metaH='<span class="cat-tag">'+cat.icon+' '+cat.label+'</span>';
+  if(item.addedBy) metaH+='<span class="added-by">'+esc(item.addedBy)+'</span>';
+  if(!ch&&item.addedAt) metaH+='<span>'+ago(item.addedAt)+'</span>';
+  if(ch&&item.checkedBy) metaH+='<span>✓ '+esc(item.checkedBy)+'</span>';
+
+  var qtyH='<div class="qty-wrap"><input type="text" value="'+esc(item.qty||'')+'" placeholder="כמות"'
+    +' title="כמות" onchange="updateQty(\''+item.id+'\',this.value)" onclick="event.stopPropagation()"/></div>';
+
+  var delH=mode==='list'?'<button class="dbtn" onclick="appDel(\''+item.id+'\')" title="מחק">✕</button>':'';
+
+  return '<div class="icard'+doneCls+shopHiCls+'">'
+    +'<div class="ckbtn'+ckCls+shopCk+'" onclick="appToggle(\''+item.id+'\')">'+(ch?'✓':'')+'</div>'
+    +imgH
+    +'<div class="ibody"><div class="iname">'+esc(item.text)+'</div><div class="imeta">'+metaH+'</div></div>'
+    +qtyH+delH+'</div>';
 }
 
-function itemCard(item, mode) {
-  var ch = item.checked;
-  var meta = ch
-    ? '✓ נקנה על ידי ' + esc(item.checkedBy || '')
-    : 'הוסיף ' + esc(item.addedBy) + ' · ' + ago(item.addedAt);
-  var shopCls = mode === 'shop' ? ' shopping-mode' : '';
-  var checkedCls = ch ? ' checked' : '';
-  var delBtn = mode === 'list'
-    ? '<button class="del-btn" onclick="appDel(\'' + item.id + '\')">✕</button>'
-    : '';
-  return '<div class="item-card' + checkedCls + '">'
-    + '<div class="check-btn' + checkedCls + shopCls + '" onclick="appToggle(\'' + item.id + '\')">'
-    + (ch ? '✓' : '')
-    + '</div>'
-    + '<div class="item-body">'
-    + '<div class="item-name">' + esc(item.text) + '</div>'
-    + '<div class="item-meta">' + meta + '</div>'
-    + '</div>'
-    + delBtn
-    + '</div>';
+function emptyH(icon,t,s){return '<div class="empty"><div class="ei">'+icon+'</div><h3>'+t+'</h3><p>'+s+'</p></div>';}
+
+/* ── CHIPS ── */
+function renderChips(){
+  var el=document.getElementById('quick-chips');
+  if(!el)return;
+  var groups={};
+  S.favs.forEach(function(f){var cid=f.category||'general';if(!groups[cid])groups[cid]=[];groups[cid].push(f);});
+  var html='<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;margin:14px 0 10px">מועדפים מהירים</div>';
+  CATS.forEach(function(cat){
+    if(!groups[cat.id]||!groups[cat.id].length)return;
+    html+='<div style="margin-bottom:10px"><div class="chips-cat-lbl">'+cat.icon+' '+cat.label+'</div><div class="chips">';
+    groups[cat.id].forEach(function(f){
+      html+='<button class="chip" onclick="quickAdd(\''+esc(f.text).replace(/'/g,"&#39;")+'\',\''+f.category+'\')">'+esc(f.text)+'</button>';
+    });
+    html+='</div></div>';
+  });
+  el.innerHTML=html;
 }
 
-/* ══════════════════════════════════════
-   ACTIONS — called from HTML onclick
-   ══════════════════════════════════════ */
+/* ── FAVS LIST ── */
+function renderFavsList(){
+  var el=document.getElementById('favs-list');
+  if(!el)return;
+  if(!S.favs.length){el.innerHTML='<p style="color:var(--t3);font-size:14px;text-align:center;padding:20px">אין מועדפים</p>';return;}
+  var html='';
+  S.favs.forEach(function(f){
+    var cat=catById(f.category||'general');
+    html+='<div class="fav-row"><span class="fav-icon">'+cat.icon+'</span>'
+      +'<span class="fav-name">'+esc(f.text)+'</span>'
+      +'<span class="fav-cat">'+cat.label+'</span>'
+      +'<button class="fav-del" onclick="deleteFav(\''+f.id+'\')">✕</button></div>';
+  });
+  el.innerHTML=html;
+}
 
-function createFamily() {
-  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
-  var fam  = document.getElementById('f-family-name').value.trim();
-  var user = document.getElementById('f-creator-name').value.trim();
-  if (!fam || !user) return toast('מלא את כל השדות');
-  var code = String(Math.floor(100000 + Math.random() * 900000));
-  db.ref('fam/' + code + '/meta').set({ name: fam, created: Date.now() })
-    .then(function() {
-      S = { code: code, family: fam, user: user, items: {} };
-      save();
-      document.getElementById('d-code').textContent = code;
-      show('s-code');
+/* ── ACTIONS ── */
+function createFamily(){
+  if(!IS_CONFIGURED)return toast('עדכן Firebase Config קודם');
+  var fam=document.getElementById('f-family-name').value.trim();
+  var user=document.getElementById('f-creator-name').value.trim();
+  if(!fam||!user)return toast('מלא את כל השדות');
+  var code=String(Math.floor(100000+Math.random()*900000));
+  db.ref('fam/'+code+'/meta').set({name:fam,created:Date.now()})
+    .then(function(){S={code:code,family:fam,user:user,items:{},favs:[]};save();document.getElementById('d-code').textContent=code;show('s-code');})
+    .catch(function(e){toast('שגיאה — בדוק חיבור');console.error(e);});
+}
+
+function joinFamily(){
+  if(!IS_CONFIGURED)return toast('עדכן Firebase Config קודם');
+  var code=document.getElementById('f-join-code').value.trim();
+  var user=document.getElementById('f-joiner-name').value.trim();
+  if(!code||!user)return toast('מלא את כל השדות');
+  db.ref('fam/'+code+'/meta').get()
+    .then(function(snap){
+      if(!snap.exists())return toast('קוד לא נמצא — בדוק שוב');
+      S={code:code,family:snap.val().name,user:user,items:{},favs:[]};save();goApp();
     })
-    .catch(function(e) { toast('שגיאה — בדוק חיבור'); console.error(e); });
+    .catch(function(e){toast('שגיאה — בדוק חיבור');console.error(e);});
 }
 
-function joinFamily() {
-  if (!IS_CONFIGURED) return toast('עדכן Firebase Config קודם');
-  var code = document.getElementById('f-join-code').value.trim();
-  var user = document.getElementById('f-joiner-name').value.trim();
-  if (!code || !user) return toast('מלא את כל השדות');
-  db.ref('fam/' + code + '/meta').get()
-    .then(function(snap) {
-      if (!snap.exists()) return toast('קוד לא נמצא — בדוק שוב');
-      S = { code: code, family: snap.val().name, user: user, items: {} };
-      save();
-      goApp();
+function copyCode(){
+  var code=S.code||document.getElementById('d-code').textContent;
+  if(navigator.clipboard)navigator.clipboard.writeText(code).then(function(){toast('הקוד הועתק ✓');});
+}
+
+function addItem(){
+  var text=document.getElementById('item-input').value.trim();
+  var cat=document.getElementById('item-cat').value;
+  var qty=document.getElementById('item-qty').value.trim();
+  var img=document.getElementById('item-img').value.trim();
+  if(!text)return toast('כתוב שם מוצר');
+  var data={text:text,category:cat,addedBy:S.user,addedAt:Date.now(),checked:false};
+  if(qty)data.qty=qty;
+  if(img)data.imageUrl=img;
+  db.ref('fam/'+S.code+'/items').push(data)
+    .then(function(){
+      document.getElementById('item-input').value='';
+      document.getElementById('item-qty').value='';
+      document.getElementById('item-img').value='';
+      document.getElementById('img-preview').style.display='none';
+      closeSheet('sh-add');
+      toast('"'+text+'" נוסף ✓');
     })
-    .catch(function(e) { toast('שגיאה — בדוק חיבור'); console.error(e); });
+    .catch(function(){toast('שגיאה בהוספה');});
 }
 
-function copyCode() {
-  var code = S.code || document.getElementById('d-code').textContent;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(code).then(function() { toast('הקוד הועתק ✓'); });
-  }
+function quickAdd(text,cat){
+  document.getElementById('item-input').value=text;
+  document.getElementById('item-cat').value=cat||'general';
+  document.getElementById('item-qty').focus();
 }
 
-function enterApp() { goApp(); }
-
-function syncNow() { setSyncing(); subscribeItems(); }
-
-function addItem() {
-  var el = document.getElementById('item-input');
-  var text = el.value.trim();
-  if (!text) return;
-  db.ref('fam/' + S.code + '/items').push({
-    text: text, addedBy: S.user, addedAt: Date.now(), checked: false
-  }).then(function() {
-    el.value = '';
-    closeSheet('add-sheet');
-    toast('"' + text + '" נוסף ✓');
-  }).catch(function() { toast('שגיאה בהוספה'); });
+function previewImg(url){
+  var el=document.getElementById('img-preview');
+  if(url&&(url.startsWith('http://')||url.startsWith('https://'))){el.src=url;el.style.display='block';}
+  else{el.style.display='none';}
 }
 
-function quickAdd(btn) {
-  var text = btn.textContent.replace(/[\u{1F000}-\u{1FFFF}]/gu, '').trim();
-  // fallback: strip leading emoji-like chars
-  text = text.replace(/^[^\u0590-\u05FF\w]+/, '').trim();
-  document.getElementById('item-input').value = text;
-  document.getElementById('item-input').focus();
+function updateQty(id,val){
+  db.ref('fam/'+S.code+'/items/'+id).update({qty:val}).catch(function(){toast('שגיאה');});
 }
 
-function appToggle(id) {
-  var it = S.items[id];
-  if (!it) return;
-  db.ref('fam/' + S.code + '/items/' + id).update({
-    checked:   !it.checked,
-    checkedBy: !it.checked ? S.user : null,
-    checkedAt: !it.checked ? Date.now() : null
-  }).catch(function() { toast('שגיאה'); });
+function appToggle(id){
+  var it=S.items[id];if(!it)return;
+  db.ref('fam/'+S.code+'/items/'+id).update({
+    checked:!it.checked,
+    checkedBy:!it.checked?S.user:null,
+    checkedAt:!it.checked?Date.now():null
+  }).catch(function(){toast('שגיאה');});
 }
 
-function appDel(id) {
-  db.ref('fam/' + S.code + '/items/' + id).remove()
-    .then(function() { toast('הוסר'); })
-    .catch(function() { toast('שגיאה'); });
+function appDel(id){
+  db.ref('fam/'+S.code+'/items/'+id).remove().then(function(){toast('הוסר');}).catch(function(){toast('שגיאה');});
 }
 
-function clearChecked() {
-  var u = {};
-  var count = 0;
-  Object.keys(S.items).forEach(function(id) {
-    if (S.items[id].checked) { u['fam/' + S.code + '/items/' + id] = null; count++; }
+function clearChecked(){
+  var u={},count=0;
+  Object.keys(S.items).forEach(function(id){if(S.items[id].checked){u['fam/'+S.code+'/items/'+id]=null;count++;}});
+  if(!count)return toast('אין פריטים מסומנים');
+  db.ref().update(u).then(function(){toast(count+' פריטים הוסרו');}).catch(function(){toast('שגיאה');});
+}
+
+function uncheckAll(){
+  var u={},count=0;
+  Object.keys(S.items).forEach(function(id){
+    if(S.items[id].checked){u['fam/'+S.code+'/items/'+id+'/checked']=false;u['fam/'+S.code+'/items/'+id+'/checkedBy']=null;count++;}
   });
-  if (!count) return toast('אין פריטים מסומנים');
-  db.ref().update(u)
-    .then(function() { toast(count + ' פריטים הוסרו'); })
-    .catch(function() { toast('שגיאה'); });
+  if(!count)return toast('אין כלום לאפס');
+  db.ref().update(u).then(function(){toast('כל הסימונים אופסו');}).catch(function(){toast('שגיאה');});
 }
 
-function uncheckAll() {
-  var u = {};
-  var count = 0;
-  Object.keys(S.items).forEach(function(id) {
-    if (S.items[id].checked) {
-      u['fam/' + S.code + '/items/' + id + '/checked']   = false;
-      u['fam/' + S.code + '/items/' + id + '/checkedBy'] = null;
-      count++;
-    }
+function addFavorite(){
+  var text=document.getElementById('fav-new-name').value.trim();
+  var cat=document.getElementById('fav-new-cat').value;
+  if(!text)return toast('כתוב שם מוצר');
+  db.ref('fam/'+S.code+'/favs').push({text:text,category:cat})
+    .then(function(){document.getElementById('fav-new-name').value='';toast('"'+text+'" נוסף למועדפים');})
+    .catch(function(){toast('שגיאה');});
+}
+
+function deleteFav(id){
+  db.ref('fam/'+S.code+'/favs/'+id).remove().catch(function(){toast('שגיאה');});
+}
+
+function switchTab(tab){
+  ['list','shop'].forEach(function(t){
+    document.getElementById('t-'+t).classList.toggle('active',t===tab);
+    document.getElementById('c-'+t).classList.toggle('active',t===tab);
   });
-  if (!count) return toast('אין כלום לאפס');
-  db.ref().update(u)
-    .then(function() { toast('כל הסימונים אופסו'); })
-    .catch(function() { toast('שגיאה'); });
+  document.getElementById('fab').style.display=tab==='list'?'flex':'none';
 }
 
-function switchTab(tab) {
-  ['list', 'shop'].forEach(function(t) {
-    document.getElementById('t-' + t).classList.toggle('active', t === tab);
-    document.getElementById('c-' + t).classList.toggle('active', t === tab);
-  });
-  document.getElementById('fab').style.display = tab === 'list' ? 'flex' : 'none';
-}
-
-function logout() {
-  if (itemsRef && itemsListener) {
-    itemsRef.off('value', itemsListener);
-    itemsRef = null;
-    itemsListener = null;
-  }
+function logout(){
+  if(itemsRef&&itemsListener){itemsRef.off('value',itemsListener);itemsRef=null;itemsListener=null;}
+  if(favsRef&&favsListener){favsRef.off('value',favsListener);favsRef=null;favsListener=null;}
   localStorage.removeItem('kniYot_v1');
-  S = { code: null, family: null, user: null, items: {} };
-  closeSheet('settings-sheet');
+  S={code:null,family:null,user:null,items:{},favs:[]};
+  closeSheet('sh-settings');
   show('s-welcome');
 }
 
-/* ══════════════════════════════════════
-   STARTUP — runs after all functions defined
-   ══════════════════════════════════════ */
-(function init() {
-  if (!IS_CONFIGURED) {
-    var el = document.getElementById('cfg-warn-area');
-    if (el) el.innerHTML = '<div class="cfg-warn">⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.</div>';
+/* ── STARTUP ── */
+(function init(){
+  if(!IS_CONFIGURED){
+    var el=document.getElementById('cfg-warn-area');
+    if(el)el.innerHTML='<div class="cfgwarn">⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.</div>';
     return;
   }
-  try {
-    var saved = localStorage.getItem('kniYot_v1');
-    if (saved) {
-      var p = JSON.parse(saved);
-      if (p && p.code && p.family && p.user) {
-        S = { code: p.code, family: p.family, user: p.user, items: {} };
-        goApp();
-        return;
-      }
+  try{
+    var saved=localStorage.getItem('kniYot_v1');
+    if(saved){
+      var p=JSON.parse(saved);
+      if(p&&p.code&&p.family&&p.user){S={code:p.code,family:p.family,user:p.user,items:{},favs:[]};goApp();return;}
     }
-  } catch(e) {
-    localStorage.removeItem('kniYot_v1');
-  }
+  }catch(e){localStorage.removeItem('kniYot_v1');}
   show('s-welcome');
 })();
-
 </script>
 </body>
 </html>
