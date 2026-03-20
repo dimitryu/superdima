@@ -582,7 +582,7 @@ body {
   <div class="welcome-bg">
     <div class="welcome-badge">🌿 רשימת קניות משפחתית</div>
     <span class="welcome-icon">🛒</span>
-    <h1>קניות<br>ביחד</h1>
+    <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
   </div>
   <div id="cfg-warn-area"></div>
@@ -795,13 +795,13 @@ import { getDatabase, ref, set, get, onValue,
    ראה הוראות ב- README.md
    ───────────────────────────────────────────── */
 const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
-  authDomain:        "superdima-ef60f.firebaseapp.com",
-  databaseURL:       "https://superdima-ef60f-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId:         "superdima-ef60f",
-  storageBucket:     "superdima-ef60f.firebasestorage.app",
-  messagingSenderId: "1047807533790",
-  appId:             "1:1047807533790:web:48fd07f3e09cda2873d84f"
+  apiKey:            "YOUR_API_KEY",
+  authDomain:        "YOUR_PROJECT.firebaseapp.com",
+  databaseURL:       "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
 };
 /* ───────────────────────────────────────────── */
 
@@ -816,22 +816,33 @@ if (IS_CONFIGURED) {
 // ── STATE ──
 let S = { code: null, family: null, user: null, items: {} };
 
-// ── INIT ──
-if (!IS_CONFIGURED) {
-  document.getElementById('cfg-warn-area').innerHTML = `
-    <div class="cfg-warn">
-      ⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.<br>
-      📖 ראה הוראות מפורטות ב- <strong>README.md</strong>
-    </div>`;
-}
+// ── INIT — runs after DOM is ready ──
+document.addEventListener('DOMContentLoaded', () => {
+  if (!IS_CONFIGURED) {
+    document.getElementById('cfg-warn-area').innerHTML = `
+      <div class="cfg-warn">
+        ⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.<br>
+        📖 ראה הוראות מפורטות ב- <strong>README.md</strong>
+      </div>`;
+    return;
+  }
 
-const saved = localStorage.getItem('kniYot_v1');
-if (saved && IS_CONFIGURED) {
+  // Auto-login from localStorage
   try {
-    Object.assign(S, JSON.parse(saved));
-    goApp();
-  } catch(e) { localStorage.removeItem('kniYot_v1'); }
-}
+    const saved = localStorage.getItem('kniYot_v1');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.code && parsed.family && parsed.user) {
+        Object.assign(S, parsed);
+        goApp();
+        return;
+      }
+    }
+  } catch(e) {
+    localStorage.removeItem('kniYot_v1');
+  }
+  // No saved session → stay on welcome screen
+});
 
 // ── SCREEN ──
 window.show = id => {
