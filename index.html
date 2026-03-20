@@ -817,17 +817,15 @@ if (IS_CONFIGURED) {
 // ── STATE ──
 let S = { code: null, family: null, user: null, items: {} };
 
-// ── INIT — runs after DOM is ready ──
-document.addEventListener('DOMContentLoaded', () => {
-  if (!IS_CONFIGURED) {
-    document.getElementById('cfg-warn-area').innerHTML = `
-      <div class="cfg-warn">
-        ⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.<br>
-        📖 ראה הוראות מפורטות ב- <strong>README.md</strong>
-      </div>`;
-    return;
-  }
-
+// ── INIT ──
+// <script type="module"> is deferred by default — DOM is ready here
+if (!IS_CONFIGURED) {
+  document.getElementById('cfg-warn-area').innerHTML = `
+    <div class="cfg-warn">
+      ⚠️ <strong>צעד אחרון:</strong> עדכן את <code>FIREBASE_CONFIG</code> בקוד עם הערכים שלך מ-Firebase Console.<br>
+      📖 ראה הוראות מפורטות ב- <strong>README.md</strong>
+    </div>`;
+} else {
   // Auto-login from localStorage
   try {
     const saved = localStorage.getItem('kniYot_v1');
@@ -836,14 +834,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (parsed.code && parsed.family && parsed.user) {
         Object.assign(S, parsed);
         goApp();
-        return;
       }
     }
   } catch(e) {
     localStorage.removeItem('kniYot_v1');
   }
-  // No saved session → stay on welcome screen
-});
+}
 
 // ── SCREEN ──
 window.show = id => {
