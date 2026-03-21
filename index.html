@@ -61,11 +61,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .prog-fill{background:var(--g300);height:100%;border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
 .prog-lbl{font-size:13px;font-weight:700;color:#fff;min-width:40px}
 .prog-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px}
-.search-bar{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:var(--rf);padding:9px 16px;display:flex;align-items:center;gap:8px;margin:0 20px 14px}
-.search-bar input{flex:1;background:transparent;border:none;outline:none;font-family:'Heebo',sans-serif;font-size:14px;color:#fff;direction:rtl;text-align:right}
-.search-bar input::placeholder{color:rgba(255,255,255,.5)}
-.search-icon{color:rgba(255,255,255,.6);font-size:15px;flex-shrink:0}
-.clear-search{color:rgba(255,255,255,.6);font-size:14px;cursor:pointer;flex-shrink:0;background:none;border:none;padding:0;line-height:1}
+/* fav search moved inline */
 .main-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:160px}
 .cat-hdr{display:flex;align-items:center;gap:8px;padding:12px 16px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);background:var(--bg);position:sticky;top:0;z-index:2;border-bottom:1px solid var(--border)}
 .cat-hdr .ci{font-size:16px}.cat-hdr.done-cat{color:var(--t3)}
@@ -90,7 +86,11 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .sec-hdr{padding:14px 16px 6px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:7px;border-bottom:2px solid var(--border)}
 .sec-hdr.green{color:var(--g700);border-color:var(--g300)}.sec-hdr.dim{color:var(--t3);border-color:var(--border)}
 .fav-section{border-top:3px solid var(--border);background:#fff;margin-top:4px}
-.fav-sec-hdr{padding:12px 16px 8px;font-size:13px;font-weight:800;color:var(--t2);background:#fff}
+.fav-sec-hdr{padding:12px 16px 10px;font-size:13px;font-weight:800;color:var(--t2);background:#fff;position:sticky;top:0;z-index:4}
+.fav-search-row{display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--rf);padding:8px 14px}
+.fav-search-row input{flex:1;background:transparent;border:none;outline:none;font-family:'Heebo',sans-serif;font-size:14px;color:var(--text);direction:rtl;text-align:right}
+.fav-search-row input::placeholder{color:var(--t3)}
+#fav-shop-list{min-height:200px}
 .fav-group-hdr{padding:8px 16px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);background:var(--bg)}
 .fav-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;background:#fff}
 .fav-row:last-child{border:none}.fav-row:hover,.fav-row:active{background:var(--g50)}
@@ -234,11 +234,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="prog-inner"><div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div><div class="prog-lbl" id="prog-label">0/0</div></div>
     <div class="prog-sub">סמן פריטים שקנית</div>
   </div>
-  <div class="search-bar">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="fav-search" placeholder="חפש במועדפים..." oninput="onFavSearch(this.value)" autocomplete="off"/>
-    <button class="clear-search" id="search-clear" onclick="clearSearch()" style="display:none">✕</button>
-  </div>
+
   <div class="main-scroll" id="main-scroll">
     <div class="list-search-bar" id="list-search-wrap" style="display:none">
       <input type="text" id="list-search" placeholder="חפש ברשימה..." oninput="onListSearch(this.value)" autocomplete="off"/>
@@ -246,7 +242,14 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     </div>
     <div id="shop-body"></div>
     <div class="fav-section">
-      <div class="fav-sec-hdr">⭐ מועדפים <span style="font-size:11px;color:var(--t3);font-weight:400">· לחץ להוסיף לרשימה</span></div>
+      <div class="fav-sec-hdr">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">⭐ מועדפים <span style="font-size:11px;color:var(--t3);font-weight:400">· לחץ להוסיף לרשימה</span></div>
+        <div class="fav-search-row">
+          <span style="color:var(--t3);font-size:14px">🔍</span>
+          <input type="text" id="fav-search" placeholder="חפש במועדפים..." oninput="onFavSearch(this.value)" autocomplete="off"/>
+          <button id="search-clear" onclick="clearSearch()" style="display:none;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;flex-shrink:0">✕</button>
+        </div>
+      </div>
       <div id="fav-shop-list"></div>
     </div>
     <div style="height:20px"></div>
@@ -700,13 +703,24 @@ function clearSearch() {
 function onListSearch(val) {
   listSearchQ = val;
   document.getElementById('list-search-clr').style.display = val ? 'block' : 'none';
+  // Also push the same query into fav search for unified results
+  var favEl = document.getElementById('fav-search');
+  if (favEl) favEl.value = val;
+  favSearchQ = val;
+  document.getElementById('search-clear').style.display = val ? 'block' : 'none';
   render();
+  renderFavShop();
 }
 function clearListSearch() {
   listSearchQ = '';
+  favSearchQ = '';
   document.getElementById('list-search').value = '';
   document.getElementById('list-search-clr').style.display = 'none';
+  var favEl = document.getElementById('fav-search');
+  if (favEl) { favEl.value = ''; }
+  document.getElementById('search-clear').style.display = 'none';
   render();
+  renderFavShop();
 }
 
 /* ── AUTOCOMPLETE: ADD ITEM ── */
