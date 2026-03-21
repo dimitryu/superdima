@@ -574,8 +574,6 @@ function subscribeFavs() {
     var v = snap.val() || {};
     S.favs = Object.keys(v).map(function(k){ return {id:k, text:v[k].text, category:v[k].category}; });
     S.favs.sort(function(a,b){
-      var ci = catIndex(a.category) - catIndex(b.category);
-      if (ci) return ci;
       return (a.text||'').localeCompare(b.text||'', 'he');
     });
     renderFavShop();
