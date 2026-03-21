@@ -136,6 +136,23 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--g900);color:#fff;padding:11px 20px;border-radius:var(--rf);font-size:14px;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .25s,transform .25s;z-index:999;pointer-events:none;box-shadow:var(--sh2)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .cfgwarn{background:#FFF3CD;border:1px solid #FFC107;border-radius:var(--rs);padding:14px 16px;font-size:13px;line-height:1.6;color:#856404;margin:16px 24px 0}
+/* SEARCH BAR for list items */
+.list-search-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:3}
+.list-search-bar input{flex:1;border:1.5px solid var(--border);border-radius:var(--rf);padding:8px 14px;font-family:'Heebo',sans-serif;font-size:14px;direction:rtl;outline:none;background:var(--bg);color:var(--text)}
+.list-search-bar input:focus{border-color:var(--g500)}
+.list-search-clr{background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;flex-shrink:0}
+/* EDIT item */
+.edit-btn{background:none;border:none;color:var(--t3);cursor:pointer;padding:5px;font-size:14px;border-radius:6px;flex-shrink:0;transition:color .15s}
+.edit-btn:hover{color:var(--g500)}
+/* IMAGE LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.open{display:flex}
+.lightbox img{max-width:92vw;max-height:88dvh;border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.lightbox-close{position:absolute;top:16px;right:20px;color:#fff;font-size:28px;cursor:pointer;background:rgba(0,0,0,.4);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;line-height:1}
+.iimg{cursor:zoom-in}
+/* Edit sheet */
+.edit-field-row{display:flex;gap:10px;margin-top:12px}
+
 </style></head>
 <body>
 <div id="app">
@@ -223,6 +240,10 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="clear-search" id="search-clear" onclick="clearSearch()" style="display:none">✕</button>
   </div>
   <div class="main-scroll" id="main-scroll">
+    <div class="list-search-bar" id="list-search-wrap" style="display:none">
+      <input type="text" id="list-search" placeholder="חפש ברשימה..." oninput="onListSearch(this.value)" autocomplete="off"/>
+      <button class="list-search-clr" id="list-search-clr" onclick="clearListSearch()" style="display:none">✕</button>
+    </div>
     <div id="shop-body"></div>
     <div class="fav-section">
       <div class="fav-sec-hdr">⭐ מועדפים <span style="font-size:11px;color:var(--t3);font-weight:400">· לחץ להוסיף לרשימה</span></div>
@@ -303,6 +324,44 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 </div>
 
 <div class="toast" id="toast"></div>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+<!-- EDIT SHEET -->
+<div class="overlay" id="sh-edit" onclick="overlayClick(event,'sh-edit')">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>✏️ עריכת פריט</h3>
+    <input type="hidden" id="edit-item-id"/>
+    <div style="margin-top:0">
+      <label class="flbl">שם המוצר</label>
+      <input class="finput" type="text" id="edit-item-name" placeholder="שם המוצר"/>
+    </div>
+    <div class="edit-field-row">
+      <div style="flex:1">
+        <label class="flbl">קטגוריה</label>
+        <select id="edit-item-cat" class="cat-select" style="padding:11px 12px;border-radius:var(--rs)"></select>
+      </div>
+      <div style="width:95px">
+        <label class="flbl">כמות</label>
+        <input type="text" id="edit-item-qty" placeholder="1 יח׳" style="width:100%;padding:11px 10px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;text-align:center;outline:none;direction:ltr;background:#fff"/>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label class="flbl">תמונה חדשה (אופציונלי)</label>
+      <input type="file" accept="image/*" id="edit-img-file" style="display:none" onchange="handleEditImg(event)"/>
+      <button class="img-upload-btn" onclick="document.getElementById('edit-img-file').click()">📷 החלף תמונה</button>
+      <img id="edit-img-preview" class="img-preview-box" alt=""/>
+      <button id="edit-img-clear" onclick="clearEditImg()" style="display:none;margin-top:6px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-family:'Heebo',sans-serif">✕ הסר תמונה</button>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn btn-d btn-sm" style="flex:1" onclick="closeSheet('sh-edit')">ביטול</button>
+      <button class="btn btn-p" style="flex:2" onclick="saveEdit()">שמור שינויים ✓</button>
+    </div>
+  </div>
+</div>
 </div><!-- #app -->
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -319,7 +378,6 @@ var FIREBASE_CONFIG = {
   appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
   measurementId: "G-JNF66CHKYX"
 };
-
 
 var CATS = [
   {id:'general', label:'כללי',           icon:'🛍️'},
@@ -385,6 +443,8 @@ var db=null, itemsRef=null, itemsListener=null, favsRef=null, favsListener=null;
 var S = {code:null, family:null, user:null, items:{}, favs:[]};
 var pendingImgBase64 = null;
 var favSearchQ = '';
+var listSearchQ = '';
+var editImgBase64 = null;
 
 /* ── PWA ── */
 (function setupPWA() {
@@ -446,6 +506,7 @@ function buildSelects() {
   var opts = CATS.map(function(c){ return '<option value="'+c.id+'">'+c.icon+' '+c.label+'</option>'; }).join('');
   document.getElementById('item-cat').innerHTML = opts;
   document.getElementById('fav-new-cat').innerHTML = opts;
+  document.getElementById('edit-item-cat').innerHTML = opts;
 }
 
 /* ── NAV ── */
@@ -513,9 +574,12 @@ function groupByCat(list) {
 
 function render() {
   var all = Object.keys(S.items).map(function(id){ return Object.assign({id:id}, S.items[id]); });
-  var unc = sortedEntries(all.filter(function(i){ return !i.checked; }));
-  var chk = sortedEntries(all.filter(function(i){ return  i.checked; }));
-  var total = unc.length + chk.length, done = chk.length;
+  var q = norm(listSearchQ);
+  var filtered = q ? all.filter(function(i){ return norm(i.text).indexOf(q) >= 0; }) : all;
+  var unc = sortedEntries(filtered.filter(function(i){ return !i.checked; }));
+  var chk = sortedEntries(filtered.filter(function(i){ return  i.checked; }));
+  var total = all.length, done = all.filter(function(i){return i.checked;}).length;
+  document.getElementById('list-search-wrap').style.display = all.length ? 'flex' : 'none';
   document.getElementById('prog-label').textContent = done + '/' + total;
   document.getElementById('prog-fill').style.width  = total ? ((done/total)*100) + '%' : '0%';
   document.getElementById('shop-bot').style.display = total ? 'flex' : 'none';
@@ -554,7 +618,7 @@ function itemCard(item) {
 
   var imgH = '';
   if (item.imageUrl) {
-    imgH = '<img class="iimg" src="' + esc(item.imageUrl) + '" onerror="this.style.display=\'none\'" alt=""/>';
+    imgH = '<img class="iimg" src="' + esc(item.imageUrl) + '" onclick="openLightbox(\''+esc(item.imageUrl)+'\')" onerror="this.style.display=\'none\'" alt="" title="לחץ להגדלה"/>';
   }
 
   var meta = '<span class="cat-tag">' + cat.icon + ' ' + cat.label + '</span>';
@@ -567,13 +631,14 @@ function itemCard(item) {
     + ' onchange="updateQty(\'' + item.id + '\',this.value)" onclick="event.stopPropagation()"/>'
     + '</div>';
 
-  var delH = '<button class="dbtn" onclick="appDel(\'' + item.id + '\')" title="מחק">✕</button>';
+  var editH = '<button class="edit-btn" onclick="openEdit(\''+item.id+'\')" title="עריכה">✏️</button>';
+  var delH = '<button class="dbtn" onclick="appDel(\''+item.id+'\')">✕</button>';
 
   return '<div class="icard' + cls + '">'
     + '<div class="ckbtn' + ckc + ' shop-ck" onclick="appToggle(\'' + item.id + '\')">' + (ch?'✓':'') + '</div>'
     + imgH
     + '<div class="ibody"><div class="iname">' + esc(item.text) + '</div><div class="imeta">' + meta + '</div></div>'
-    + qtyH + delH
+    + qtyH + editH + delH
     + '</div>';
 }
 
@@ -632,6 +697,17 @@ function clearSearch() {
   document.getElementById('search-clear').style.display = 'none';
   renderFavShop();
 }
+function onListSearch(val) {
+  listSearchQ = val;
+  document.getElementById('list-search-clr').style.display = val ? 'block' : 'none';
+  render();
+}
+function clearListSearch() {
+  listSearchQ = '';
+  document.getElementById('list-search').value = '';
+  document.getElementById('list-search-clr').style.display = 'none';
+  render();
+}
 
 /* ── AUTOCOMPLETE: ADD ITEM ── */
 function onAddItemInput(val) {
@@ -687,6 +763,73 @@ function onFavMgmtKey(e) {
 }
 
 /* ── IMAGE ── */
+/* ── LIGHTBOX ── */
+function openLightbox(url) {
+  document.getElementById('lightbox-img').src = url;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.getElementById('lightbox-img').src = '';
+  document.body.style.overflow = '';
+}
+
+/* ── EDIT ITEM ── */
+function openEdit(id) {
+  var it = S.items[id];
+  if (!it) return;
+  document.getElementById('edit-item-id').value = id;
+  document.getElementById('edit-item-name').value = it.text || '';
+  document.getElementById('edit-item-cat').value  = it.category || 'general';
+  document.getElementById('edit-item-qty').value  = it.qty || '';
+  editImgBase64 = null;
+  var prev = document.getElementById('edit-img-preview');
+  if (it.imageUrl) { prev.src = it.imageUrl; prev.style.display = 'block'; }
+  else             { prev.style.display = 'none'; }
+  document.getElementById('edit-img-clear').style.display = it.imageUrl ? 'inline-block' : 'none';
+  document.getElementById('edit-img-file').value = '';
+  openSheet('sh-edit');
+}
+function handleEditImg(e) {
+  var file = e.target.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    var img = new Image();
+    img.onload = function(){
+      var MAX=480, w=img.width, h=img.height;
+      if (w>MAX||h>MAX){var r=Math.min(MAX/w,MAX/h);w=Math.round(w*r);h=Math.round(h*r);}
+      var canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      editImgBase64 = canvas.toDataURL('image/jpeg',.72);
+      document.getElementById('edit-img-preview').src = editImgBase64;
+      document.getElementById('edit-img-preview').style.display = 'block';
+      document.getElementById('edit-img-clear').style.display = 'inline-block';
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function clearEditImg() {
+  editImgBase64 = 'REMOVE';
+  document.getElementById('edit-img-preview').style.display = 'none';
+  document.getElementById('edit-img-clear').style.display = 'none';
+  document.getElementById('edit-img-file').value = '';
+}
+function saveEdit() {
+  var id   = document.getElementById('edit-item-id').value;
+  var text = document.getElementById('edit-item-name').value.trim();
+  var cat  = document.getElementById('edit-item-cat').value;
+  var qty  = document.getElementById('edit-item-qty').value.trim();
+  if (!text) return toast('כתוב שם מוצר');
+  var upd = {text:text, category:cat, qty:qty||null};
+  if (editImgBase64 === 'REMOVE') upd.imageUrl = null;
+  else if (editImgBase64)          upd.imageUrl = editImgBase64;
+  db.ref('fam/'+S.code+'/items/'+id).update(upd)
+    .then(function(){ closeSheet('sh-edit'); toast('"'+text+'" עודכן ✓'); editImgBase64=null; })
+    .catch(function(){ toast('שגיאה בעדכון'); });
+}
+
 function handleImgUpload(e) {
   var file = e.target.files[0]; if (!file) return;
   var reader = new FileReader();
