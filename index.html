@@ -75,7 +75,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .ckbtn:hover{border-color:var(--g500);transform:scale(1.1)}.ckbtn.checked{background:var(--g500);border-color:var(--g500);color:#fff}
 .ckbtn.shop-ck:not(.checked){border-color:var(--g500)}
 .iimg{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)}
-.ibody{flex:1;min-width:0}.iname{font-size:17px;font-weight:600;line-height:1.3}
+.ibody{flex:1;min-width:0}.iname{font-size:var(--item-font,17px);font-weight:600;line-height:1.3}
 .imeta{font-size:11px;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .cat-tag{background:var(--g50);color:var(--g700);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;white-space:nowrap}
 .added-by{color:var(--t2);font-weight:500}
@@ -136,6 +136,13 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--g900);color:#fff;padding:11px 20px;border-radius:var(--rf);font-size:14px;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .25s,transform .25s;z-index:999;pointer-events:none;box-shadow:var(--sh2)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .cfgwarn{background:#FFF3CD;border:1px solid #FFC107;border-radius:var(--rs);padding:14px 16px;font-size:13px;line-height:1.6;color:#856404;margin:16px 24px 0}
+.font-size-btn{width:36px;height:36px;border-radius:var(--rs);border:2px solid var(--border);background:#fff;cursor:pointer;font-family:'Heebo',sans-serif;font-weight:700;color:var(--t2);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.font-size-btn:hover{border-color:var(--g500);color:var(--g700)}
+.font-size-btn.active{background:var(--g700);border-color:var(--g700);color:#fff}
+#fs-small{font-size:12px}
+#fs-medium{font-size:15px}
+#fs-large{font-size:18px}
+#fs-xlarge{font-size:22px}
 /* SEARCH BAR for list items */
 .list-search-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:3}
 .list-search-bar input{flex:1;border:1.5px solid var(--border);border-radius:var(--rf);padding:8px 14px;font-family:'Heebo',sans-serif;font-size:14px;direction:rtl;outline:none;background:var(--bg);color:var(--text)}
@@ -170,7 +177,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 1.7 · Family Shopping App</div>
+  <div class="wfooter">גרסה 1.8 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -227,7 +234,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v1.7</div>
+      <div class="ver-badge">v1.8</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -343,6 +350,15 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
       <span class="sl">🔑 קוד הצטרפות</span>
       <div style="display:flex;align-items:center;gap:8px"><span class="sv" id="ss-code">—</span><button class="btn btn-g btn-sm" onclick="copyCode()">העתק</button></div>
     </div>
+    <div class="srow">
+      <span class="sl">🔤 גודל טקסט פריטים</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="font-size-btn" id="fs-small"  onclick="setFontSize('small')"  title="קטן">א</button>
+        <button class="font-size-btn" id="fs-medium" onclick="setFontSize('medium')" title="בינוני">א</button>
+        <button class="font-size-btn" id="fs-large"  onclick="setFontSize('large')"  title="גדול">א</button>
+        <button class="font-size-btn" id="fs-xlarge" onclick="setFontSize('xlarge')" title="גדול מאוד">א</button>
+      </div>
+    </div>
     <div style="margin-top:20px"><button class="btn btn-d" style="width:100%" onclick="logout()">🚪 יציאה מהרשימה</button></div>
   </div>
 </div>
@@ -402,7 +418,6 @@ var FIREBASE_CONFIG = {
   appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
   measurementId: "G-JNF66CHKYX"
 };
-
 var CATS = [
   {id:'general',  label:'כללי',             icon:'🛍️'},
   {id:'alcohol',  label:'אלכוהול',           icon:'🍷'},
@@ -466,7 +481,7 @@ var DEFAULT_FAVS = [
 var IS_CONFIGURED = FIREBASE_CONFIG.apiKey.indexOf("YOUR") === -1;
 var db=null, itemsRef=null, itemsListener=null, favsRef=null, favsListener=null;
 // Firebase init happens AFTER all functions defined — see bottom of script
-var S = {code:null, family:null, user:null, items:{}, favs:[]};
+var S = {code:null, family:null, user:null, items:{}, favs:[], fontSize:'medium'};
 var pendingImgBase64 = null;
 var favSearchQ = '';
 var listSearchQ = '';
@@ -515,7 +530,7 @@ function ago(ts) {
 }
 function catById(id) { for (var i=0;i<CATS.length;i++) if (CATS[i].id===id) return CATS[i]; return CATS[0]; }
 function catIndex(id){ var i=CATS.findIndex(function(c){return c.id===id;}); return i<0?0:i; }
-function save() { localStorage.setItem('kniYot_v1', JSON.stringify({code:S.code,family:S.family,user:S.user})); }
+function save() { localStorage.setItem('kniYot_v1', JSON.stringify({code:S.code,family:S.family,user:S.user,fontSize:S.fontSize})); }
 function norm(s) { return (s||'').trim().toLowerCase(); }
 
 function inListSet() {
@@ -539,6 +554,7 @@ function buildSelects() {
 
 /* ── NAV ── */
 function goApp() {
+  applyFontSize(S.fontSize || 'medium');
   document.getElementById('h-family').textContent  = 'רשימת קניות של משפחת ' + S.family;
   document.getElementById('h-user').textContent    = S.user;
   document.getElementById('ss-family').textContent = S.family;
@@ -1015,6 +1031,21 @@ function addFavorite() {
     })
     .catch(function(){ toast('שגיאה'); });
 }
+function applyFontSize(size) {
+  var sizes = {small:'13px', medium:'17px', large:'20px', xlarge:'24px'};
+  var px = sizes[size] || '17px';
+  document.documentElement.style.setProperty('--item-font', px);
+  // Update button states
+  ['small','medium','large','xlarge'].forEach(function(s){
+    var btn = document.getElementById('fs-'+s);
+    if (btn) btn.classList.toggle('active', s===size);
+  });
+}
+function setFontSize(size) {
+  S.fontSize = size;
+  applyFontSize(size);
+  save();
+}
 function deleteFav(id) {
   db.ref('fam/' + S.code + '/favs/' + id).remove().catch(function(){ toast('שגיאה'); });
 }
@@ -1062,7 +1093,7 @@ function logout() {
     if (saved) {
       var p = JSON.parse(saved);
       if (p && p.code && p.family && p.user) {
-        S = {code:p.code, family:p.family, user:p.user, items:{}, favs:[]};
+        S = {code:p.code, family:p.family, user:p.user, items:{}, favs:[], fontSize:p.fontSize||'medium'};
         goApp(); return;
       }
     }
