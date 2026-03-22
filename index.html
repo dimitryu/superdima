@@ -170,7 +170,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 1.6 · Family Shopping App</div>
+  <div class="wfooter">גרסה 1.7 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -227,7 +227,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v1.6</div>
+      <div class="ver-badge">v1.7</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -403,21 +403,20 @@ var FIREBASE_CONFIG = {
   measurementId: "G-JNF66CHKYX"
 };
 
-
 var CATS = [
   {id:'general',  label:'כללי',             icon:'🛍️'},
-  {id:'veggies',  label:'ירקות ופירות',      icon:'🍅'},
-  {id:'dairy',    label:'חלב וביצים',        icon:'🧀'},
-  {id:'bread',    label:'לחם ומאפים',        icon:'🍞'},
-  {id:'baking',   label:'מוצרי אפייה',       icon:'🧁'},
+  {id:'alcohol',  label:'אלכוהול',           icon:'🍷'},
   {id:'meat',     label:'בשר ודגים',         icon:'🥩'},
-  {id:'pantry',   label:'מזווה ובישול',      icon:'🍝'},
-  {id:'cans',     label:'שימורים',           icon:'🥫'},
+  {id:'hygiene',  label:'היגיינה אישית',     icon:'🪥'},
+  {id:'dairy',    label:'חלב וביצים',        icon:'🧀'},
   {id:'snacks',   label:'חטיפים וממתקים',    icon:'🍫'},
   {id:'drinks',   label:'משקאות קלים',       icon:'🥤'},
-  {id:'alcohol',  label:'אלכוהול',           icon:'🍷'},
-  {id:'hygiene',  label:'היגיינה אישית',     icon:'🪥'},
-  {id:'cleaning', label:'ניקיון ובית',       icon:'🧹'}
+  {id:'pantry',   label:'מזווה ובישול',      icon:'🍝'},
+  {id:'baking',   label:'מוצרי אפייה',       icon:'🧁'},
+  {id:'bread',    label:'לחם ומאפים',        icon:'🍞'},
+  {id:'veggies',  label:'ירקות ופירות',      icon:'🍅'},
+  {id:'cleaning', label:'ניקיון ובית',       icon:'🧹'},
+  {id:'cans',     label:'שימורים',           icon:'🥫'}
 ];
 
 var DEFAULT_FAVS = [
@@ -662,7 +661,7 @@ function itemCard(item) {
   var delH = '<button class="dbtn" onclick="appDel(\''+item.id+'\')">✕</button>';
 
   return '<div class="icard' + cls + '">'
-    + '<div class="ckbtn' + ckc + ' shop-ck" onclick="appToggle(\'' + item.id + '\')">' + (ch?'✓':'') + '</div>'
+    + '<button class="ckbtn' + ckc + ' shop-ck" ontouchstart="" onclick="appToggle(\\\'' + item.id + '\\\')">' + (ch?'✓':'') + '</button>'
     + imgH
     + '<div class="ibody"><div class="iname">' + esc(item.text) + '</div><div class="imeta">' + meta + '</div></div>'
     + qtyH + editH + delH
