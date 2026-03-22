@@ -96,7 +96,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .fav-row:last-child{border:none}.fav-row:hover,.fav-row:active{background:var(--g50)}
 .fav-row.in-list{opacity:.38;pointer-events:none}
 .fav-icon{font-size:17px;flex-shrink:0;width:22px;text-align:center}
-.fav-name{flex:1;font-size:14px;font-weight:500;color:var(--text)}
+.fav-name{flex:1;font-size:var(--item-font,17px);font-weight:500;color:var(--text)}
 .fav-add-icon{font-size:20px;color:var(--g500)}.fav-in-badge{font-size:11px;color:var(--g500);font-weight:600}
 .fav-no-results{padding:20px 16px;text-align:center;color:var(--t3);font-size:13px}
 .empty{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px 32px;gap:12px}
@@ -177,7 +177,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 1.8 · Family Shopping App</div>
+  <div class="wfooter">גרסה 1.9 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -234,7 +234,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v1.8</div>
+      <div class="ver-badge">v1.9</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -418,6 +418,7 @@ var FIREBASE_CONFIG = {
   appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
   measurementId: "G-JNF66CHKYX"
 };
+
 var CATS = [
   {id:'general',  label:'כללי',             icon:'🛍️'},
   {id:'alcohol',  label:'אלכוהול',           icon:'🍷'},
@@ -677,7 +678,7 @@ function itemCard(item) {
   var delH = '<button class="dbtn" onclick="appDel(\''+item.id+'\')">✕</button>';
 
   return '<div class="icard' + cls + '">'
-    + '<button class="ckbtn' + ckc + ' shop-ck" ontouchstart="" onclick="appToggle(\\\'' + item.id + '\\\')">' + (ch?'✓':'') + '</button>'
+    + '<button class="ckbtn' + ckc + ' shop-ck" ontouchstart="" onclick="appToggle(\'' + item.id + '\')">'+  (ch?'✓':'') + '</button>'
     + imgH
     + '<div class="ibody"><div class="iname">' + esc(item.text) + '</div><div class="imeta">' + meta + '</div></div>'
     + qtyH + editH + delH
@@ -719,7 +720,7 @@ function renderFavMgmt() {
     var cat = catById(f.category||'general');
     html += '<div class="fav-mgmt-row">'
       + '<span style="font-size:18px">' + cat.icon + '</span>'
-      + '<span style="flex:1;font-size:14px;font-weight:500">' + esc(f.text) + '</span>'
+      + '<span class="fav-name">' + esc(f.text) + '</span>'
       + '<span style="font-size:11px;color:var(--t3);margin-left:4px">' + cat.label + '</span>'
       + '<button class="edit-btn" onclick="openFavEdit(\'' + f.id + '\')" title="ערוך">✏️</button>'
       + '<button class="fav-del" onclick="deleteFav(\'' + f.id + '\')" title="מחק">✕</button>'
