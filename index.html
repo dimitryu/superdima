@@ -28,8 +28,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .wfooter{text-align:center;padding:0 24px 24px;color:var(--t3);font-size:12px;font-weight:500;letter-spacing:.5px}
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--r);border:none;font-family:'Heebo',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1)}
 .btn:active{transform:scale(.97)}
-.btn-p{background:var(--g700);color:#fff;box-shadow:0 4px 14px rgba(45,106,79,.35)}.btn-p:hover{background:var(--g900)}
-.btn-g{background:#fff;color:var(--g700);border:2px solid var(--border)}.btn-g:hover{border-color:var(--g300);background:var(--g50)}
+.btn-p{background:var(--g700);color:#fff;box-shadow:0 4px 14px rgba(45,106,79,.35)}@media(hover:hover){.btn-p:hover{background:var(--g900)}}
+.btn-g{background:#fff;color:var(--g700);border:2px solid var(--border)}@media(hover:hover){.btn-g:hover{border-color:var(--g300);background:var(--g50)}}
 .btn-a{background:var(--amber);color:#fff}.btn-d{background:#fff;color:var(--red);border:1.5px solid var(--border)}
 .btn-sm{padding:8px 16px;font-size:14px;border-radius:var(--rs)}
 .ftop{background:var(--g900);padding:52px 28px 36px;color:#fff}
@@ -72,12 +72,12 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .icard.done .iname{text-decoration:line-through;color:var(--t3)}
 .icard.shop-hi{border-color:var(--g300);background:var(--g50);box-shadow:0 2px 8px rgba(64,145,108,.12)}
 .ckbtn{width:26px;height:26px;border-radius:50%;border:2.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .2s cubic-bezier(.34,1.56,.64,1);font-size:12px;color:transparent;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
-.ckbtn:hover{border-color:var(--g500);transform:scale(1.1)}.ckbtn.checked{background:var(--g500);border-color:var(--g500);color:#fff}
+@media(hover:hover){.ckbtn:hover{border-color:var(--g500);transform:scale(1.1)}}.ckbtn.checked{background:var(--g500);border-color:var(--g500);color:#fff}
 .ckbtn.shop-ck:not(.checked){border-color:var(--g500)}
 .iimg{width:42px;height:42px;border-radius:8px;object-fit:cover;flex-shrink:0;border:1px solid var(--border)}
 .ibody{flex:1;min-width:0}.iname{font-size:var(--item-font,17px);font-weight:600;line-height:1.3}
-.imeta{font-size:11px;color:var(--t3);margin-top:3px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
-.cat-tag{background:var(--g50);color:var(--g700);border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;white-space:nowrap}
+.imeta{font-size:13px;color:var(--t3);margin-top:4px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.cat-tag{background:var(--g50);color:var(--g700);border-radius:5px;padding:2px 7px;font-size:12px;font-weight:600;white-space:nowrap}
 .added-by{color:var(--t2);font-weight:500}
 .qty-wrap{display:flex;align-items:center;background:var(--g50);border-radius:8px;border:1.5px solid var(--g100);flex-shrink:0}
 .qty-wrap input{width:54px;border:none;background:transparent;font-family:'Heebo',sans-serif;font-size:13px;font-weight:700;text-align:center;color:var(--text);outline:none;padding:5px 4px;direction:ltr}
@@ -93,7 +93,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 #fav-shop-list{min-height:200px}
 .fav-group-hdr{padding:8px 16px 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);background:var(--bg)}
 .fav-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;background:#fff;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
-.fav-row:last-child{border:none}.fav-row:hover,.fav-row:active{background:var(--g50)}
+.fav-row:last-child{border:none}.fav-row:active{background:var(--g50)}@media(hover:hover){.fav-row:hover{background:var(--g50)}}
 .fav-row.in-list{opacity:.38;pointer-events:none}
 .fav-icon{font-size:17px;flex-shrink:0;width:22px;text-align:center}
 .fav-name{flex:1;font-size:var(--item-font,17px);font-weight:500;color:var(--text)}
@@ -177,7 +177,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 1.9 · Family Shopping App</div>
+  <div class="wfooter">גרסה 2.0 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -234,7 +234,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v1.9</div>
+      <div class="ver-badge">v2.0</div>
     </div>
   </div>
   <div class="prog-wrap">
