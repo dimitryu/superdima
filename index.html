@@ -129,6 +129,9 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .fav-add-bar .finput{padding:10px 14px;font-size:14px;border-radius:var(--rs)}
 .fav-mgmt-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
 .fav-mgmt-row:last-child{border:none}
+.fav-to-list-btn{background:var(--g50);border:1.5px solid var(--g300);color:var(--g700);cursor:pointer;font-size:15px;font-weight:700;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-family:'Heebo',sans-serif;touch-action:manipulation}
+.fav-to-list-btn:hover{background:var(--g700);color:#fff;border-color:var(--g700)}
+.fav-to-list-btn.in-list-btn{background:var(--g100);border-color:var(--g300);color:var(--g500);cursor:default}
 .fav-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;border-radius:6px}
 .fav-del:hover{color:var(--red)}
 .srow{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
@@ -177,7 +180,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 2.0 · Family Shopping App</div>
+  <div class="wfooter">גרסה 2.1 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -234,7 +237,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v2.0</div>
+      <div class="ver-badge">v2.1</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -432,7 +435,8 @@ var CATS = [
   {id:'bread',    label:'לחם ומאפים',        icon:'🍞'},
   {id:'veggies',  label:'ירקות ופירות',      icon:'🍅'},
   {id:'cleaning', label:'ניקיון ובית',       icon:'🧹'},
-  {id:'cans',     label:'שימורים',           icon:'🥫'}
+  {id:'cans',     label:'שימורים',           icon:'🥫'},
+  {id:'soda',     label:'שתיה מתוקה',        icon:'🥤'}
 ];
 
 var DEFAULT_FAVS = [
@@ -718,10 +722,12 @@ function renderFavMgmt() {
   var html = '';
   S.favs.forEach(function(f){
     var cat = catById(f.category||'general');
+    var alreadyIn = inListSet()[norm(f.text)];
     html += '<div class="fav-mgmt-row">'
       + '<span style="font-size:18px">' + cat.icon + '</span>'
       + '<span class="fav-name">' + esc(f.text) + '</span>'
       + '<span style="font-size:11px;color:var(--t3);margin-left:4px">' + cat.label + '</span>'
+      + '<button class="fav-to-list-btn' + (alreadyIn ? ' in-list-btn' : '') + '" onclick="addFavToListFromMgmt(\'' + f.text.replace(/\'/g, "\\\'"   ) + '\',\'' + f.category + '\')" title="' + (alreadyIn ? 'כבר ברשימה' : 'הוסף לרשימה') + '">' + (alreadyIn ? '✓' : '+') + '</button>'
       + '<button class="edit-btn" onclick="openFavEdit(\'' + f.id + '\')" title="ערוך">✏️</button>'
       + '<button class="fav-del" onclick="deleteFav(\'' + f.id + '\')" title="מחק">✕</button>'
       + '</div>';
@@ -1049,6 +1055,13 @@ function setFontSize(size) {
 }
 function deleteFav(id) {
   db.ref('fam/' + S.code + '/favs/' + id).remove().catch(function(){ toast('שגיאה'); });
+}
+function addFavToListFromMgmt(text, cat) {
+  if (!IS_CONFIGURED) return;
+  if (inListSet()[norm(text)]) return toast('"' + text + '" כבר ברשימה');
+  db.ref('fam/' + S.code + '/items').push({text:text, category:cat, addedBy:S.user, addedAt:Date.now(), checked:false})
+    .then(function(){ toast('"' + text + '" נוסף לרשימה ✓'); renderFavMgmt(); })
+    .catch(function(){ toast('שגיאה'); });
 }
 function openFavEdit(id) {
   var f = S.favs.find(function(x){ return x.id === id; });
