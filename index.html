@@ -129,6 +129,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .fav-add-bar .finput{padding:10px 14px;font-size:14px;border-radius:var(--rs)}
 .fav-mgmt-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
 .fav-mgmt-row:last-child{border:none}
+.fav-reset-btn{background:none;border:1.5px solid var(--border);color:var(--t2);cursor:pointer;font-size:12px;font-weight:600;padding:5px 10px;border-radius:var(--rf);font-family:'Heebo',sans-serif;white-space:nowrap;touch-action:manipulation;transition:all .15s}
+.fav-reset-btn:hover{border-color:var(--g500);color:var(--g700)}
 .fav-to-list-btn{background:var(--g50);border:1.5px solid var(--g300);color:var(--g700);cursor:pointer;font-size:15px;font-weight:700;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;font-family:'Heebo',sans-serif;touch-action:manipulation}
 .fav-to-list-btn:hover{background:var(--g700);color:#fff;border-color:var(--g700)}
 .fav-to-list-btn.in-list-btn{background:var(--g100);border-color:var(--g300);color:var(--g500);cursor:default}
@@ -180,7 +182,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 2.2 · Family Shopping App</div>
+  <div class="wfooter">גרסה 2.3 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -237,7 +239,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v2.2</div>
+      <div class="ver-badge">v2.3</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -253,7 +255,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div id="shop-body"></div>
     <div class="fav-section">
       <div class="fav-sec-hdr">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">⭐ מועדפים <span style="font-size:11px;color:var(--t3);font-weight:400">· לחץ להוסיף לרשימה</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="display:flex;align-items:center;gap:6px">⭐ מועדפים <span style="font-size:11px;color:var(--t3);font-weight:400">· לחץ להוסיף לרשימה</span></div><button class="fav-reset-btn" onclick="resetFavChecks()" title="אפס כל הסימונים">↺ אפס +</button></div>
         <div class="fav-search-row">
           <span style="color:var(--t3);font-size:14px">🔍</span>
           <input type="text" id="fav-search" placeholder="חפש במועדפים..." oninput="onFavSearch(this.value)" autocomplete="off"/>
@@ -1005,7 +1007,8 @@ function appToggle(id) {
 }
 function appDel(id) {
   db.ref('fam/' + S.code + '/items/' + id).remove()
-    .then(function(){ toast('הוסר'); }).catch(function(){ toast('שגיאה'); });
+    .then(function(){ toast('הוסר'); renderFavMgmt(); })
+    .catch(function(){ toast('שגיאה'); });
 }
 function clearChecked() {
   var u = {}, count = 0;
@@ -1052,6 +1055,23 @@ function setFontSize(size) {
   S.fontSize = size;
   applyFontSize(size);
   save();
+}
+function resetFavChecks() {
+  // Remove ALL unchecked items from list (keeps checked ones — they're done)
+  // Actually: remove all active (unchecked) items from the shopping list
+  // so all favorites show + again
+  var u = {}, count = 0;
+  Object.keys(S.items).forEach(function(id){
+    if (!S.items[id].checked) {
+      u['fam/' + S.code + '/items/' + id] = null;
+      count++;
+    }
+  });
+  if (!count) { toast('אין פריטים פעילים לאיפוס'); return; }
+  if (!confirm('למחוק ' + count + ' פריטים פעילים מרשימת הקניות?')) return;
+  db.ref().update(u)
+    .then(function(){ toast(count + ' פריטים הוסרו — כל ה-+ חזרו'); renderFavMgmt(); })
+    .catch(function(){ toast('שגיאה'); });
 }
 function deleteFav(id) {
   db.ref('fam/' + S.code + '/favs/' + id).remove().catch(function(){ toast('שגיאה'); });
