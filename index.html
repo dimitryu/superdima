@@ -180,7 +180,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 2.1 · Family Shopping App</div>
+  <div class="wfooter">גרסה 2.2 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -237,7 +237,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v2.1</div>
+      <div class="ver-badge">v2.2</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -436,7 +436,6 @@ var CATS = [
   {id:'veggies',  label:'ירקות ופירות',      icon:'🍅'},
   {id:'cleaning', label:'ניקיון ובית',       icon:'🧹'},
   {id:'cans',     label:'שימורים',           icon:'🥫'},
-  {id:'soda',     label:'שתיה מתוקה',        icon:'🥤'}
 ];
 
 var DEFAULT_FAVS = [
@@ -655,6 +654,7 @@ function render() {
   }
   sb.innerHTML = html;
   renderFavShop();
+  renderFavMgmt();
 }
 
 function itemCard(item) {
