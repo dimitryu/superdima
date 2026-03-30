@@ -115,7 +115,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .ac-wrap{position:relative}
 .ac-drop{position:absolute;top:100%;right:0;left:0;background:#fff;border:2px solid var(--g300);border-top:none;border-radius:0 0 var(--rs) var(--rs);box-shadow:var(--sh2);z-index:200;max-height:180px;overflow-y:auto;display:none}
 .ac-drop.open{display:block}
-.ac-item{padding:11px 16px;cursor:pointer;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.ac-item{padding:11px 16px;cursor:pointer;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);background:#fff;width:100%;text-align:right;font-family:'Heebo',sans-serif;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .ac-item:last-child{border:none}.ac-item:hover{background:var(--g50)}
 .ac-item .ac-cat{font-size:16px}.ac-item .ac-dup{font-size:11px;color:var(--red);font-weight:600;margin-right:auto}
 .img-upload-btn{width:100%;padding:11px;border:2px dashed var(--border);border-radius:var(--rs);background:var(--g50);color:var(--g700);font-family:'Heebo',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
@@ -180,7 +180,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 2.4 · Family Shopping App</div>
+  <div class="wfooter">גרסה 2.5 · Family Shopping App</div>
 </div>
 
 <!-- CREATE -->
@@ -237,7 +237,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v2.4</div>
+      <div class="ver-badge">v2.5</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -807,16 +807,29 @@ function onFavMgmtInput(val) {
   var q = norm(val);
   var matches = S.favs.filter(function(f){ return norm(f.text).indexOf(q) >= 0; });
   if (!matches.length) { drop.classList.remove('open'); return; }
+  var inList = inListSet();
   var html = '';
-  matches.slice(0,6).forEach(function(f){
+  matches.slice(0,8).forEach(function(f){
     var cat = catById(f.category||'general');
-    html += '<div class="ac-item" style="color:var(--red)">'
+    var already = inList[norm(f.text)];
+    var safeText = f.text.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    html += '<button class="ac-item ac-fav-item" ontouchstart="" onclick="addFavFromAC(\'' + safeText + '\',\'' + f.category + '\')" type="button">'
       + '<span class="ac-cat">' + cat.icon + '</span>'
-      + esc(f.text)
-      + '<span class="ac-dup">קיים</span>'
-      + '</div>';
+      + '<span style="flex:1;text-align:right">' + esc(f.text) + '</span>'
+      + (already
+        ? '<span class="ac-dup" style="color:var(--g500)">✓ ברשימה</span>'
+        : '<span class="ac-dup" style="color:var(--g700)">+ הוסף</span>')
+      + '</button>';
   });
   drop.innerHTML = html; drop.classList.add('open');
+}
+function addFavFromAC(text, cat) {
+  document.getElementById('fav-ac-drop').classList.remove('open');
+  document.getElementById('fav-new-name').value = '';
+  if (inListSet()[norm(text)]) { toast('"' + text + '" כבר ברשימה'); return; }
+  db.ref('fam/' + S.code + '/items').push({text:text, category:cat, addedBy:S.user, addedAt:Date.now(), checked:false})
+    .then(function(){ toast('"' + text + '" נוסף לרשימה ✓'); })
+    .catch(function(){ toast('שגיאה'); });
 }
 function onFavMgmtKey(e) {
   if (e.key === 'Enter')  { document.getElementById('fav-ac-drop').classList.remove('open'); addFavorite(); }
