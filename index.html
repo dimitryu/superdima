@@ -37,12 +37,12 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .back{display:flex;align-items:center;gap:6px;color:rgba(255,255,255,.65);font-size:14px;margin-bottom:24px;cursor:pointer;width:fit-content;border:none;background:none;font-family:'Heebo',sans-serif}
 .ficon{font-size:44px;margin-bottom:12px;display:block}
 .ftop h2{font-size:26px;font-weight:800;margin-bottom:6px}.ftop p{font-size:14px;opacity:.7}
-.fwrap{display:flex;flex-direction:column;flex:1;padding:0 24px 32px}
+.fwrap{display:flex;flex-direction:column;flex:1;padding:0 24px 32px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .flbl{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t2);margin-bottom:7px}
 .finput{width:100%;padding:13px 16px;border:2px solid var(--border);border-radius:var(--r);font-family:'Heebo',sans-serif;font-size:15px;color:var(--text);background:#fff;outline:none;transition:border-color .2s;direction:rtl;text-align:right}
 .finput:focus{border-color:var(--g500);box-shadow:0 0 0 3px rgba(64,145,108,.15)}
 .code-inp{text-align:center!important;font-size:28px!important;font-weight:700!important;letter-spacing:6px!important}
-.fspacer{flex:1}.fsub{margin-top:20px}.fg{margin-top:18px}
+.fspacer{flex:0;min-height:32px}.fsub{margin-top:24px}.fg{margin-top:18px}
 .codebox{background:linear-gradient(135deg,var(--g900),var(--g700));border-radius:var(--r);padding:28px;text-align:center;margin:28px 0 16px;color:#fff}
 .codel{font-size:11px;text-transform:uppercase;letter-spacing:2px;opacity:.65;margin-bottom:10px}
 .codev{font-size:46px;font-weight:900;letter-spacing:8px}.codeh{font-size:13px;opacity:.6;margin-top:10px}
@@ -171,7 +171,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.0</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.1</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -181,7 +181,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 3.0 · SuperDima</div>
+  <div class="wfooter">גרסה 3.1 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -238,7 +238,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v3.0</div>
+      <div class="ver-badge">v3.1</div>
     </div>
   </div>
   <div class="prog-wrap">
