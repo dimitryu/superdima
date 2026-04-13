@@ -170,7 +170,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v2.8</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v2.9</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -180,7 +180,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 2.8 · SuperDima</div>
+  <div class="wfooter">גרסה 2.9 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -237,7 +237,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v2.8</div>
+      <div class="ver-badge">v2.9</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -975,7 +975,7 @@ function createFamily() {
   if (!fam || !user) return toast('מלא את כל השדות');
   var code = String(Math.floor(100000 + Math.random() * 900000));
   db.ref('fam/' + code + '/meta').set({name:fam, created:Date.now()})
-    .then(function(){ S={code:code,family:fam,user:user,items:{},favs:[]}; save(); document.getElementById('d-code').textContent=code; show('s-code'); })
+    .then(function(){ S={code:code,family:fam,user:user,items:{},favs:[],customCats:[],fontSize:S.fontSize||'medium'}; save(); document.getElementById('d-code').textContent=code; show('s-code'); })
     .catch(function(e){ toast('שגיאה — בדוק חיבור'); console.error(e); });
 }
 function joinFamily() {
@@ -986,7 +986,7 @@ function joinFamily() {
   db.ref('fam/' + code + '/meta').get()
     .then(function(snap){
       if (!snap.exists()) return toast('קוד לא נמצא — בדוק שוב');
-      S = {code:code, family:snap.val().name, user:user, items:{}, favs:[]};
+      S = {code:code, family:snap.val().name, user:user, items:{}, favs:[], customCats:[], fontSize:S.fontSize||'medium'};
       save(); goApp();
     })
     .catch(function(e){ toast('שגיאה — בדוק חיבור'); console.error(e); });
@@ -1176,7 +1176,7 @@ function logout() {
   if (catsRef  && catsListener)  { catsRef.off('value',  catsListener);  catsRef=null;  catsListener=null; }
   if (favsRef  && favsListener)  { favsRef.off('value',  favsListener);  favsRef=null;  favsListener=null;  }
   localStorage.removeItem('kniYot_v1');
-  S = {code:null, family:null, user:null, items:{}, favs:[]};
+  S = {code:null, family:null, user:null, items:{}, favs:[], customCats:[], fontSize:'medium'};
   closeSheet('sh-settings'); show('s-welcome');
 }
 
