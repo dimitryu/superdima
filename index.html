@@ -26,7 +26,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .wbg p{font-size:16px;color:rgba(255,255,255,.75);position:relative}
 .wactions{padding:32px 24px;display:flex;flex-direction:column;gap:12px;flex:1}
 .wfooter{text-align:center;padding:0 24px 24px;color:var(--t3);font-size:12px;font-weight:500;letter-spacing:.5px}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--r);border:none;font-family:'Heebo',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:var(--r);border:none;font-family:'Heebo',sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:all .18s cubic-bezier(.34,1.56,.64,1);touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
 .btn:active{transform:scale(.97)}
 .btn-p{background:var(--g700);color:#fff;box-shadow:0 4px 14px rgba(45,106,79,.35)}@media(hover:hover){.btn-p:hover{background:var(--g900)}}
 .btn-g{background:#fff;color:var(--g700);border:2px solid var(--border)}@media(hover:hover){.btn-g:hover{border-color:var(--g300);background:var(--g50)}}
@@ -170,30 +170,30 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div class="badge">🌿 רשימת קניות משפחתית</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v2.8</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
   </div>
   <div id="cfg-warn-area"></div>
   <div class="wactions">
-    <button class="btn btn-p" onclick="show('s-create')">✦ צור משפחה חדשה</button>
-    <button class="btn btn-g" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
+    <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
+    <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 2.7 · Family Shopping App</div>
+  <div class="wfooter">גרסה 2.8 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
 <div class="screen" id="s-create">
   <div class="ftop">
-    <button class="back" onclick="show('s-welcome')">← חזרה</button>
+    <button class="back" ontouchstart="" onclick="show('s-welcome')">← חזרה</button>
     <span class="ficon">🏠</span><h2>צור משפחה חדשה</h2><p>תיצור רשימה שכולם יוכלו להוסיף אליה</p>
   </div>
   <div class="fwrap">
     <div class="fg"><label class="flbl">שם המשפחה</label><input class="finput" type="text" id="f-family-name" placeholder="כהן, לוי..." autocomplete="off"/></div>
     <div class="fg"><label class="flbl">השם שלך</label><input class="finput" type="text" id="f-creator-name" placeholder="אמא, אבא, יוסי..." autocomplete="off"/></div>
     <div class="fspacer"></div>
-    <div class="fsub"><button class="btn btn-p" style="width:100%" onclick="createFamily()">צור משפחה ✨</button></div>
+    <div class="fsub"><button class="btn btn-p" style="width:100%" ontouchstart="" onclick="createFamily()">צור משפחה ✨</button></div>
   </div>
 </div>
 
@@ -207,7 +207,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="fg"><label class="flbl">קוד הצטרפות</label><input class="finput code-inp" type="text" id="f-join-code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="off"/></div>
     <div class="fg"><label class="flbl">השם שלך</label><input class="finput" type="text" id="f-joiner-name" placeholder="אמא, אבא, יוסי..." autocomplete="off"/></div>
     <div class="fspacer"></div>
-    <div class="fsub"><button class="btn btn-a" style="width:100%" onclick="joinFamily()">הצטרף 🚀</button></div>
+    <div class="fsub"><button class="btn btn-a" style="width:100%" ontouchstart="" onclick="joinFamily()">הצטרף 🚀</button></div>
   </div>
 </div>
 
@@ -218,9 +218,9 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
   <div class="fwrap">
     <div class="codebox"><div class="codel">קוד הצטרפות</div><div class="codev" id="d-code">------</div><div class="codeh">שתף כדי שהמשפחה תצטרף</div></div>
-    <button class="btn btn-g" style="width:100%" onclick="copyCode()">📋 העתק קוד</button>
+    <button class="btn btn-g" style="width:100%" ontouchstart="" onclick="copyCode()">📋 העתק קוד</button>
     <div class="fspacer"></div>
-    <div class="fsub"><button class="btn btn-p" style="width:100%" onclick="goApp()">כנס לרשימה →</button></div>
+    <div class="fsub"><button class="btn btn-p" style="width:100%" ontouchstart="" onclick="goApp()">כנס לרשימה →</button></div>
   </div>
 </div>
 
@@ -237,7 +237,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v2.7</div>
+      <div class="ver-badge">v2.8</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -430,6 +430,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 
+var FIREBASE_CONFIG = {
 apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
 authDomain: "[superdima-ef60f.firebaseapp.com](http://superdima-ef60f.firebaseapp.com/)",
 databaseURL: "[https://superdima-ef60f-default-rtdb.europe-west1.firebasedatabase.app](https://superdima-ef60f-default-rtdb.europe-west1.firebasedatabase.app/)",
