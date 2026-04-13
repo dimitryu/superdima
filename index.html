@@ -171,7 +171,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.1</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.2</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -181,7 +181,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 3.1 · SuperDima</div>
+  <div class="wfooter">גרסה 3.2 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -238,7 +238,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v3.1</div>
+      <div class="ver-badge">v3.2</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -984,13 +984,20 @@ function joinFamily() {
   var code = document.getElementById('f-join-code').value.trim();
   var user = document.getElementById('f-joiner-name').value.trim();
   if (!code || !user) return toast('מלא את כל השדות');
+  toast('מחפש קוד...');
   db.ref('fam/' + code + '/meta').get()
     .then(function(snap){
       if (!snap.exists()) return toast('קוד לא נמצא — בדוק שוב');
       S = {code:code, family:snap.val().name, user:user, items:{}, favs:[], customCats:[], fontSize:S.fontSize||'medium'};
-      save(); goApp();
+      save();
+      try {
+        goApp();
+      } catch(goErr) {
+        console.error('goApp error:', goErr);
+        toast('שגיאה: ' + goErr.message);
+      }
     })
-    .catch(function(e){ toast('שגיאה — בדוק חיבור'); console.error(e); });
+    .catch(function(e){ toast('שגיאת חיבור: ' + (e.message||e)); console.error(e); });
 }
 function copyCode() {
   var code = S.code || document.getElementById('d-code').textContent;
