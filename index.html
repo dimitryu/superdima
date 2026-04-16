@@ -171,7 +171,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.4</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.5</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -181,7 +181,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 3.4 · SuperDima</div>
+  <div class="wfooter">גרסה 3.5 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -238,7 +238,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v3.4</div>
+      <div class="ver-badge">v3.5</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -459,28 +459,28 @@ var DEFAULT_FAVS = [
   {t:'שמנת חמוצה',c:'dairy'},{t:'שמנת לבישול',c:'dairy'},{t:'שמנת מתוקה',c:'dairy'},
   {t:'לחם שיפון מלא',c:'bread'},{t:'לחמניות כוסמין',c:'bread'},{t:'פיתה',c:'bread'},{t:'פיתות כוסמין',c:'bread'},
   {t:'חזה עוף',c:'meat'},{t:'כנפיים',c:'meat'},{t:'פרגית',c:'meat'},
-  {t:'אורז',c:'pantry'},{t:'אצות נוערי',c:'pantry'},{t:'חומץ 5%',c:'pantry'},
-  {t:'חמאת בוטנים טיבועת',c:'pantry'},{t:'כוסמת',c:'pantry'},{t:'מיקס פירות יער',c:'pantry'},
-  {t:'נס קפה',c:'pantry'},{t:'סודה לשתיה',c:'pantry'},{t:'סויה',c:'pantry'},
-  {t:'סוכר',c:'pantry'},{t:'סילאן',c:'pantry'},{t:'פלפל שחור גרוס גס',c:'pantry'},
-  {t:'פסטה',c:'pantry'},{t:'פסטרמה',c:'pantry'},{t:'פפריקה מתוקה',c:'pantry'},
-  {t:'פריכיות',c:'pantry'},{t:'קוסקוס',c:'pantry'},{t:'קטשופ',c:'pantry'},
-  {t:'קליליות',c:'pantry'},{t:'קמח',c:'pantry'},{t:'רוטב בזיליקום ללינה',c:'pantry'},
+  {t:'אורז',c:'pantry'},{t:'אצות נוערי',c:'cans'},{t:'חומץ 5%',c:'pantry'},
+  {t:'חמאת בוטנים טיבועת',c:'pantry'},{t:'כוסמת',c:'pantry'},{t:'מיקס פירות יער',c:'frozen'},
+  {t:'נס קפה',c:'pantry'},{t:'סודה לשתיה',c:'pantry'},{t:'סויה',c:'dairy'},
+  {t:'סוכר',c:'pantry'},{t:'סילאן',c:'cans'},{t:'פלפל שחור גרוס גס',c:'pantry'},
+  {t:'פסטה',c:'pantry'},{t:'פסטרמה',c:'meat'},{t:'פפריקה מתוקה',c:'pantry'},
+  {t:'פריכיות',c:'snacks'},{t:'קוסקוס',c:'pantry'},{t:'קטשופ',c:'pantry'},
+  {t:'קליליות',c:'snacks'},{t:'קמח',c:'pantry'},{t:'רוטב בזיליקום ללינה',c:'pantry'},
   {t:'רסק עגבניות בשפורפרת',c:'pantry'},{t:'שמן חמניות',c:'pantry'},
-  {t:'שניצל תירס קפוא',c:'pantry'},{t:'תבלין לפיצה',c:'pantry'},
-  {t:'אפונה רוסית',c:'cans'},{t:'טונה בשמן StarKist',c:'cans'},{t:'כרוב כבוש',c:'cans'},{t:'מיונז תלמה',c:'cans'},
+  {t:'שניצל תירס קפוא',c:'frozen'},{t:'תבלין לפיצה',c:'pantry'},
+  {t:'אפונה רוסית',c:'cans'},{t:'טונה בשמן StarKist',c:'cans'},{t:'כרוב כבוש',c:'cans'},{t:'מיונז תלמה',c:'pantry'},
   {t:'דופשניות',c:'snacks'},{t:'חלבה',c:'snacks'},{t:'לוטוס עוגיות',c:'snacks'},
   {t:'מרשמלו',c:'snacks'},{t:'נוטלה',c:'snacks'},{t:'פופקורן',c:'snacks'},
   {t:'פטיבר',c:'snacks'},{t:'פרינגלס פיצה',c:'snacks'},{t:'שוקולד מריר 5יח',c:'snacks'},
   {t:'קולה זירו',c:'drinks'},{t:'קולה רגילה',c:'drinks'},
   {t:"שוופס ג'ינג'ר",c:'drinks'},{t:"שישית מים מי עדן 1.5 ל'",c:'drinks'},
   {t:'בירה',c:'alcohol'},{t:'וויסקי בלנטיינס',c:'alcohol'},
-  {t:'מגבות נייר',c:'cleaning'},{t:'מגני תחתון אולוויז 3',c:'cleaning'},
+  {t:'מגבות נייר',c:'cleaning'},{t:'מגני תחתון אולוויז 3',c:'hygiene'},
   {t:'מטליות בגליל',c:'cleaning'},{t:'מרכך כביסה',c:'cleaning'},
-  {t:'משחת שיניים פרדונטקס',c:'cleaning'},{t:'משחת שיניים קולגייט',c:'cleaning'},
+  {t:'משחת שיניים פרדונטקס',c:'hygiene'},{t:'משחת שיניים קולגייט',c:'hygiene'},
   {t:'נייר טואלת',c:'cleaning'},{t:'סבון אסלה כדוריות',c:'cleaning'},
-  {t:'פדים ימיות כארפריי',c:'cleaning'},{t:'פיניש קפסולות למדיח',c:'cleaning'},
-  {t:'חרדל רוסי',c:'general'},{t:"צ'ילי מתוק",c:'general'},{t:'שום קטוש',c:'general'}
+  {t:'פדים ימיות כארפריי',c:'hygiene'},{t:'פיניש קפסולות למדיח',c:'cleaning'},
+  {t:'חרדל רוסי',c:'pantry'},{t:"צ'ילי מתוק",c:'pantry'},{t:'שום קטוש',c:'pantry'}
 ];
 
 /* ── INIT ── */
