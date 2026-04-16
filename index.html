@@ -140,6 +140,12 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 .toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--g900);color:#fff;padding:11px 20px;border-radius:var(--rf);font-size:14px;font-weight:500;white-space:nowrap;opacity:0;transition:opacity .25s,transform .25s;z-index:999;pointer-events:none;box-shadow:var(--sh2)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .cfgwarn{background:#FFF3CD;border:1px solid #FFC107;border-radius:var(--rs);padding:14px 16px;font-size:13px;line-height:1.6;color:#856404;margin:16px 24px 0}
+.cat-suggest{display:none;background:#EFF9F4;border:1.5px solid var(--g300);border-radius:var(--rs);padding:12px 14px;margin-top:10px;font-size:13px;color:var(--g900)}
+.cat-suggest.show{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cat-suggest-icon{font-size:20px;flex-shrink:0}
+.cat-suggest-text{flex:1;line-height:1.5;min-width:120px}
+.cat-suggest-btn{background:var(--g700);color:#fff;border:none;border-radius:var(--rs);padding:7px 14px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;touch-action:manipulation}
+.cat-suggest-btn:hover{background:var(--g900)}
 .font-size-btn{width:36px;height:36px;border-radius:var(--rs);border:2px solid var(--border);background:#fff;cursor:pointer;font-family:'Heebo',sans-serif;font-weight:700;color:var(--t2);transition:all .15s;display:flex;align-items:center;justify-content:center}
 .font-size-btn:hover{border-color:var(--g500);color:var(--g700)}
 .font-size-btn.active{background:var(--g700);border-color:var(--g700);color:#fff}
@@ -171,7 +177,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.5</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.6</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -181,7 +187,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 3.5 · SuperDima</div>
+  <div class="wfooter">גרסה 3.6 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -238,7 +244,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v3.5</div>
+      <div class="ver-badge">v3.6</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -280,14 +286,26 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="ac-wrap" id="add-ac-wrap">
       <label class="flbl">שם המוצר</label>
       <input class="finput" type="text" id="item-input" placeholder="מה לקנות?" autocomplete="off"
-        oninput="onAddItemInput(this.value)" onkeydown="onAddItemKey(event)"/>
+        oninput="onAddItemInput(this.value);checkCatSuggestion()" onkeydown="onAddItemKey(event)"/>
       <div class="ac-drop" id="add-ac-drop"></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:12px">
-      <div style="flex:1"><label class="flbl">קטגוריה</label><select id="item-cat" class="cat-select" style="padding:11px 12px;border-radius:var(--rs)"></select></div>
+      <div style="flex:1"><label class="flbl">קטגוריה</label><select id="item-cat" class="cat-select" style="padding:11px 12px;border-radius:var(--rs)" onchange="checkCatSuggestion()"></select></div>
       <div style="width:95px"><label class="flbl">כמות</label>
         <input type="text" id="item-qty" placeholder="1 יח׳" style="width:100%;padding:11px 10px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;text-align:center;outline:none;direction:ltr;background:#fff"/>
       </div>
+    </div>
+    <!-- Category suggestion warning -->
+    <div class="cat-suggest" id="cat-suggest">
+      <span class="cat-suggest-icon" id="cat-suggest-icon">💡</span>
+      <span class="cat-suggest-text" id="cat-suggest-text"></span>
+      <button class="cat-suggest-btn" id="cat-suggest-btn" ontouchstart="" onclick="acceptCatSuggestion()">החלף קטגוריה</button>
+    </div>
+    <!-- Category suggestion -->
+    <div id="cat-suggest" style="display:none;background:#EFF9F4;border:1.5px solid #74C69D;border-radius:10px;padding:11px 14px;margin-top:10px;font-size:13px;color:#1B4332;align-items:center;gap:10px;flex-wrap:wrap">
+      <span id="cat-suggest-icon" style="font-size:18px;flex-shrink:0">💡</span>
+      <span id="cat-suggest-text" style="flex:1;line-height:1.5;min-width:120px"></span>
+      <button ontouchstart="" onclick="acceptCatSuggestion()" style="background:#2D6A4F;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;touch-action:manipulation">החלף ✓</button>
     </div>
     <div style="margin-top:12px">
       <label class="flbl">תמונה</label>
@@ -394,19 +412,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
       </div>
     </div>
     <div style="margin-top:12px">
-      <label class="flbl">תמונה חדשה (אופציונלי)</label>
-      <input type="file" accept="image/*" id="edit-img-file" style="display:none" onchange="handleEditImg(event)"/>
-      <button class="img-upload-btn" onclick="document.getElementById('edit-img-file').click()">📷 החלף תמונה</button>
-      <img id="edit-img-preview" class="img-preview-box" alt=""/>
-      <button id="edit-img-clear" onclick="clearEditImg()" style="display:none;margin-top:6px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-family:'Heebo',sans-serif">✕ הסר תמונה</button>
-    </div>
-    <div style="margin-top:16px;display:flex;gap:10px">
-      <button class="btn btn-d btn-sm" style="flex:1" onclick="closeSheet('sh-edit')">ביטול</button>
-      <button class="btn btn-p" style="flex:2" onclick="saveEdit()">שמור שינויים ✓</button>
-    </div>
-  </div>
-</div>
-</div><!-- #app -->
+      <label class="flbl">תמונה חדשה (א
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -422,7 +428,7 @@ messagingSenderId: "1047807533790",
 appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
 measurementId: "G-JNF66CHKYX"
 };
-
+  
 var CATS = [
   {id:'general',  label:'כללי',             icon:'🛍️'},
   {id:'alcohol',  label:'אלכוהול',           icon:'🍷'},
@@ -492,6 +498,7 @@ var pendingImgBase64 = null;
 var favSearchQ = '';
 var listSearchQ = '';
 var editImgBase64 = null;
+var _suggestedCat = null;
 
 /* ── PWA ── */
 (function setupPWA() {
@@ -520,7 +527,14 @@ function toast(msg) {
   clearTimeout(el._t); el._t = setTimeout(function(){ el.classList.remove('show'); }, 2500);
 }
 function openSheet(id)  { document.getElementById(id).classList.add('open'); }
-function closeSheet(id) { document.getElementById(id).classList.remove('open'); }
+function closeSheet(id) {
+  document.getElementById(id).classList.remove('open');
+  if (id === 'sh-add') {
+    var s = document.getElementById('cat-suggest');
+    if (s) s.classList.remove('show');
+    _suggestedCat = null;
+  }
+}
 function overlayClick(e, id) { if (e.target.classList.contains('overlay')) closeSheet(id); }
 function setSyncing() { document.getElementById('sync-dot').className='sdot syncing'; document.getElementById('sync-txt').textContent='מסנכרן...'; }
 function setSynced()  { document.getElementById('sync-dot').className='sdot';         document.getElementById('sync-txt').textContent='מסונכרן'; }
@@ -983,6 +997,169 @@ function joinFamily() {
 function copyCode() {
   var code = S.code || document.getElementById('d-code').textContent;
   if (navigator.clipboard) navigator.clipboard.writeText(code).then(function(){ toast('הקוד הועתק ✓'); });
+}
+
+/* ── CATEGORY SUGGESTION ── */
+var _suggestedCat = null;
+
+function checkCatSuggestion() {
+  var text = (document.getElementById('item-input').value || '').trim();
+  var selectedCat = document.getElementById('item-cat').value;
+  var box = document.getElementById('cat-suggest');
+  _suggestedCat = null;
+
+  if (!text) { box.classList.remove('show'); return; }
+
+  // 1. Check against known favorites list
+  var q = norm(text);
+  var match = null;
+  for (var i = 0; i < S.favs.length; i++) {
+    if (norm(S.favs[i].text) === q) { match = S.favs[i]; break; }
+  }
+  // Also check DEFAULT_FAVS for bootstrap
+  if (!match) {
+    for (var j = 0; j < DEFAULT_FAVS.length; j++) {
+      if (norm(DEFAULT_FAVS[j].t) === q) {
+        match = {text: DEFAULT_FAVS[j].t, category: DEFAULT_FAVS[j].c};
+        break;
+      }
+    }
+  }
+
+  // 2. Keyword-based rules as fallback
+  var suggested = null;
+  if (match) {
+    suggested = match.category;
+  } else {
+    suggested = guessCatByKeyword(text);
+  }
+
+  if (!suggested || suggested === selectedCat) {
+    box.classList.remove('show'); return;
+  }
+
+  // Show suggestion
+  _suggestedCat = suggested;
+  var sugCat = catById(suggested);
+  var selCat = catById(selectedCat);
+  document.getElementById('cat-suggest-icon').textContent = sugCat.icon;
+  document.getElementById('cat-suggest-text').innerHTML =
+    'בדרך כלל "<b>' + esc(text) + '</b>" שייך ל<b>' + sugCat.label + '</b>' +
+    ' ולא ל' + selCat.label + '. להחליף?';
+  box.classList.add('show');
+}
+
+function acceptCatSuggestion() {
+  if (_suggestedCat) {
+    document.getElementById('item-cat').value = _suggestedCat;
+    _suggestedCat = null;
+    document.getElementById('cat-suggest').classList.remove('show');
+    toast('קטגוריה עודכנה ✓');
+  }
+}
+
+function guessCatByKeyword(text) {
+  var t = norm(text);
+  var rules = [
+    // Frozen
+    {keys:['קפוא','קפואי','פיצה קפוא'], cat:'frozen'},
+    // Veggies
+    {keys:['עגבני','מלפפ','חסה','גזר','בצל','פלפל','ברוקולי','כרובי','חציל','תפוח אדמה','בטטה','קישו','דלעת','סלרי','סלק','שום','פטרוזיל','קוסברה','שמיר','ענבי','תפוח','לימון','קיווי','בננ','פרי'], cat:'veggies'},
+    // Dairy
+    {keys:['חלב','גבינ','יוגורט','שמנת','קוטג','מוצרל','ביצי','אקטימל','אשל','פיטות','סויה'], cat:'dairy'},
+    // Meat
+    {keys:['עוף','פרגית','כנפיי','שניצל','קציצ','המבורג','בשר','דג ','סלמון','טונה','נקניק','פסטרמ','נקניקי'], cat:'meat'},
+    // Bread
+    {keys:['לחם','פיתה','פיתות','לחמני','בגט','כוסמי','שיפו','חלה'], cat:'bread'},
+    // Snacks
+    {keys:['חטיף','ביסלי','במבה','קליל','פריכי','פופקורן','שוקול','נוטלה','חלבה','עוגי','ופל','גלידה','ממתק','דופשני','מרשמל','לוטוס','פטיבר','פרינגל'], cat:'snacks'},
+    // Drinks
+    {keys:['קולה','ספרייט','פנטה','מיץ','שוופס','מיים','מים','סודה','עסיס'], cat:'drinks'},
+    // Alcohol
+    {keys:['בירה','יין','וודקה','וויסקי','קוניאק','רום','לאגר','אלכוהol'], cat:'alcohol'},
+    // Cleaning
+    {keys:['סבון','מרכך','אבקת כביסה','ניקוי','מנקה','נייר טואלת','מגבות נייר','מטלי','פיניש','קפסולות מדיח'], cat:'cleaning'},
+    // Hygiene
+    {keys:['שמפו','קונדיציונר','דאודור','משחת שיניים','מברשת שיניים','גילוח','כרית','תחבושת','פד ','טמפון','אולוויז'], cat:'hygiene'},
+    // Cans / Pantry
+    {keys:['שימורי','רסק','קטשופ','חומוס','טחינה','מיונז','חרדל','חמוצ','כרוב כבוש','זית'], cat:'cans'},
+    // Baking
+    {keys:['קמח','סוכר','שמרי','אבקת אפי','וניל','קקאו','שוקולד לאפי','אבקת שקד'], cat:'baking'},
+  ];
+
+  for (var i = 0; i < rules.length; i++) {
+    for (var j = 0; j < rules[i].keys.length; j++) {
+      if (t.indexOf(rules[i].keys[j]) >= 0) return rules[i].cat;
+    }
+  }
+  return null;
+}
+
+function guessCatByKeyword(text) {
+  var t = norm(text);
+  var rules = [
+    {keys:['קפוא','קפואי'],                                                      cat:'frozen'},
+    {keys:['עגבני','מלפפ','גזר','בצל','פלפל','ברוקולי','חציל','תפוח אדמה','בטטה','קישו','דלעת','סלרי','סלק','שום ','פטרוזיל','קוסברה','שמיר','ענבי','בננ','לימון','קיווי','תפוח','כרובי','אבוקדו'], cat:'veggies'},
+    {keys:['חלב','גבינ','יוגורט','שמנת','קוטג','מוצרל','ביצי','אקטימל','אשל','סויה','פיטות'], cat:'dairy'},
+    {keys:['עוף','פרגית','כנפיי','שניצל','קציצ','המבורג','פילה בשר','פרגי','אנטריקוט','פסטרמ','נקניק','דג ','סלמון'], cat:'meat'},
+    {keys:['לחם','פיתה','פיתות','לחמני','בגט','כוסמי','שיפו','חלה'], cat:'bread'},
+    {keys:['שמרי','אבקת אפי','וניל','קקאו','שוקולד לאפי','אבקת שקד','מאפה'], cat:'baking'},
+    {keys:['חטיף','ביסלי','במבה','קליל','פריכי','פופקורן','שוקול','נוטלה','חלבה','עוגי','ופל','דופשני','מרשמל','לוטוס','פטיבר','פרינגל'], cat:'snacks'},
+    {keys:['קולה','ספרייט','פנטה','מיץ','שוופס','מים','סודה','עסיס'], cat:'drinks'},
+    {keys:['בירה','יין','וודקה','וויסקי','קוניאק'], cat:'alcohol'},
+    {keys:['שמפו','קונדיציונר','דאודור','משחת שיניים','מברשת','גילוח','תחבושת','פד ','טמפון','אולוויז'], cat:'hygiene'},
+    {keys:['סבון','מרכך','אבקת כביסה','נייר טואלת','מגבות נייר','מטלי','פיניש','מדיח'], cat:'cleaning'},
+    {keys:['שימורי','רסק','קטשופ','מיונז','חרדל','חמוצ','כרוב כבוש','זית','אצות','סילאן'], cat:'cans'},
+    {keys:['אורז','פסטה','קמח','סוכר','שמן','חומץ','כוסמת','קוסקוס'], cat:'pantry'}
+  ];
+  for (var i=0;i<rules.length;i++) {
+    for (var j=0;j<rules[i].keys.length;j++) {
+      if (t.indexOf(rules[i].keys[j])>=0) return rules[i].cat;
+    }
+  }
+  return null;
+}
+
+function checkCatSuggestion() {
+  var text = (document.getElementById('item-input').value||'').trim();
+  var selCatId = document.getElementById('item-cat').value;
+  var box = document.getElementById('cat-suggest');
+  if (!box) return;
+  _suggestedCat = null;
+  if (!text) { box.style.display='none'; return; }
+
+  // Check favs list first (exact match)
+  var q = norm(text);
+  var suggested = null;
+  for (var i=0;i<S.favs.length;i++) {
+    if (norm(S.favs[i].text)===q) { suggested=S.favs[i].category; break; }
+  }
+  if (!suggested) {
+    for (var j=0;j<DEFAULT_FAVS.length;j++) {
+      if (norm(DEFAULT_FAVS[j].t)===q) { suggested=DEFAULT_FAVS[j].c; break; }
+    }
+  }
+  if (!suggested) suggested = guessCatByKeyword(text);
+
+  if (!suggested || suggested===selCatId) { box.style.display='none'; return; }
+
+  _suggestedCat = suggested;
+  var sugCat = catById(suggested);
+  var selCat = catById(selCatId);
+  document.getElementById('cat-suggest-icon').textContent = sugCat.icon;
+  document.getElementById('cat-suggest-text').innerHTML =
+    '"<b>'+esc(text)+'</b>" בדרך כלל שייך ל<b>'+sugCat.label+'</b> ולא ל'+selCat.label+'. רוצה להחליף?';
+  box.style.display='flex';
+}
+
+function acceptCatSuggestion() {
+  if (_suggestedCat) {
+    document.getElementById('item-cat').value = _suggestedCat;
+    _suggestedCat = null;
+    document.getElementById('cat-suggest').style.display='none';
+    toast('קטגוריה עודכנה ✓');
+    checkCatSuggestion(); // re-check in case still mismatch
+  }
 }
 
 function addItem() {
