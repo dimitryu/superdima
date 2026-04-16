@@ -295,12 +295,6 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <input type="text" id="item-qty" placeholder="1 יח׳" style="width:100%;padding:11px 10px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;text-align:center;outline:none;direction:ltr;background:#fff"/>
       </div>
     </div>
-    <!-- Category suggestion warning -->
-    <div class="cat-suggest" id="cat-suggest">
-      <span class="cat-suggest-icon" id="cat-suggest-icon">💡</span>
-      <span class="cat-suggest-text" id="cat-suggest-text"></span>
-      <button class="cat-suggest-btn" id="cat-suggest-btn" ontouchstart="" onclick="acceptCatSuggestion()">החלף קטגוריה</button>
-    </div>
     <!-- Category suggestion -->
     <div id="cat-suggest" style="display:none;background:#EFF9F4;border:1.5px solid #74C69D;border-radius:10px;padding:11px 14px;margin-top:10px;font-size:13px;color:#1B4332;align-items:center;gap:10px;flex-wrap:wrap">
       <span id="cat-suggest-icon" style="font-size:18px;flex-shrink:0">💡</span>
@@ -428,7 +422,7 @@ messagingSenderId: "1047807533790",
 appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
 measurementId: "G-JNF66CHKYX"
 };
-  
+
 var CATS = [
   {id:'general',  label:'כללי',             icon:'🛍️'},
   {id:'alcohol',  label:'אלכוהול',           icon:'🍷'},
@@ -531,7 +525,7 @@ function closeSheet(id) {
   document.getElementById(id).classList.remove('open');
   if (id === 'sh-add') {
     var s = document.getElementById('cat-suggest');
-    if (s) s.classList.remove('show');
+    if (s) s.style.display='none';
     _suggestedCat = null;
   }
 }
@@ -1008,7 +1002,7 @@ function checkCatSuggestion() {
   var box = document.getElementById('cat-suggest');
   _suggestedCat = null;
 
-  if (!text) { box.classList.remove('show'); return; }
+  if (!text) { box.style.display='none'; return; }
 
   // 1. Check against known favorites list
   var q = norm(text);
@@ -1035,7 +1029,7 @@ function checkCatSuggestion() {
   }
 
   if (!suggested || suggested === selectedCat) {
-    box.classList.remove('show'); return;
+    box.style.display='none'; return;
   }
 
   // Show suggestion
@@ -1046,14 +1040,14 @@ function checkCatSuggestion() {
   document.getElementById('cat-suggest-text').innerHTML =
     'בדרך כלל "<b>' + esc(text) + '</b>" שייך ל<b>' + sugCat.label + '</b>' +
     ' ולא ל' + selCat.label + '. להחליף?';
-  box.classList.add('show');
+  box.style.display='flex';
 }
 
 function acceptCatSuggestion() {
   if (_suggestedCat) {
     document.getElementById('item-cat').value = _suggestedCat;
     _suggestedCat = null;
-    document.getElementById('cat-suggest').classList.remove('show');
+    document.getElementById('cat-suggest').style.display='none';
     toast('קטגוריה עודכנה ✓');
   }
 }
