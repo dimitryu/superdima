@@ -2,6 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#1B4332">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -177,7 +179,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.7</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.8</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -187,7 +189,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 3.7 · SuperDima</div>
+  <div class="wfooter">גרסה 3.8 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -244,7 +246,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v3.7</div>
+      <div class="ver-badge">v3.8</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -286,7 +288,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="ac-wrap" id="add-ac-wrap">
       <label class="flbl">שם המוצר</label>
       <input class="finput" type="text" id="item-input" placeholder="מה לקנות?" autocomplete="off"
-        oninput="onAddItemInput(this.value);checkCatSuggestion()" onkeydown="onAddItemKey(event)"/>
+        oninput="onAddItemInput(this.value);checkCatSuggestion()" onblur="checkCatSuggestion()" onkeydown="onAddItemKey(event)"/>
       <div class="ac-drop" id="add-ac-drop"></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:12px">
@@ -411,7 +413,6 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-
   
 var FIREBASE_CONFIG = {
 apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
@@ -1065,6 +1066,8 @@ function acceptCatSuggestion() {
 }
 
 function addItem() {
+  // Run suggestion check one more time in case user didn't interact with cat
+  checkCatSuggestion();
   var text    = document.getElementById('item-input').value.trim();
   var cat     = document.getElementById('item-cat').value;
   var qty     = document.getElementById('item-qty').value.trim();
