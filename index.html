@@ -179,7 +179,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.8</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.9</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -189,7 +189,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 3.8 · SuperDima</div>
+  <div class="wfooter">גרסה 3.9 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -199,8 +199,8 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <span class="ficon">🏠</span><h2>צור משפחה חדשה</h2><p>תיצור רשימה שכולם יוכלו להוסיף אליה</p>
   </div>
   <div class="fwrap">
-    <div class="fg"><label class="flbl">שם המשפחה</label><input class="finput" type="text" id="f-family-name" placeholder="כהן, לוי..." autocomplete="off"/></div>
-    <div class="fg"><label class="flbl">השם שלך</label><input class="finput" type="text" id="f-creator-name" placeholder="אמא, אבא, יוסי..." autocomplete="off"/></div>
+    <div class="fg"><label class="flbl">שם המשפחה</label><input class="finput" type="text" id="f-family-name" placeholder="כהן, לוי..." spellcheck="false" autocorrect="off" autocapitalize="words" autocomplete="off"/></div>
+    <div class="fg"><label class="flbl">השם שלך</label><input class="finput" type="text" id="f-creator-name" placeholder="אמא, אבא, יוסי..." spellcheck="false" autocorrect="off" autocapitalize="words" autocomplete="off"/></div>
     <div class="fspacer"></div>
     <div class="fsub"><button class="btn btn-p" style="width:100%" ontouchstart="" onclick="createFamily()">צור משפחה ✨</button></div>
   </div>
@@ -214,7 +214,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
   <div class="fwrap">
     <div class="fg"><label class="flbl">קוד הצטרפות</label><input class="finput code-inp" type="text" id="f-join-code" placeholder="000000" maxlength="6" inputmode="numeric" autocomplete="off"/></div>
-    <div class="fg"><label class="flbl">השם שלך</label><input class="finput" type="text" id="f-joiner-name" placeholder="אמא, אבא, יוסי..." autocomplete="off"/></div>
+    <div class="fg"><label class="flbl">השם שלך</label><input class="finput" type="text" id="f-joiner-name" placeholder="אמא, אבא, יוסי..." spellcheck="false" autocorrect="off" autocapitalize="words" autocomplete="off"/></div>
     <div class="fspacer"></div>
     <div class="fsub"><button class="btn btn-a" style="width:100%" ontouchstart="" onclick="joinFamily()">הצטרף 🚀</button></div>
   </div>
@@ -246,7 +246,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v3.8</div>
+      <div class="ver-badge">v3.9</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -287,7 +287,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <h3>➕ הוסף פריט לרשימה</h3>
     <div class="ac-wrap" id="add-ac-wrap">
       <label class="flbl">שם המוצר</label>
-      <input class="finput" type="text" id="item-input" placeholder="מה לקנות?" autocomplete="off"
+      <input class="finput" type="text" id="item-input" placeholder="מה לקנות?" autocomplete="off" spellcheck="true" autocorrect="on" autocapitalize="sentences"
         oninput="onAddItemInput(this.value);checkCatSuggestion()" onblur="checkCatSuggestion()" onkeydown="onAddItemKey(event)"/>
       <div class="ac-drop" id="add-ac-drop"></div>
     </div>
@@ -325,7 +325,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <h3>⭐ ניהול מועדפים</h3>
     <div class="fav-add-bar">
       <div class="ac-wrap">
-        <input class="finput" type="text" id="fav-new-name" placeholder="שם מוצר..." autocomplete="off"
+        <input class="finput" type="text" id="fav-new-name" placeholder="שם מוצר..." autocomplete="off" spellcheck="true" autocorrect="on" autocapitalize="sentences"
           oninput="onFavMgmtInput(this.value)" onkeydown="onFavMgmtKey(event)"/>
         <div class="ac-drop" id="fav-ac-drop"></div>
       </div>
@@ -344,7 +344,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <input type="hidden" id="fav-edit-id"/>
     <div style="margin-top:0">
       <label class="flbl">שם המוצר</label>
-      <input class="finput" type="text" id="fav-edit-name" placeholder="שם המוצר" onkeydown="if(event.key==='Enter') saveFavEdit()"/>
+      <input class="finput" type="text" id="fav-edit-name" placeholder="שם המוצר" spellcheck="true" autocorrect="on" autocapitalize="sentences" onkeydown="if(event.key==='Enter') saveFavEdit()"/>
     </div>
     <div style="margin-top:12px">
       <label class="flbl">קטגוריה</label>
@@ -395,7 +395,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <input type="hidden" id="edit-item-id"/>
     <div style="margin-top:0">
       <label class="flbl">שם המוצר</label>
-      <input class="finput" type="text" id="edit-item-name" placeholder="שם המוצר"/>
+      <input class="finput" type="text" id="edit-item-name" placeholder="שם המוצר" spellcheck="true" autocorrect="on" autocapitalize="sentences"/>
     </div>
     <div class="edit-field-row">
       <div style="flex:1">
@@ -413,7 +413,6 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-  
 var FIREBASE_CONFIG = {
 apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
 authDomain: "superdima-ef60f.firebaseapp.com",
@@ -690,7 +689,7 @@ function itemCard(item) {
     + ' onchange="updateQty(\'' + item.id + '\',this.value)" onclick="event.stopPropagation()"/>'
     + '</div>';
 
-  var editH = '<button class="edit-btn" onclick="openEdit(\''+item.id+'\')" title="עריכה">✏️</button>';
+  var editH = '';
   var delH = '<button class="dbtn" onclick="appDel(\''+item.id+'\')">✕</button>';
 
   return '<div class="icard' + cls + '">'
