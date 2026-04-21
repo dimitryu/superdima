@@ -179,7 +179,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v3.9</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.1</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -189,7 +189,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 3.9 · SuperDima</div>
+  <div class="wfooter">גרסה 4.1 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -246,7 +246,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v3.9</div>
+      <div class="ver-badge">v4.1</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -525,9 +525,9 @@ function openSheet(id)  { document.getElementById(id).classList.add('open'); }
 function closeSheet(id) {
   document.getElementById(id).classList.remove('open');
   if (id === 'sh-add') {
-    var s = document.getElementById('cat-suggest');
-    if (s) s.style.display='none';
-    _suggestedCat = null;
+    var b = document.getElementById('cat-suggest');
+    if (b) b.style.display='none';
+    _suggestedCat = null
   }
 }
 function overlayClick(e, id) { if (e.target.classList.contains('overlay')) closeSheet(id); }
@@ -804,7 +804,7 @@ function onAddItemInput(val) {
 function selectAddItem(text, cat) {
   document.getElementById('item-input').value = text;
   document.getElementById('item-cat').value   = cat || 'general';
-  document.getElementById('add-ac-drop').classList.remove('open');
+    document.getElementById('add-ac-drop').classList.remove('open');
 }
 function onAddItemKey(e) {
   if (e.key === 'Enter')  { document.getElementById('add-ac-drop').classList.remove('open'); addItem(); }
@@ -996,6 +996,7 @@ function copyCode() {
 
 /* ── CATEGORY SUGGESTION ── */
 var _suggestedCat = null;
+
 
 function guessCatByKeyword(text) {
   var t = norm(text);
