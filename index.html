@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SuperDima v4.3 build=202604251704 -->
+<!-- SuperDima v4.4 -->
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -16,6 +16,7 @@
 <title>SuperDima</title>
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+
 :root{--g900:#1B4332;--g700:#2D6A4F;--g500:#40916C;--g300:#74C69D;--g100:#D8F3DC;--g50:#F0FAF3;--amber:#F4A261;--amber-d:#E76F51;--red:#E63946;--bg:#F7F5F0;--text:#1A2E1C;--t2:#4A6352;--t3:#8FAD99;--border:#E2EDE6;--sh:0 1px 4px rgba(27,67,50,.09);--sh2:0 4px 14px rgba(27,67,50,.14);--r:14px;--rs:10px;--rf:100px}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100dvh;display:flex;justify-content:center;overscroll-behavior:none}
@@ -173,14 +174,31 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 /* Edit sheet */
 .edit-field-row{display:flex;gap:10px;margin-top:12px}
 
-</style></head>
+
+/* VOICE */
+.voice-item-card{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#fff;border:1.5px solid var(--border);border-radius:var(--rs);margin-bottom:7px}
+.voice-item-card .vi-icon{font-size:18px}
+.voice-item-card .vi-body{flex:1;text-align:right}
+.voice-item-card .vi-name{font-size:15px;font-weight:600}
+.voice-item-card .vi-meta{font-size:12px;color:var(--t3);margin-top:2px}
+.voice-item-card .vi-del{background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;padding:4px;touch-action:manipulation}
+#voice-btn{width:90px;height:90px;border-radius:50%;border:none;background:var(--g700);color:#fff;font-size:36px;cursor:pointer;touch-action:manipulation;box-shadow:0 4px 20px rgba(27,67,50,.35)}
+#voice-btn.listening{background:var(--red);animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+#voice-fab{position:fixed;bottom:76px;left:20px;width:52px;height:52px;border-radius:50%;border:none;background:var(--g500);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(27,67,50,.3);z-index:50;touch-action:manipulation;display:flex;align-items:center;justify-content:center}
+
+</style>
+</head>
 <body>
 <div id="app">
 
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.3</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative">
+      <div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div>
+      <span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.4</span>
+    </div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -190,7 +208,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 4.3 · SuperDima</div>
+  <div class="wfooter">גרסה 4.4 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -210,7 +228,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- JOIN -->
 <div class="screen" id="s-join">
   <div class="ftop">
-    <button class="back" onclick="show('s-welcome')">← חזרה</button>
+    <button class="back" ontouchstart="" onclick="show('s-welcome')">← חזרה</button>
     <span class="ficon">🔗</span><h2>הצטרף למשפחה</h2><p>הזן את קוד ההצטרפות שקיבלת</p>
   </div>
   <div class="fwrap">
@@ -238,23 +256,22 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <div class="screen" id="s-app">
   <div class="aheader">
     <div class="aheader-txt">
-      <h2 id="h-family">רשימת קניות של משפחת</h2>
+      <h2 id="h-family">רשימת קניות</h2>
       <div class="sub"><span class="sdot" id="sync-dot"></span><span id="sync-txt">מסונכרן</span> · <span id="h-user">אתה</span></div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <div class="hbtns">
-        <button class="ibtn" onclick="syncNow()" title="רענן">⟳</button>
-        <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
-        <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
+        <button class="ibtn" ontouchstart="" onclick="syncNow()" title="רענן">⟳</button>
+        <button class="ibtn" ontouchstart="" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
+        <button class="ibtn" ontouchstart="" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v4.3</div>
+      <div class="ver-badge">v4.4</div>
     </div>
   </div>
   <div class="prog-wrap">
     <div class="prog-inner"><div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div><div class="prog-lbl" id="prog-label">0/0</div></div>
     <div class="prog-sub">סמן פריטים שקנית</div>
   </div>
-
   <div class="main-scroll" id="main-scroll">
     <div class="list-search-bar" id="list-search-wrap" style="display:none">
       <input type="text" id="list-search" placeholder="חפש ברשימה..." oninput="onListSearch(this.value)" autocomplete="off"/>
@@ -274,14 +291,11 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     </div>
     <div style="height:20px"></div>
   </div>
-  <button class="fab" id="fab" onclick="openSheet('sh-add')">+ הוסף פריט</button>
-  <button id="voice-fab" ontouchstart="" onclick="openVoice()"
-    style="position:fixed;bottom:76px;left:24px;width:54px;height:54px;border-radius:50%;border:none;background:var(--g500);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(27,67,50,.35);z-index:50;touch-action:manipulation;display:flex;align-items:center;justify-content:center">
-    🎤
-  </button>
+  <button class="fab" id="fab" ontouchstart="" onclick="openSheet('sh-add')">+ הוסף פריט</button>
+  <button id="voice-fab" ontouchstart="" onclick="openVoice()" title="הוספה קולית">🎤</button>
   <div class="shop-bot" id="shop-bot" style="display:none">
-    <button class="btn btn-d btn-sm" style="flex:1" onclick="clearChecked()">🗑 נקה נקנה</button>
-    <button class="btn btn-g btn-sm" style="flex:1" onclick="uncheckAll()">↺ אפס הכל</button>
+    <button class="btn btn-d btn-sm" style="flex:1" ontouchstart="" onclick="clearChecked()">🗑 נקה נקנה</button>
+    <button class="btn btn-g btn-sm" style="flex:1" ontouchstart="" onclick="uncheckAll()">↺ אפס הכל</button>
   </div>
 </div>
 
@@ -297,12 +311,13 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
       <div class="ac-drop" id="add-ac-drop"></div>
     </div>
     <div style="display:flex;gap:10px;margin-top:12px">
-      <div style="flex:1"><label class="flbl">קטגוריה</label><select id="item-cat" class="cat-select" style="padding:11px 12px;border-radius:var(--rs)" onchange="checkCatSuggestion()"></select></div>
+      <div style="flex:1"><label class="flbl">קטגוריה</label>
+        <select id="item-cat" class="cat-select" style="padding:11px 12px;border-radius:var(--rs)" onchange="checkCatSuggestion()"></select>
+      </div>
       <div style="width:95px"><label class="flbl">כמות</label>
         <input type="text" id="item-qty" placeholder="1 יח׳" style="width:100%;padding:11px 10px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;text-align:center;outline:none;direction:ltr;background:#fff"/>
       </div>
     </div>
-    <!-- Category suggestion -->
     <div id="cat-suggest" style="display:none;background:#EFF9F4;border:1.5px solid #74C69D;border-radius:10px;padding:11px 14px;margin-top:10px;font-size:13px;color:#1B4332;align-items:center;gap:10px;flex-wrap:wrap">
       <span id="cat-suggest-icon" style="font-size:18px;flex-shrink:0">💡</span>
       <span id="cat-suggest-text" style="flex:1;line-height:1.5;min-width:120px"></span>
@@ -311,7 +326,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div style="margin-top:12px">
       <label class="flbl">תמונה</label>
       <input type="file" accept="image/*" id="img-file-input" style="display:none" onchange="handleImgUpload(event)"/>
-      <button class="img-upload-btn" onclick="document.getElementById('img-file-input').click()">📷 בחר תמונה מהגלריה</button>
+      <button class="img-upload-btn" ontouchstart="" onclick="document.getElementById('img-file-input').click()">📷 בחר תמונה מהגלריה</button>
       <img id="img-preview" class="img-preview-box" alt=""/>
       <button id="img-clear-btn" onclick="clearImg()" style="display:none;margin-top:6px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-family:'Heebo',sans-serif">✕ הסר תמונה</button>
     </div>
@@ -319,7 +334,38 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
       <input type="checkbox" id="also-fav"/>
       <span>⭐ שמור גם במועדפים</span>
     </label>
-    <div style="margin-top:14px"><button class="btn btn-p" style="width:100%" onclick="addItem()">הוסף לרשימה ✓</button></div>
+    <div style="margin-top:14px"><button class="btn btn-p" style="width:100%" ontouchstart="" onclick="addItem()">הוסף לרשימה ✓</button></div>
+  </div>
+</div>
+
+<!-- EDIT SHEET -->
+<div class="overlay" id="sh-edit" onclick="overlayClick(event,'sh-edit')">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3>✏️ עריכת פריט</h3>
+    <input type="hidden" id="edit-item-id"/>
+    <div style="margin-top:0"><label class="flbl">שם המוצר</label>
+      <input class="finput" type="text" id="edit-item-name" placeholder="שם המוצר" spellcheck="true" autocorrect="on" autocapitalize="sentences"/>
+    </div>
+    <div class="edit-field-row">
+      <div style="flex:1"><label class="flbl">קטגוריה</label>
+        <select id="edit-item-cat" class="cat-select" style="padding:11px 12px;border-radius:var(--rs)"></select>
+      </div>
+      <div style="width:95px"><label class="flbl">כמות</label>
+        <input type="text" id="edit-item-qty" placeholder="1 יח׳" style="width:100%;padding:11px 10px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;text-align:center;outline:none;direction:ltr;background:#fff"/>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <label class="flbl">תמונה חדשה (אופציונלי)</label>
+      <input type="file" accept="image/*" id="edit-img-file" style="display:none" onchange="handleEditImg(event)"/>
+      <button class="img-upload-btn" ontouchstart="" onclick="document.getElementById('edit-img-file').click()">📷 החלף תמונה</button>
+      <img id="edit-img-preview" class="img-preview-box" alt=""/>
+      <button id="edit-img-clear" onclick="clearEditImg()" style="display:none;margin-top:6px;background:none;border:none;color:var(--red);font-size:12px;cursor:pointer;font-family:'Heebo',sans-serif">✕ הסר תמונה</button>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn btn-d btn-sm" style="flex:1" ontouchstart="" onclick="closeSheet('sh-edit')">ביטול</button>
+      <button class="btn btn-p" style="flex:2" ontouchstart="" onclick="saveEdit()">שמור שינויים ✓</button>
+    </div>
   </div>
 </div>
 
@@ -335,7 +381,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <div class="ac-drop" id="fav-ac-drop"></div>
       </div>
       <select id="fav-new-cat" class="cat-select" style="width:130px;padding:10px;border-radius:var(--rs)"></select>
-      <button class="btn btn-p btn-sm" onclick="addFavorite()">+ הוסף</button>
+      <button class="btn btn-p btn-sm" ontouchstart="" onclick="addFavorite()">+ הוסף</button>
     </div>
     <div id="favs-mgmt-list"></div>
   </div>
@@ -347,17 +393,15 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="handle"></div>
     <h3>✏️ עריכת מועדף</h3>
     <input type="hidden" id="fav-edit-id"/>
-    <div style="margin-top:0">
-      <label class="flbl">שם המוצר</label>
+    <div style="margin-top:0"><label class="flbl">שם המוצר</label>
       <input class="finput" type="text" id="fav-edit-name" placeholder="שם המוצר" spellcheck="true" autocorrect="on" autocapitalize="sentences" onkeydown="if(event.key==='Enter') saveFavEdit()"/>
     </div>
-    <div style="margin-top:12px">
-      <label class="flbl">קטגוריה</label>
+    <div style="margin-top:12px"><label class="flbl">קטגוריה</label>
       <select id="fav-edit-cat" class="cat-select"></select>
     </div>
     <div style="margin-top:16px;display:flex;gap:10px">
-      <button class="btn btn-d btn-sm" style="flex:1" onclick="closeSheet('sh-fav-edit')">ביטול</button>
-      <button class="btn btn-p" style="flex:2" onclick="saveFavEdit()">שמור ✓</button>
+      <button class="btn btn-d btn-sm" style="flex:1" ontouchstart="" onclick="closeSheet('sh-fav-edit')">ביטול</button>
+      <button class="btn btn-p" style="flex:2" ontouchstart="" onclick="saveFavEdit()">שמור ✓</button>
     </div>
   </div>
 </div>
@@ -371,7 +415,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="srow"><span class="sl">👤 השם שלי</span><span class="sv" id="ss-user">—</span></div>
     <div class="srow">
       <span class="sl">🔑 קוד הצטרפות</span>
-      <div style="display:flex;align-items:center;gap:8px"><span class="sv" id="ss-code">—</span><button class="btn btn-g btn-sm" onclick="copyCode()">העתק</button></div>
+      <div style="display:flex;align-items:center;gap:8px"><span class="sv" id="ss-code">—</span><button class="btn btn-g btn-sm" ontouchstart="" onclick="copyCode()">העתק</button></div>
     </div>
     <div class="srow" style="flex-direction:column;align-items:stretch;gap:8px">
       <div style="display:flex;align-items:center;justify-content:space-between">
@@ -388,13 +432,13 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="srow">
       <span class="sl">🔤 גודל טקסט פריטים</span>
       <div style="display:flex;gap:6px;align-items:center">
-        <button class="font-size-btn" id="fs-small"  onclick="setFontSize('small')"  title="קטן">א</button>
-        <button class="font-size-btn" id="fs-medium" onclick="setFontSize('medium')" title="בינוני">א</button>
-        <button class="font-size-btn" id="fs-large"  onclick="setFontSize('large')"  title="גדול">א</button>
-        <button class="font-size-btn" id="fs-xlarge" onclick="setFontSize('xlarge')" title="גדול מאוד">א</button>
+        <button class="font-size-btn" id="fs-small"  ontouchstart="" onclick="setFontSize('small')"  title="קטן">א</button>
+        <button class="font-size-btn" id="fs-medium" ontouchstart="" onclick="setFontSize('medium')" title="בינוני">א</button>
+        <button class="font-size-btn" id="fs-large"  ontouchstart="" onclick="setFontSize('large')"  title="גדול">א</button>
+        <button class="font-size-btn" id="fs-xlarge" ontouchstart="" onclick="setFontSize('xlarge')" title="גדול מאוד">א</button>
       </div>
     </div>
-    <div style="margin-top:20px"><button class="btn btn-d" style="width:100%" onclick="logout()">🚪 יציאה מהרשימה</button></div>
+    <div style="margin-top:20px"><button class="btn btn-d" style="width:100%" ontouchstart="" onclick="logout()">🚪 יציאה מהרשימה</button></div>
   </div>
 </div>
 
@@ -404,28 +448,23 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div class="handle"></div>
     <h3 style="text-align:right">🎤 הוספה קולית</h3>
     <p style="font-size:13px;color:var(--t3);margin-bottom:20px;text-align:right">דבר בעברית — אמור מוצרים וכמויות</p>
-
-    <!-- Mic button -->
     <div id="voice-mic-wrap" style="margin:10px auto 20px">
-      <button id="voice-btn" ontouchstart="" onclick="toggleVoice()"
-        style="width:90px;height:90px;border-radius:50%;border:none;background:var(--g700);color:#fff;font-size:36px;cursor:pointer;touch-action:manipulation;box-shadow:0 4px 20px rgba(27,67,50,.35);transition:background .2s">
-        🎤
-      </button>
+      <button id="voice-btn" ontouchstart="" onclick="toggleVoice()">🎤</button>
       <div id="voice-status" style="margin-top:12px;font-size:14px;font-weight:600;color:var(--g700)">לחץ להתחיל</div>
     </div>
-
-    <!-- Transcript area -->
     <div id="voice-transcript" style="display:none;background:var(--g50);border:1.5px solid var(--g300);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;text-align:right;font-size:14px;line-height:1.7;min-height:60px;color:var(--text)"></div>
-
-    <!-- Parsed items list -->
     <div id="voice-items" style="display:none;margin-bottom:16px"></div>
-
-    <!-- Action buttons -->
-    <div id="voice-actions" style="display:none;display:flex;gap:10px;flex-direction:column">
+    <div id="voice-actions" style="display:none;flex-direction:column;gap:10px">
       <button class="btn btn-p" ontouchstart="" onclick="addVoiceItems()" style="width:100%">הוסף לרשימה ✓</button>
       <button class="btn btn-g btn-sm" ontouchstart="" onclick="resetVoice()" style="width:100%">נסה שוב 🔄</button>
     </div>
   </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightbox-img" src="" alt=""/>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -434,6 +473,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
+
 /* ===== הגדרות Firebase - שנה כאן ===== */
 var FIREBASE_CONFIG = {
 apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
@@ -445,6 +485,7 @@ messagingSenderId: "1047807533790",
 appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
 measurementId: "G-JNF66CHKYX"
 };
+
 var CATS = [
   {id:'general',  label:'כללי',             icon:'🛍️'},
   {id:'alcohol',  label:'אלכוהול',           icon:'🍷'},
@@ -1484,6 +1525,7 @@ document.addEventListener('click', function(e){
   if (!e.target.closest('#add-ac-wrap'))   document.getElementById('add-ac-drop').classList.remove('open');
   if (!e.target.closest('.fav-add-bar'))   document.getElementById('fav-ac-drop').classList.remove('open');
 });
+
 
 </script>
 </body>
