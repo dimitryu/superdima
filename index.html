@@ -179,7 +179,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.2</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.3</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -189,7 +189,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 4.2 · SuperDima</div>
+  <div class="wfooter">גרסה 4.3 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -246,7 +246,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v4.2</div>
+      <div class="ver-badge">v4.3</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -372,6 +372,18 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
       <span class="sl">🔑 קוד הצטרפות</span>
       <div style="display:flex;align-items:center;gap:8px"><span class="sv" id="ss-code">—</span><button class="btn btn-g btn-sm" onclick="copyCode()">העתק</button></div>
     </div>
+    <div class="srow" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span class="sl">🤖 Anthropic API Key</span>
+        <span id="ss-api-status" style="font-size:11px;color:var(--t3)">לא מוגדר</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <input id="ss-api-key" type="password" placeholder="sk-ant-..." autocomplete="off" spellcheck="false"
+          style="flex:1;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:13px;direction:ltr;text-align:left;outline:none;background:#fff"/>
+        <button class="btn btn-p btn-sm" ontouchstart="" onclick="saveApiKey()">שמור</button>
+      </div>
+      <p style="font-size:11px;color:var(--t3);margin:0">נשמר רק במכשיר שלך. נדרש להוספה קולית.</p>
+    </div>
     <div class="srow">
       <span class="sl">🔤 גודל טקסט פריטים</span>
       <div style="display:flex;gap:6px;align-items:center">
@@ -407,11 +419,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-/* ===== הגדרות API - שנה כאן ===== */
-// TODO: החלף במפתח ה-API שלך מ-https://console.anthropic.com
-var ANTHROPIC_API_KEY = "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";
-/* ================================= */
-
+/* ===== הגדרות Firebase - שנה כאן ===== */
 var FIREBASE_CONFIG = {
 apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
 authDomain: "superdima-ef60f.firebaseapp.com",
@@ -487,7 +495,7 @@ var DEFAULT_FAVS = [
 var IS_CONFIGURED = FIREBASE_CONFIG.apiKey.indexOf("YOUR") === -1;
 var db=null, itemsRef=null, itemsListener=null, favsRef=null, favsListener=null;
 // Firebase init happens AFTER all functions defined — see bottom of script
-var S = {code:null, family:null, user:null, items:{}, favs:[], fontSize:'medium'};
+var S = {code:null, family:null, user:null, items:{}, favs:[], fontSize:'medium', anthropicKey:''};
 var pendingImgBase64 = null;
 var favSearchQ = '';
 var listSearchQ = '';
@@ -544,7 +552,7 @@ function ago(ts) {
 }
 function catById(id) { for (var i=0;i<CATS.length;i++) if (CATS[i].id===id) return CATS[i]; return CATS[0]; }
 function catIndex(id){ var i=CATS.findIndex(function(c){return c.id===id;}); return i<0?0:i; }
-function save() { localStorage.setItem('kniYot_v1', JSON.stringify({code:S.code,family:S.family,user:S.user,fontSize:S.fontSize})); }
+function save() { localStorage.setItem('kniYot_v1', JSON.stringify({code:S.code,family:S.family,user:S.user,fontSize:S.fontSize,anthropicKey:S.anthropicKey||''})); }
 function norm(s) { return (s||'').trim().toLowerCase(); }
 
 function inListSet() {
@@ -569,6 +577,7 @@ function buildSelects() {
 /* ── NAV ── */
 function goApp() {
   applyFontSize(S.fontSize || 'medium');
+  updateApiStatus();
   document.getElementById('h-family').textContent  = 'רשימת קניות של משפחת ' + S.family;
   document.getElementById('h-user').textContent    = S.user;
   document.getElementById('ss-family').textContent = S.family;
@@ -948,7 +957,7 @@ function createFamily() {
   if (!fam || !user) return toast('מלא את כל השדות');
   var code = String(Math.floor(100000 + Math.random() * 900000));
   db.ref('fam/' + code + '/meta').set({name:fam, created:Date.now()})
-    .then(function(){ S={code:code,family:fam,user:user,items:{},favs:[],fontSize:S.fontSize||'medium'}; save(); document.getElementById('d-code').textContent=code; show('s-code'); })
+    .then(function(){ S={code:code,family:fam,user:user,items:{},favs:[],fontSize:S.fontSize||'medium', anthropicKey:S.anthropicKey||''}; save(); document.getElementById('d-code').textContent=code; show('s-code'); })
     .catch(function(e){ toast('שגיאה — בדוק חיבור'); console.error(e); });
 }
 function joinFamily() {
@@ -972,7 +981,7 @@ function joinFamily() {
     done = true;
     clearTimeout(timer);
     if (!snap.exists()) return toast('קוד לא נמצא — בדוק שוב');
-    S = {code:code, family:snap.val().name, user:user, items:{}, favs:[], fontSize:S.fontSize||'medium'};
+    S = {code:code, family:snap.val().name, user:user, items:{}, favs:[], fontSize:S.fontSize||'medium', anthropicKey:S.anthropicKey||''};
     save();
     try {
       goApp();
@@ -1159,6 +1168,22 @@ function addFavorite() {
     })
     .catch(function(){ toast('שגיאה'); });
 }
+function saveApiKey() {
+  var key = (document.getElementById('ss-api-key').value || '').trim();
+  S.anthropicKey = key;
+  save();
+  updateApiStatus();
+  toast(key ? 'API Key נשמר ✓' : 'API Key נמחק');
+}
+function updateApiStatus() {
+  var el = document.getElementById('ss-api-status');
+  if (!el) return;
+  var key = S.anthropicKey || '';
+  el.textContent = key ? '✅ מוגדר (' + key.substring(0,8) + '...)' : '❌ לא מוגדר';
+  el.style.color = key ? 'var(--g500)' : 'var(--t3)';
+  var inp = document.getElementById('ss-api-key');
+  if (inp) inp.value = key;
+}
 function applyFontSize(size) {
   var sizes = {small:'13px', medium:'17px', large:'20px', xlarge:'24px'};
   var px = sizes[size] || '17px';
@@ -1207,7 +1232,7 @@ function logout() {
   if (itemsRef && itemsListener) { itemsRef.off('value', itemsListener); itemsRef=null; itemsListener=null; }
   if (favsRef  && favsListener)  { favsRef.off('value',  favsListener);  favsRef=null;  favsListener=null;  }
   localStorage.removeItem('kniYot_v1');
-  S = {code:null, family:null, user:null, items:{}, favs:[], fontSize:'medium'};
+  S = {code:null, family:null, user:null, items:{}, favs:[], fontSize:'medium', anthropicKey:S.anthropicKey||''};
   closeSheet('sh-settings'); show('s-welcome');
 }
 
@@ -1301,8 +1326,10 @@ function stopVoice() {
 }
 
 function parseVoiceTranscript(text) {
-  if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY.indexOf('YOUR') >= 0) {
-    toast('הוסף ANTHROPIC_API_KEY בקוד');
+  var ANTHROPIC_API_KEY = S.anthropicKey || '';
+  if (!ANTHROPIC_API_KEY) {
+    toast('הוסף Anthropic API Key בהגדרות ⚙');
+    openSheet('sh-settings');
     return;
   }
 
@@ -1428,7 +1455,7 @@ function addVoiceItems() {
     saved = null;
   }
   if (saved && saved.code && saved.family && saved.user) {
-    S = {code:saved.code, family:saved.family, user:saved.user, items:{}, favs:[], fontSize:saved.fontSize||'medium'};
+        S = {code:saved.code, family:saved.family, user:saved.user, items:{}, favs:[], fontSize:saved.fontSize||'medium', anthropicKey:saved.anthropicKey||''};
     try {
       goApp(); return;
     } catch(e) {
