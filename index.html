@@ -179,7 +179,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <!-- WELCOME -->
 <div class="screen active" id="s-welcome">
   <div class="wbg">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.1</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative"><div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div><span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.2</span></div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
     <p>כולם מוסיפים, אחד קונה</p>
@@ -189,7 +189,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 4.1 · SuperDima</div>
+  <div class="wfooter">גרסה 4.2 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -246,7 +246,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v4.1</div>
+      <div class="ver-badge">v4.2</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -274,6 +274,10 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <div style="height:20px"></div>
   </div>
   <button class="fab" id="fab" onclick="openSheet('sh-add')">+ הוסף פריט</button>
+  <button id="voice-fab" ontouchstart="" onclick="openVoice()"
+    style="position:fixed;bottom:76px;left:24px;width:54px;height:54px;border-radius:50%;border:none;background:var(--g500);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(27,67,50,.35);z-index:50;touch-action:manipulation;display:flex;align-items:center;justify-content:center">
+    🎤
+  </button>
   <div class="shop-bot" id="shop-bot" style="display:none">
     <button class="btn btn-d btn-sm" style="flex:1" onclick="clearChecked()">🗑 נקה נקנה</button>
     <button class="btn btn-g btn-sm" style="flex:1" onclick="uncheckAll()">↺ אפס הכל</button>
@@ -381,38 +385,33 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightbox-img" src="" alt=""/>
-</div>
-<!-- EDIT SHEET -->
-<div class="overlay" id="sh-edit" onclick="overlayClick(event,'sh-edit')">
-  <div class="sheet">
+<!-- VOICE SHEET -->
+<div class="overlay" id="sh-voice" onclick="overlayClick(event,'sh-voice')">
+  <div class="sheet" style="text-align:center">
     <div class="handle"></div>
-    <h3>✏️ עריכת פריט</h3>
-    <input type="hidden" id="edit-item-id"/>
-    <div style="margin-top:0">
-      <label class="flbl">שם המוצר</label>
-      <input class="finput" type="text" id="edit-item-name" placeholder="שם המוצר" spellcheck="true" autocorrect="on" autocapitalize="sentences"/>
+    <h3 style="text-align:right">🎤 הוספה קולית</h3>
+    <p style="font-size:13px;color:var(--t3);margin-bottom:20px;text-align:right">דבר בעברית — אמור מוצרים וכמויות</p>
+
+    <!-- Mic button -->
+    <div id="voice-mic-wrap" style="margin:10px auto 20px">
+      <button id="voice-btn" ontouchstart="" onclick="toggleVoice()"
+        style="width:90px;height:90px;border-radius:50%;border:none;background:var(--g700);color:#fff;font-size:36px;cursor:pointer;touch-action:manipulation;box-shadow:0 4px 20px rgba(27,67,50,.35);transition:background .2s">
+        🎤
+      </button>
+      <div id="voice-status" style="margin-top:12px;font-size:14px;font-weight:600;color:var(--g700)">לחץ להתחיל</div>
     </div>
-    <div class="edit-field-row">
-      <div style="flex:1">
-        <label class="flbl">קטגוריה</label>
-        <select id="edit-item-cat" class="cat-select" style="padding:11px 12px;border-radius:var(--rs)"></select>
-      </div>
-      <div style="width:95px">
-        <label class="flbl">כמות</label>
-        <input type="text" id="edit-item-qty" placeholder="1 יח׳" style="width:100%;padding:11px 10px;border:2px solid var(--border);border-radius:var(--rs);font-family:'Heebo',sans-serif;font-size:14px;text-align:center;outline:none;direction:ltr;background:#fff"/>
-      </div>
-    </div>
-    <div style="margin-top:12px">
-      <label class="flbl">תמונה חדשה (א
+
+    <!-- Transcript area -->
+    <div id="voice-transcript" style="display:none;background:var(--g50);border:1.5px solid var(--g300);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;text-align:right;font-size:14px;line-height:1.7;min-height:60px;color:var(--text)"></div
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
+/* ===== הגדרות API - שנה כאן ===== */
+// TODO: החלף במפתח ה-API שלך מ-https://console.anthropic.com
+var ANTHROPIC_API_KEY = "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";
+/* ================================= */
+
 var FIREBASE_CONFIG = {
 apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
 authDomain: "superdima-ef60f.firebaseapp.com",
@@ -1210,6 +1209,198 @@ function logout() {
   localStorage.removeItem('kniYot_v1');
   S = {code:null, family:null, user:null, items:{}, favs:[], fontSize:'medium'};
   closeSheet('sh-settings'); show('s-welcome');
+}
+
+/* ── VOICE INPUT ── */
+var _voiceRecognition = null;
+var _voiceListening   = false;
+var _parsedVoiceItems = [];
+
+function openVoice() {
+  resetVoice();
+  openSheet('sh-voice');
+}
+
+function resetVoice() {
+  if (_voiceRecognition) { try{_voiceRecognition.stop();}catch(e){} _voiceRecognition=null; }
+  _voiceListening   = false;
+  _parsedVoiceItems = [];
+  var btn   = document.getElementById('voice-btn');
+  var stat  = document.getElementById('voice-status');
+  var trans = document.getElementById('voice-transcript');
+  var items = document.getElementById('voice-items');
+  var acts  = document.getElementById('voice-actions');
+  if(btn)   { btn.style.background='var(--g700)'; btn.textContent='🎤'; }
+  if(stat)  { stat.textContent='לחץ להתחיל'; stat.style.color='var(--g700)'; }
+  if(trans) { trans.style.display='none'; trans.textContent=''; }
+  if(items) { items.style.display='none'; items.innerHTML=''; }
+  if(acts)  { acts.style.display='none'; }
+}
+
+function toggleVoice() {
+  if (_voiceListening) stopVoice();
+  else startVoice();
+}
+
+function startVoice() {
+  var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) { toast('הדפדפן לא תומך בדיבור. נסה Chrome'); return; }
+
+  resetVoice();
+  var rec = new SpeechRec();
+  rec.lang = 'he-IL';
+  rec.continuous = false;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+  _voiceRecognition = rec;
+  _voiceListening   = true;
+
+  var btn  = document.getElementById('voice-btn');
+  var stat = document.getElementById('voice-status');
+  if(btn)  { btn.style.background='var(--red)'; btn.textContent='⏹'; }
+  if(stat) { stat.textContent='מקשיב...'; stat.style.color='var(--red)'; }
+
+  var trans = document.getElementById('voice-transcript');
+  if(trans) { trans.style.display='block'; trans.textContent='...'; }
+
+  rec.onresult = function(ev) {
+    var txt = '';
+    for(var i=0;i<ev.results.length;i++) txt += ev.results[i][0].transcript;
+    if(trans) trans.textContent = txt;
+  };
+
+  rec.onerror = function(ev) {
+    _voiceListening = false;
+    var stat = document.getElementById('voice-status');
+    if(stat) { stat.textContent='שגיאה: '+ev.error; stat.style.color='var(--red)'; }
+    var btn = document.getElementById('voice-btn');
+    if(btn) { btn.style.background='var(--g700)'; btn.textContent='🎤'; }
+  };
+
+  rec.onend = function() {
+    _voiceListening = false;
+    var btn  = document.getElementById('voice-btn');
+    var stat = document.getElementById('voice-status');
+    if(btn)  { btn.style.background='var(--g700)'; btn.textContent='🎤'; }
+    var transcript = (document.getElementById('voice-transcript')||{}).textContent||'';
+    if(transcript && transcript !== '...') {
+      if(stat) { stat.textContent='מעבד...'; stat.style.color='var(--t2)'; }
+      parseVoiceTranscript(transcript);
+    } else {
+      if(stat) { stat.textContent='לא נקלט שום דבר — נסה שוב'; stat.style.color='var(--t3)'; }
+    }
+  };
+
+  try { rec.start(); }
+  catch(e) { toast('לא ניתן להפעיל מיקרופון: ' + e.message); _voiceListening=false; }
+}
+
+function stopVoice() {
+  if(_voiceRecognition) { try{_voiceRecognition.stop();}catch(e){} }
+  _voiceListening = false;
+}
+
+function parseVoiceTranscript(text) {
+  if (!ANTHROPIC_API_KEY || ANTHROPIC_API_KEY.indexOf('YOUR') >= 0) {
+    toast('הוסף ANTHROPIC_API_KEY בקוד');
+    return;
+  }
+
+  var catList = CATS.map(function(c){ return c.id+':'+c.label; }).join(', ');
+  var prompt = 'הטקסט הבא הוא רשימת קניות שנאמרה בעברית:\n"' + text + '"\n\n' +
+    'חלץ מכאן רשימת מוצרים. לכל מוצר החזר שם, כמות (מחרוזת חופשית כמו "2 יח׳" או "קילו" או "" אם לא צוין), ' +
+    'וקטגוריה הכי מתאימה מהרשימה הזו: ' + catList + '.\n\n' +
+    'החזר JSON בלבד ללא שום טקסט נוסף, בפורמט:\n' +
+    '[{"text":"שם המוצר","qty":"כמות","category":"id_קטגוריה"}]';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 512,
+      messages: [{role:'user', content: prompt}]
+    })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    var raw = (data.content && data.content[0] && data.content[0].text) || '';
+    // Strip markdown fences if present
+    raw = raw.replace(/```json|```/g,'').trim();
+    try {
+      var items = JSON.parse(raw);
+      if(!Array.isArray(items) || !items.length) throw new Error('empty');
+      _parsedVoiceItems = items;
+      renderParsedItems(items);
+      var stat = document.getElementById('voice-status');
+      if(stat) { stat.textContent = 'נמצאו ' + items.length + ' פריטים'; stat.style.color='var(--g700)'; }
+    } catch(e) {
+      toast('לא הצלחתי לפרסר — נסה שוב');
+      var stat = document.getElementById('voice-status');
+      if(stat) { stat.textContent='נסה לדבר שוב'; stat.style.color='var(--t3)'; }
+    }
+  })
+  .catch(function(err) {
+    toast('שגיאת רשת: '+err.message);
+    var stat = document.getElementById('voice-status');
+    if(stat){ stat.textContent='שגיאת חיבור'; stat.style.color='var(--red)'; }
+  });
+}
+
+function renderParsedItems(items) {
+  var el = document.getElementById('voice-items');
+  var acts = document.getElementById('voice-actions');
+  if(!el) return;
+  var html = '<div style="text-align:right;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.8px">פריטים שזוהו</div>';
+  items.forEach(function(item, i) {
+    var cat = catById(item.category||'general');
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:#fff;border:1.5px solid var(--border);border-radius:var(--rs);margin-bottom:7px">'
+      + '<span style="font-size:18px">' + cat.icon + '</span>'
+      + '<div style="flex:1;text-align:right">'
+      + '<div style="font-size:15px;font-weight:600">' + esc(item.text) + '</div>'
+      + (item.qty ? '<div style="font-size:12px;color:var(--t3)">' + esc(item.qty) + ' · ' + cat.label + '</div>' : '<div style="font-size:12px;color:var(--t3)">' + cat.label + '</div>')
+      + '</div>'
+      + '<button ontouchstart="" onclick="removeVoiceItem('+i+')" style="background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;padding:4px;touch-action:manipulation">✕</button>'
+      + '</div>';
+  });
+  el.innerHTML = html;
+  el.style.display = 'block';
+  if(acts) acts.style.display = 'flex';
+}
+
+function removeVoiceItem(i) {
+  _parsedVoiceItems.splice(i, 1);
+  if(_parsedVoiceItems.length === 0) {
+    document.getElementById('voice-items').style.display='none';
+    document.getElementById('voice-actions').style.display='none';
+    var stat = document.getElementById('voice-status');
+    if(stat){ stat.textContent='לחץ להתחיל'; stat.style.color='var(--g700)'; }
+  } else {
+    renderParsedItems(_parsedVoiceItems);
+  }
+}
+
+function addVoiceItems() {
+  if(!_parsedVoiceItems.length) return;
+  var inList = inListSet();
+  var added=0, skipped=0;
+  var promises = [];
+  _parsedVoiceItems.forEach(function(item) {
+    if(inList[norm(item.text)]) { skipped++; return; }
+    var data = {text:item.text, category:item.category||'general', addedBy:S.user, addedAt:Date.now(), checked:false};
+    if(item.qty) data.qty = item.qty;
+    promises.push(db.ref('fam/'+S.code+'/items').push(data).then(function(){ added++; }));
+  });
+  Promise.all(promises).then(function(){
+    closeSheet('sh-voice');
+    toast(added + ' פריטים נוספו' + (skipped?' ('+skipped+' כבר ברשימה)':''));
+    resetVoice();
+  }).catch(function(){ toast('שגיאה בהוספה'); });
 }
 
 /* ── STARTUP ── */
