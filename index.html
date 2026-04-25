@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- SuperDima v4.4 -->
+<!-- SuperDima v4.5 -->
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -185,7 +185,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 #voice-btn{width:90px;height:90px;border-radius:50%;border:none;background:var(--g700);color:#fff;font-size:36px;cursor:pointer;touch-action:manipulation;box-shadow:0 4px 20px rgba(27,67,50,.35)}
 #voice-btn.listening{background:var(--red);animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-#voice-fab{position:fixed;bottom:76px;left:20px;width:52px;height:52px;border-radius:50%;border:none;background:var(--g500);color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(27,67,50,.3);z-index:50;touch-action:manipulation;display:flex;align-items:center;justify-content:center}
+#voice-fab{position:fixed;bottom:76px;left:20px;width:52px;height:52px;border-radius:50%;border:none;background:#E76F51;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 4px 16px rgba(231,111,81,.4);z-index:50;touch-action:manipulation;display:flex;align-items:center;justify-content:center}
 
 </style>
 </head>
@@ -197,7 +197,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
   <div class="wbg">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;position:relative">
       <div class="badge" style="margin-bottom:0">🌿 רשימת קניות משפחתית</div>
-      <span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.4</span>
+      <span style="font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px">v4.5</span>
     </div>
     <span class="wicon">🛒</span>
     <h1>Super<br>Dima</h1>
@@ -208,7 +208,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
     <button class="btn btn-p" ontouchstart="" onclick="show('s-create')">✦ צור משפחה חדשה</button>
     <button class="btn btn-g" ontouchstart="" onclick="show('s-join')">🔗 הצטרף למשפחה קיימת</button>
   </div>
-  <div class="wfooter">גרסה 4.4 · SuperDima</div>
+  <div class="wfooter">גרסה 4.5 · SuperDima</div>
 </div>
 
 <!-- CREATE -->
@@ -265,7 +265,7 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
         <button class="ibtn" ontouchstart="" onclick="openSheet('sh-favmgmt')" title="ניהול מועדפים">⭐</button>
         <button class="ibtn" ontouchstart="" onclick="openSheet('sh-settings')" title="הגדרות">⚙</button>
       </div>
-      <div class="ver-badge">v4.4</div>
+      <div class="ver-badge">v4.5</div>
     </div>
   </div>
   <div class="prog-wrap">
@@ -474,16 +474,17 @@ body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-h
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
 
+
+
 /* ===== הגדרות Firebase - שנה כאן ===== */
 var FIREBASE_CONFIG = {
-apiKey: "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
-authDomain: "superdima-ef60f.firebaseapp.com",
-databaseURL: "https://superdima-ef60f-default-rtdb.europe-west1.firebasedatabase.app",
-projectId: "superdima-ef60f",
-storageBucket: "superdima-ef60f.firebasestorage.app",
-messagingSenderId: "1047807533790",
-appId: "1:1047807533790:web:48fd07f3e09cda2873d84f",
-measurementId: "G-JNF66CHKYX"
+  apiKey:            "AIzaSyDY7AVKKsta4d5Zgf_bRXV2-ZNYk6JUOBc",
+  authDomain:        "superdima-ef60f.firebaseapp.com",
+  databaseURL:       "https://superdima-ef60f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:         "superdima-ef60f",
+  storageBucket:     "superdima-ef60f.firebasestorage.app",
+  messagingSenderId: "1047807533790",
+  appId:             "1:1047807533790:web:48fd07f3e09cda2873d84f"
 };
 
 var CATS = [
@@ -1390,7 +1391,7 @@ function parseVoiceTranscript(text) {
 
   var catList = CATS.map(function(c){ return c.id+':'+c.label; }).join(', ');
   var prompt = 'הטקסט הבא הוא רשימת קניות שנאמרה בעברית:\n"' + text + '"\n\n' +
-    'חלץ מכאן רשימת מוצרים. לכל מוצר החזר שם, כמות (מחרוזת חופשית כמו "2 יח׳" או "קילו" או "" אם לא צוין), ' +
+    'חלץ מכאן רשימת מוצרים. לכל מוצר החזר שם, כמות (תמיד השתמש בספרות ולא במילים, למשל "2 יח׳" ולא "שתי יחידות", "3 ק"ג" ולא "שלושה קילו", או "" אם לא צוין), ' +
     'וקטגוריה הכי מתאימה מהרשימה הזו: ' + catList + '.\n\n' +
     'החזר JSON בלבד ללא שום טקסט נוסף, בפורמט:\n' +
     '[{"text":"שם המוצר","qty":"כמות","category":"id_קטגוריה"}]';
@@ -1519,7 +1520,25 @@ function addVoiceItems() {
     }
   }
   show('s-welcome');
+  // Push a state so Android back button returns to welcome instead of closing app
+  if (window.history && window.history.pushState) {
+    window.history.pushState({page:'app'}, '');
+  }
 })();
+
+window.addEventListener('popstate', function(e) {
+  // Android/browser back button — go to welcome screen instead of closing
+  var activeScreen = document.querySelector('.screen.active');
+  if (activeScreen && activeScreen.id !== 's-welcome') {
+    show('s-welcome');
+    // Close any open sheets
+    document.querySelectorAll('.overlay.open').forEach(function(o){ o.classList.remove('open'); });
+  }
+  // Re-push state so next back press is also caught
+  if (window.history && window.history.pushState) {
+    window.history.pushState({page:'app'}, '');
+  }
+});
 
 document.addEventListener('click', function(e){
   if (!e.target.closest('#add-ac-wrap'))   document.getElementById('add-ac-drop').classList.remove('open');
@@ -1527,6 +1546,6 @@ document.addEventListener('click', function(e){
 });
 
 
-</script>
+script>
 </body>
 </html>
